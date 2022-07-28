@@ -1,5 +1,5 @@
-function keydownHandle(key, gameState) {
-  const playerPos = gameState.player.pos;
+function keydownHandle(key, currGameState) {
+  const playerPos = currGameState.player.pos;
   switch (key) {
     case 'w':
       playerPos.y -= 1;
@@ -15,6 +15,7 @@ function keydownHandle(key, gameState) {
       break;
     default:
   }
+  return currGameState;
 }
 
 module.exports = { keydownHandle };

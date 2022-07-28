@@ -1,14 +1,5 @@
-function createGameState() {
-  return {
-    player: {
-      pos: {
-        x: 10,
-        y: 10,
-      },
-    },
-    gridsize: 20,
-  };
-}
+const globalGameState = [];
+const socketRooms = [];
 
 function initialGameState() {
   return {
@@ -22,4 +13,4 @@ function initialGameState() {
   };
 }
 
-module.exports = { createGameState, initialGameState };
+module.exports = { initialGameState, globalGameState, socketRooms };

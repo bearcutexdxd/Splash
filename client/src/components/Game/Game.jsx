@@ -31,9 +31,9 @@ function Game({ gameState, socket }) {
     const ctx = canvas.getContext('2d');
     canvas.width = 600;
     canvas.height = 600;
-    const gridsize = gameState?.gridsize;
+    const { gridsize } = gameState;
     const size = canvas.width / gridsize;
-    const playerPos = gameState?.player?.pos;
+    const playerPos = gameState.player.pos;
 
     draw(ctx, canvas, BG_COLOR);
 
