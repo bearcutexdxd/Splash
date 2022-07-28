@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     const roomId = makeid();
     socket.emit('getRoomName', roomId);
 
-    globalGameState.push({ [roomId]: initialGameState() });
+    globalGameState[roomId] = initialGameState();
     console.log(globalGameState, '\n ^ all game states');
   });
 
@@ -60,23 +60,62 @@ io.on('connection', (socket) => {
     console.log(socket.number);
     socket.emit('playerId', socket.number);
 
-    if (socketsNumber >= 1) { // starting game, check for 1 player less
-      let currGameState = globalGameState.find((el) => {
-        const elKey = Object.keys(el)[0];
-        if (elKey === roomId) {
-          return true;
-        }
-      });
-      currGameState = currGameState[roomId];
+    if (socketsNumber === 1) { // starting game, check for 1 player less
+      io.sockets.in(roomId).emit('startGame', roomId);
 
-      socket.on('keydown', (key) => {
-        const newCurrGameState = keydownHandle(key, currGameState);
-        console.log(newCurrGameState);
-        io.sockets.in(roomId).emit('gameState', newCurrGameState);
-        // socket.to(roomId).emit('gameState', newCurrGameState);
-      });
+      // let currGameState = globalGameState.find((el) => {
+      //   const elKey = Object.keys(el)[0];
+      //   if (elKey === roomId) {
+      //     return true;
+      //   }
+      // });
+      // currGameState = currGameState[roomId];
+
+      // socket.on('keydown', (key) => {
+      //   const newCurrGameState = keydownHandle(key, currGameState);
+      //   console.log(newCurrGameState);
+      //   io.sockets.in(roomId).emit('gameState', newCurrGameState);
+      //   // socket.to(roomId).emit('gameState', newCurrGameState);
+      // });
     }
   });
+
+  socket.on('keydown', (key, roomId) => {
+    console.log('here');
+    // let currGameState = globalGameState.find((el) => {
+    //   const elKey = Object.keys(el)[0];
+    //   if (elKey === roomId) {
+    //     return true;
+    //   }
+    // });
+    // currGameState = currGameState[roomId];
+
+    let currGameState;
+    Object.keys(globalGameState).forEach((el) => {
+      if (el === roomId) {
+        currGameState = globalGameState[el];
+      }
+    });
+
+    currGameState = keydownHandle(key, currGameState);
+    console.log(currGameState, 'currGameState');
+    globalGameState[roomId] = currGameState;
+    io.sockets.in(roomId).emit('gameState', currGameState);
+    // socket.to(roomId).emit('gameState', newCurrGameState);
+  });
+
+  // socket.on('startGame', (currGameState, roomId) => {
+  //   socket.on('keydown', (key) => {
+  //     const newCurrGameState = keydownHandle(key, currGameState);
+  //     console.log(newCurrGameState);
+  //     io.sockets.in(roomId).emit('gameState', newCurrGameState);
+  //     // socket.to(roomId).emit('gameState', newCurrGameState);
+  //   });
+  // });
+
+  // let roomsUsers = socketRooms.map((el) => Object.values(el)[0]);
+  // roomsUsers = roomsUsers.sort((a, b) => a - b);
+  // console.log(roomsUsers);
 });
 
 server.listen(PORT, console.log('Server running on Port ', PORT));

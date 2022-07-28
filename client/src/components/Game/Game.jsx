@@ -9,6 +9,13 @@ const PLAYER_COLOR = '#fa8072';
 
 function Game({ gameState, socket }) {
   const canvasRef = useRef();
+  const [currRoomId, setCurrRoomId] = useState();
+  const [listenKey, setListenKey] = useState(false);
+
+  socket.on('startGame', (roomId) => {
+    setCurrRoomId(roomId);
+    setListenKey(true);
+  });
 
   const draw = useCallback((ctx, canvas, color) => {
     ctx.fillStyle = color;
@@ -22,9 +29,9 @@ function Game({ gameState, socket }) {
 
   useEffect(() => { // event listener
     window.addEventListener('keydown', (e) => {
-      socket.emit('keydown', e.key);
+      if (listenKey) socket.emit('keydown', e.key, currRoomId);
     });
-  }, []);
+  }, [listenKey]);
 
   useEffect(() => { // drawing on canvas
     const canvas = canvasRef.current;

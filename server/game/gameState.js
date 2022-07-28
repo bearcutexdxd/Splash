@@ -1,4 +1,4 @@
-const globalGameState = [];
+const globalGameState = {};
 const socketRooms = [];
 
 function initialGameState() {
