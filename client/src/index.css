@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.game-container {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.game-canvas {
+  border: 5px solid #fa8072;
+  align-self: center;
+}
