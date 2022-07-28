@@ -23,12 +23,10 @@ function Game({ gameState, socket }) {
   useEffect(() => { // event listener
     window.addEventListener('keydown', (e) => {
       socket.emit('keydown', e.key);
-      console.log(e.key);
     });
   }, []);
 
   useEffect(() => { // drawing on canvas
-    console.log(gameState);
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     canvas.width = 600;
