@@ -25,8 +25,8 @@ function SignUp() {
   };
 
   return (
-    <div className="main ">
-      <form onSubmit={submitHandler} className="form flex justify-center items-center flex-col">
+    <div className="main">
+      <form onSubmit={submitHandler} className="min-w-300 form flex justify-center items-center flex-col">
         <legend className="text-center mb-4 text-info">
           User Sign Up
         </legend>
