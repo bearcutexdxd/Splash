@@ -13,7 +13,8 @@ module.exports = {
       {
         mytheme: {
 
-          primary: '#22d3ee',
+          // primary: '#22d3ee',
+          primary: '#6a47ad',
 
           secondary: '#F000B8',
 

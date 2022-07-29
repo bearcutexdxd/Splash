@@ -1,6 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: "undertale";
+  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
+}
+body{
+  font-family: "undertale";
+}
+
 
 .game-container {
   display: flex;
@@ -31,7 +39,7 @@
   position: absolute;
   width: 0%;
   height: 4px;
-  background-color: rgb(213, 227, 13);
+  background-color: rgb(252, 230, 139);
   transition: 0.2s;
 }
 
@@ -39,3 +47,4 @@
   width: 100%;
   left: 0;
 }
+
