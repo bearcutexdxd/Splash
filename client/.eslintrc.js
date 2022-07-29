@@ -29,5 +29,6 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 0,
     'jsx-a11y/no-static-element-interactions': 0,
     'default-param-last': 0,
+    'react/no-unescaped-entities': ['error', { forbid: ['>', '"', '}'] }],
   },
 };

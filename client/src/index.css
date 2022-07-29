@@ -1,6 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: "undertale";
+  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
+}
+body{
+  font-family: "undertale";
+}
+
 
 .game-container {
   display: flex;
@@ -12,3 +20,31 @@
   border: 5px solid #fa8072;
   align-self: center;
 }
+
+.back {
+  background: url('https://kartinkin.net/uploads/posts/2021-07/1625541534_2-kartinkin-com-p-krasivii-fon-terrariya-krasivie-foni-2.jpg');
+}
+
+.animation:hover {
+  transform-origin: center;
+  transform: translateY(-10px);
+  transition: 0.7s;
+
+}
+
+.animation::before{
+  content: '';
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  width: 0%;
+  height: 4px;
+  background-color: rgb(252, 230, 139);
+  transition: 0.2s;
+}
+
+.animation:hover:before {
+  width: 100%;
+  left: 0;
+}
+
