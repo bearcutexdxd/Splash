@@ -5,7 +5,9 @@ import Navbar from './components/Navbar/Navbar';
 import Main from './components/Main/Main';
 import Game from './components/Game/Game';
 import About from './components/About/About';
+import * as endPoints from './config/endPoints';
 
+const socket = io(endPoints.host());
 const init = {
   player1: {
     pos: {
@@ -34,7 +36,6 @@ const init = {
   gridsize: 20,
 };
 
-const socket = io('http://localhost:3030');
 socket.on('connect', () => console.log(socket.id));
 
 function App() {
