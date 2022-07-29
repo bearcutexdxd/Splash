@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { User } = require('../../db/models');
+const { User, Statistics } = require('../../db/models');
 
 const signUp = async (req, res) => {
   const { playerName, password } = req.body;
@@ -13,9 +13,21 @@ const signUp = async (req, res) => {
           password: await bcrypt.hash(password, 10),
         },
       });
+
       if (!created) {
         return res.status(401).json({ error: 'email already in use' });
       }
+      await Statistics.bulkCreate([
+        {
+          kills: 0,
+          deaths: 0,
+          loses: 0,
+          wins: 0,
+          user_id: user.id,
+        },
+
+      ]);
+
       req.session.user = {
         id: user.id,
         name: user.name,

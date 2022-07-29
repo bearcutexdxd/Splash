@@ -1,4 +1,5 @@
 export const host = () => 'http://localhost:3002';
+export const getStats = (id) => `${host()}/statistics/${id}`;
 export const signUp = () => `${host()}/auth/signup`;
 export const signIn = () => `${host()}/auth/signin`;
 export const signOut = () => `${host()}/auth/signout`;

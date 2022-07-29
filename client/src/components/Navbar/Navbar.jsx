@@ -22,10 +22,10 @@ export default function Navbar() {
         <button type="button" className="signButton" onClick={() => setSiginUpActive(true)}>SiginUp</button>
       </div>
       <Modal active={loginActive} setActive={setLoginActive}>
-        <SigIn />
+        <SigIn setActive={setLoginActive} />
       </Modal>
       <Modal active={siginUpActive} setActive={setSiginUpActive}>
-        <SignUp />
+        <SignUp setActive={setSiginUpActive} />
       </Modal>
     </div>
   );

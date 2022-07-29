@@ -27,7 +27,8 @@ const statPut = async (req, res) => {
 };
 
 const statGet = async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
+  console.log('!!!!!', id);
   try {
     const userStat = await User.findOne({ where: { id }, include: Statistics });
     return res.json(userStat);
