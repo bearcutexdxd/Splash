@@ -5,8 +5,9 @@ import Navbar from './components/Navbar/Navbar';
 import Main from './components/Main/Main';
 import Game from './components/Game/Game';
 import About from './components/About/About';
+import * as endPoints from './config/endPoints';
 
-const socket = io('http://localhost:3030');
+const socket = io(endPoints.host());
 socket.on('connect', () => console.log(socket.id));
 
 function App() {
