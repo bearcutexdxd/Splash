@@ -33,10 +33,10 @@ export default function Navbar() {
         </div>
       </div>
       <Modal active={loginActive} setActive={setLoginActive}>
-        <SigIn />
+        <SigIn setActive={setLoginActive} />
       </Modal>
       <Modal active={siginUpActive} setActive={setSiginUpActive}>
-        <SignUp />
+        <SignUp setActive={setSiginUpActive} />
       </Modal>
     </>
 

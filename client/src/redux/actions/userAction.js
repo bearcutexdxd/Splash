@@ -18,7 +18,7 @@ export const signUp = (payload, navigate) => async (dispatch) => {
   console.log('!!!!!', data);
   if (response.ok) {
     dispatch(addUserAC(data));
-    navigate('/');
+    navigate('/main');
   } else {
     console.log(data);
   }
@@ -37,19 +37,23 @@ export const signIn = (payload, navigate) => async (dispatch) => {
   const data = await response.json();
   if (response.ok) {
     dispatch(addUserAC(data));
-    navigate('/');
+    navigate('/main');
   } else {
     console.log(data);
   }
 };
 
 export const checkAuth = () => async (dispatch) => {
-  const response = await fetch(endPoints.checkAuth(), {
-    credentials: 'include',
-  });
-  if (response.ok) {
-    const data = await response.json();
-    dispatch(addUserAC(data));
+  try {
+    const response = await fetch(endPoints.checkAuth(), {
+      credentials: 'include',
+    });
+    if (response.ok) {
+      const data = await response.json();
+      dispatch(addUserAC(data));
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 };
 

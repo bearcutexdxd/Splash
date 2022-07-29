@@ -19,7 +19,7 @@ function SignUp() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // console.log('!!!sig', userSignUp);
+    console.log('!!!sig', userSignUp);
     dispatch(signUp(userSignUp, navigate));
     setUserSignUp({});
   };

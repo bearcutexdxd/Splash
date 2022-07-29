@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signIn } from '../../../redux/actions/userAction';
 
-function SigIn() {
+function SigIn({ setActive }) {
   const [input, setInput] = useState({});
 
   const navigate = useNavigate();
@@ -16,6 +16,8 @@ function SigIn() {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(signIn(input, navigate));
+    setInput({});
+    setActive();
   };
 
   return (

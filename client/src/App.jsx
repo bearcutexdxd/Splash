@@ -1,11 +1,16 @@
 import { Route, Routes } from 'react-router';
 import { io } from 'socket.io-client';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbar from './components/Navbar/Navbar';
+import Home from './components/Home/Home';
 import Main from './components/Main/Main';
 import Game from './components/Game/Game';
 import About from './components/About/About';
 import * as endPoints from './config/endPoints';
+import { checkAuth } from './redux/actions/userAction';
+import PrivateRoute from './components/PrivateRouter/PrivateRouter';
+import { getStats } from './redux/actions/statisticsAction';
 
 const socket = io(endPoints.host());
 const init = {
@@ -44,16 +49,25 @@ function App() {
   socket.on('gameState', (state) => {
     setGameState(state);
   });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, []);
 
   return (
-    <div className="App">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Main socket={socket} />} />
-        <Route path="/game" element={<Game gameState={gameState} socket={socket} />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+    <div>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />
+          <Route path="/game" element={<PrivateRoute><Game gameState={gameState} socket={socket} /></PrivateRoute>} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </div>
+
     </div>
+
   );
 }
 
