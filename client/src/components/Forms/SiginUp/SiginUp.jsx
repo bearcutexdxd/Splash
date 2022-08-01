@@ -33,7 +33,7 @@ function SignUp() {
 
         <input
           onChange={changeHandler}
-          className="inpyt text-info text-center"
+          className="input input-bordered input-warning w-full max-w-xs text-info text-center"
           value={userSignUp.playerName}
           type="text"
           name="playerName"
@@ -42,13 +42,13 @@ function SignUp() {
 
         <input
           onChange={changeHandler}
-          className="form-control text-info text-center"
+          className="input input-bordered input-warning w-full max-w-xs text-info text-center mt-2"
           value={userSignUp.password}
           type="password"
           name="password"
           placeholder="Pass"
         />
-        <button type="submit" className="btn btn-primary text-info text-center">
+        <button type="submit" className="btn btn-primary text-info text-center mt-4">
           Sign Up
         </button>
       </form>

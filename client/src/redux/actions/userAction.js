@@ -4,7 +4,7 @@ export const addUserAC = (payload) => ({ type: 'SET_USER', payload });
 export const deleteUserAC = () => ({ type: 'DELETE_USER' });
 
 export const signUp = (payload, navigate) => async (dispatch) => {
-  console.log('!!!!pay', payload);
+  // console.log('!!!!pay', payload);
   const response = await fetch(endPoints.signUp(), {
     method: 'post',
     headers: {
@@ -15,12 +15,12 @@ export const signUp = (payload, navigate) => async (dispatch) => {
   });
 
   const data = await response.json();
-  console.log('!!!!!', data);
+  // console.log('!!!!!', data);
   if (response.ok) {
     dispatch(addUserAC(data));
     navigate('/');
   } else {
-    console.log(data);
+    // console.log(data);
   }
 };
 
@@ -39,7 +39,7 @@ export const signIn = (payload, navigate) => async (dispatch) => {
     dispatch(addUserAC(data));
     navigate('/');
   } else {
-    console.log(data);
+    // console.log(data);
   }
 };
 

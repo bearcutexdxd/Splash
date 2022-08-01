@@ -19,7 +19,7 @@ function Game({ gameState, socket }) {
   socket.on('startGame', (roomId) => {
     setCurrRoomId(roomId);
     setListenKey(true);
-    console.log('game started!');
+    // console.log('game started!');
   });
 
   socket.on('playerId', (playerNum) => {

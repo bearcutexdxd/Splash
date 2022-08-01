@@ -1,18 +1,21 @@
 import React from 'react';
+import { Typewriter } from 'react-simple-typewriter';
 
 function About() {
   return (
     <div className="back h-screen">
       <div className="flex flex-col w-full border-opacity-50">
-        <div className="grid card rounded-box place-items-center m-7 text-warning text-4xl">
-          С правилами игры всё просто. Самая классная киса может быть только одна.
-          Из этого следует, что остальных кис нужно просто утопить.
-          <p>Для передвижения по полю используй клавиши:</p>
-          <p>
-            'W - вверх, 'D' - вправо,
-            'S' - вниз, 'A' - влево,
-          </p>
-          Чтобы выкопать ямку с водой для твоих противников нажми: 'Пробел'
+        <div className="grid card rounded-box place-items-center m-7 text-warning text-2xl">
+          <span>
+            <Typewriter
+              cursor
+              cursorStyle="_"
+              typeSpeed={30}
+              deleteSpeed={50}
+              delaySpeed={100000}
+              words={['С правилами игры всё просто. \nСамая классная киса может быть только одна. Из этого следует, что остальных кис нужно просто утопить.\n Для передвижения по полю используй клавиши:\n "W" - вверх, "D" - вправо, "S" - вниз, "A" - влево. Чтобы выкопать ямку с водой для твоих противников нажми: "Пробел"']}
+            />
+          </span>
         </div>
       </div>
     </div>
