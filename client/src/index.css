@@ -9,6 +9,9 @@ body{
   font-family: "undertale";
 }
 
+/* .btn {
+  @apply rounded-full;
+} */
 
 .game-container {
   display: flex;
@@ -22,7 +25,7 @@ body{
 }
 
 .back {
-  background: url('https://kartinkin.net/uploads/posts/2021-07/1625541534_2-kartinkin-com-p-krasivii-fon-terrariya-krasivie-foni-2.jpg');
+  background: url('https://kartinkin.net/uploads/posts/2021-07/1625541534_2-kartinkin-com-p-krasivii-fon-terrariya-krasivie-foni-2.jpg') center no-repeat;
 }
 
 .animation:hover {
@@ -47,4 +50,5 @@ body{
   width: 100%;
   left: 0;
 }
+
 

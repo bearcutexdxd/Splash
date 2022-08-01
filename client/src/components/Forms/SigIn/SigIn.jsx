@@ -23,11 +23,11 @@ function SigIn({ setActive }) {
   return (
     <div className="main">
       <form className="flex justify-center items-center flex-col" onSubmit={submitHandler}>
-        <div className="login">
-          sign in
+        <div className="login text-info mb-4">
+          Login
         </div>
         <input
-          className="inputEmail text-center text-info"
+          className="input input-bordered input-warning w-full max-w-xs text-info text-center"
           value={input.name || ''}
           name="name"
           type="name"
@@ -35,7 +35,7 @@ function SigIn({ setActive }) {
           placeholder="Player name"
         />
         <input
-          className="inputPass text-center text-info"
+          className="input input-bordered input-warning text-center text-info w-full max-w-xs mt-2"
           value={input.password || ''}
           type="password"
           name="password"
@@ -43,7 +43,7 @@ function SigIn({ setActive }) {
           placeholder="Password"
         />
 
-        <button className="btn btn-primary text-info text-center" type="submit">
+        <button className="btn btn-primary text-info text-center mt-4" type="submit">
           Sig in
         </button>
         {/* <div>
