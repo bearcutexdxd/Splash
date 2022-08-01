@@ -45,13 +45,20 @@ io.on('connection', (socket) => {
     console.log(globalGameState, '\n ^ all game states');
   });
 
-  socket.on('joinRoom', (roomId) => {
+  socket.on('joinRoom', (roomId, user) => {
     const socketId = String(socket.id);
+    const socketUser = user;
     const currRoomSockets = [];
 
     socketRooms.forEach((el) => {
       const elRoom = Object.values(el);
-      if ((elRoom[0] === roomId)) currRoomSockets.push({ [socketId]: roomId });
+      if ((elRoom[0] === roomId)) {
+        currRoomSockets.push({
+          [socketId]: roomId,
+          name: socketUser.name,
+          userId: socketUser.id,
+        });
+      }
     });
     console.log(currRoomSockets, '\n ^ curr room users');
 
@@ -61,11 +68,12 @@ io.on('connection', (socket) => {
       return;
     }
 
-    socketRooms.push({ [socketId]: roomId });
+    socketRooms.push({ [socketId]: roomId, name: socketUser.name, userId: socketUser.id });
     socket.join(roomId);
     console.log(socketRooms, '\n ^ users and rooms');
     socket.number = socketsNumber + 1;
-    console.log(socket.number);
+    socket.to(roomId).emit('socketRooms', socketRooms);
+    console.log('>>>>>> socet rooms pull');
     socket.emit('playerId', socket.number);
 
     if (socketsNumber === 1) { // starting game, (players number === 4)

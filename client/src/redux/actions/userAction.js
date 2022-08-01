@@ -63,6 +63,5 @@ export const signOut = (navigate) => async (dispatch) => {
   });
   if (response.ok) {
     dispatch(deleteUserAC());
-    navigate('/');
   }
 };

@@ -1,10 +1,13 @@
 /* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Main({ socket }) {
+  const dispatch = useDispatch();
   const [input, setInput] = useState('');
   const [gameName, setGameName] = useState('');
+  const user = useSelector((store) => store.user);
 
   function inputHandle(e) {
     setInput(e.target.value);
@@ -15,7 +18,7 @@ function Main({ socket }) {
   }
 
   function joinGameHandle() {
-    socket.emit('joinRoom', input);
+    socket.emit('joinRoom', input, user);
   }
 
   socket.on('getRoomName', (roomId) => {

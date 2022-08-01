@@ -24,7 +24,7 @@ function SigIn({ setActive }) {
     <div className="main">
       <form className="flex justify-center items-center flex-col" onSubmit={submitHandler}>
         <div className="login">
-          Login
+          sign in
         </div>
         <input
           className="inputEmail text-center text-info"

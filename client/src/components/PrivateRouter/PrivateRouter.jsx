@@ -7,7 +7,7 @@ function PrivateRoute({ children }) {
   const auth = useSelector((state) => state.user.id);
 
   return (
-    auth ? children : <Navigate to="/auth/signin" />
+    auth ? children : <Navigate to="/" />
 
   );
 }
