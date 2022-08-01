@@ -10,50 +10,23 @@ import About from './components/About/About';
 import * as endPoints from './config/endPoints';
 import { checkAuth } from './redux/actions/userAction';
 import PrivateRoute from './components/PrivateRouter/PrivateRouter';
-import { getStats } from './redux/actions/statisticsAction';
+import PersonalArea from './components/PersonalArea/PersonalArea';
+import { putGameStateAC } from './redux/actions/gameStateAction';
 
 const socket = io(endPoints.host());
-const init = {
-  player1: {
-    pos: {
-      x: 0,
-      y: 0,
-    },
-  },
-  player2: {
-    pos: {
-      x: 19,
-      y: 0,
-    },
-  },
-  player3: {
-    pos: {
-      x: 0,
-      y: 19,
-    },
-  },
-  player4: {
-    pos: {
-      x: 19,
-      y: 19,
-    },
-  },
-  gridsize: 20,
-};
 
-socket.on('connect', () => console.log(socket.id));
+socket.on('connect', () => console.log(socket));
 
 function App() {
-  const [gameState, setGameState] = useState(init);
+  const dispatch = useDispatch();
 
   socket.on('gameState', (state) => {
-    setGameState(state);
+    dispatch(putGameStateAC(state));
   });
-  const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(checkAuth());
   }, []);
-
   return (
     <div>
       <div className="App">
@@ -61,7 +34,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />
-          <Route path="/game" element={<PrivateRoute><Game gameState={gameState} socket={socket} /></PrivateRoute>} />
+          <Route path="/game" element={<PrivateRoute><Game socket={socket} /></PrivateRoute>} />
+          <Route path="/personalArea/:id" element={<PrivateRoute><PersonalArea /></PrivateRoute>} />
           <Route path="/about" element={<About />} />
         </Routes>
       </div>
