@@ -3,6 +3,8 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import getRoomsAC from '../../redux/actions/roomsAction';
 
 const BG_COLOR = '#ffffff';
 const PLAYER_COLOR1 = '#fa8072';
@@ -10,11 +12,16 @@ const PLAYER_COLOR2 = '#B84CAB';
 const PLAYER_COLOR3 = '#87F03D';
 const PLAYER_COLOR4 = '#3DCDF0';
 
-function Game({ gameState, socket }) {
+function Game({ socket }) {
+  const gameState = useSelector((store) => store.gameState);
   const canvasRef = useRef();
   const [currRoomId, setCurrRoomId] = useState();
+
   const [listenKey, setListenKey] = useState(false);
   const [playerId, setPlayerId] = useState();
+  const [socketRooms, setSocketRooms] = useState([{ userId: '23432' }, { name: 'yes' }]);
+
+  const dispatch = useDispatch();
 
   socket.on('startGame', (roomId) => {
     setCurrRoomId(roomId);
@@ -25,6 +32,21 @@ function Game({ gameState, socket }) {
   socket.on('playerId', (playerNum) => {
     setPlayerId(playerNum);
   });
+  const rooms = useSelector((store) => store.rooms);
+
+  useEffect(() => {
+    socket.on('socketRooms', (playrRoom) => {
+      dispatch(getRoomsAC(playrRoom));
+      console.log('new user in room');
+    });
+  }, [rooms]);
+
+  // useEffect(() => {
+  //   socket.on('socketRooms', (playrRoom) => {
+  //     setSocketRooms(playrRoom);
+  //     console.log('new user in room');
+  //   });
+  // }, [socketRooms]);
 
   useEffect(() => { // event listener
     window.addEventListener('keydown', (e) => {
@@ -63,9 +85,14 @@ function Game({ gameState, socket }) {
   }, [gameState]);
 
   return (
-    <div className="flex justify-center items-center mt-12">
-      <canvas ref={canvasRef} className="game-canvas" />
-    </div>
+    <>
+      {rooms.map((el) => (
+        <div key={el.userId}>{el.name}</div>
+      ))}
+      <div className="flex justify-center items-center mt-12">
+        <canvas ref={canvasRef} className="game-canvas" />
+      </div>
+    </>
   );
 }
 

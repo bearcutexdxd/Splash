@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../../../redux/actions/userAction';
 
-function SignUp() {
+function SignUp({ setActive }) {
   const [userSignUp, setUserSignUp] = useState({
     password: '',
     playerName: '',
@@ -19,9 +19,10 @@ function SignUp() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // console.log('!!!sig', userSignUp);
+    console.log('!!!sig', userSignUp);
     dispatch(signUp(userSignUp, navigate));
     setUserSignUp({});
+    setActive();
   };
 
   return (
