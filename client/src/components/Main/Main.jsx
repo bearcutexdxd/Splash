@@ -67,6 +67,7 @@ function Main({ socket }) {
           <input
             onChange={inputHandle}
             type="text"
+            value={input}
             placeholder="Type here"
             className="input mt-4 input-bordered input-warning w-full max-w-xs text-info text-center"
           />

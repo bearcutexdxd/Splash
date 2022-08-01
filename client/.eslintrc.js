@@ -30,5 +30,8 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 0,
     'default-param-last': 0,
     'react/no-unescaped-entities': ['error', { forbid: ['>', '"', '}'] }],
+    'max-len': 0,
+    'no-unsafe-optional-chaining': 0,
+    'no-use-before-define': 0,
   },
 };

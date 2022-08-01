@@ -17,18 +17,19 @@
     "sequelize-cli": "^6.4.1"
   },
   "dependencies": {
+    "@socket.io/admin-ui": "^0.4.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
+    "express": "^4.18.1",
     "express-session": "^1.17.3",
     "morgan": "^1.10.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
+    "randomstring": "^1.2.2",
     "sequelize": "^6.21.3",
     "session-file-store": "^1.5.0",
-    "@socket.io/admin-ui": "^0.4.0",
-    "express": "^4.18.1",
-    "randomstring": "^1.2.2",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "uuid": "^8.3.2"
   }
 }

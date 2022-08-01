@@ -22,6 +22,8 @@ body{
 .game-canvas {
   border: 5px solid #fa8072;
   align-self: center;
+  image-rendering: pixelated;
+  transform: scale(1.8)  translateY(14%);
 }
 
 .back {
