@@ -1,14 +1,24 @@
 /* eslint-disable no-shadow */
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typewriter } from 'react-simple-typewriter';
+import currentRoomAC from '../../redux/actions/currentRoomAction';
 
 function Main({ socket }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [input, setInput] = useState('');
   const [gameName, setGameName] = useState('');
   const user = useSelector((store) => store.user);
+
+  useEffect(() => {
+    if (gameName) {
+      console.log(gameName);
+      socket.emit('joinRoom', gameName, user);
+      navigate('/game');
+    }
+  }, [gameName]);
 
   function inputHandle(e) {
     setInput(e.target.value);
@@ -24,6 +34,7 @@ function Main({ socket }) {
 
   socket.on('getRoomName', (roomId) => {
     setGameName(roomId);
+    dispatch(currentRoomAC(roomId));
   });
 
   return (
@@ -57,6 +68,7 @@ function Main({ socket }) {
           >
             Create game
           </button>
+
           <Link to="/game">
             <button
               className="btn btn-primary mt-4 text-info"

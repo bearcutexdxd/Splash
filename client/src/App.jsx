@@ -41,15 +41,15 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />
-          <Route path="/game" element={<PrivateRoute><Game listenKey={listenKey} socket={socket} /></PrivateRoute>} />
           <Route
-            path="/personalArea/:id"
+            path="/game"
             element={(
               <PrivateRoute>
-                <PersonalArea />
+                <Game listenKey={listenKey} setListenKey={setListenKey} socket={socket} />
               </PrivateRoute>
 )}
           />
+          <Route path="/personalArea/:id" element={<PrivateRoute><PersonalArea /></PrivateRoute>} />
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
         </Routes>
