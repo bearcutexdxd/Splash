@@ -13,6 +13,10 @@ function Main({ socket }) {
   const user = useSelector((store) => store.user);
 
   useEffect(() => {
+    socket.emit('getRooms');
+  }, []);
+
+  useEffect(() => {
     if (gameName) {
       console.log(gameName);
       socket.emit('joinRoom', gameName, user);
@@ -31,6 +35,11 @@ function Main({ socket }) {
   function joinGameHandle() {
     socket.emit('joinRoom', input, user);
   }
+
+  socket.on('sendRooms', (socketRooms) => {
+    navigate('/main');
+    console.log(socketRooms);
+  });
 
   socket.on('getRoomName', (roomId) => {
     setGameName(roomId);
