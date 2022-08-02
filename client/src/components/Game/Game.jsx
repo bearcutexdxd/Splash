@@ -14,20 +14,19 @@ import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
 import characterSkin4 from '../../assets/images/skins/pipo-nekonin004.png';
 import balloonImage from '../../assets/images/bomb/bomb.png';
 import splashImage from '../../assets/images/splash/splash.png';
-import getRoomsAC from '../../redux/actions/roomsAction';
+import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
 
 function Game({ socket, listenKey, currRoomId }) {
   // store data
   const gameState = useSelector((store) => store.gameState);
-  const rooms = useSelector((store) => store.rooms);
+  const currRoom = useSelector((store) => store.currRoom);
 
   const { bombs } = gameState;
   const { splash } = gameState;
   const { walls } = gameState;
-
   // room id state
   const dispatch = useDispatch();
-  // const [currRoomId, setCurrRoomId] = useState();
+  //  const [currRoomId, setCurrRoomId] = useState();
   // const [socketRooms, setSocketRooms] = useState([{ userId: '23432' }, { name: 'yes' }]);
 
   // player id state
@@ -58,15 +57,20 @@ function Game({ socket, listenKey, currRoomId }) {
   // });
 
   socket.on('playerId', (playerNum) => {
+    console.log('in socket player id');
     setPlayerId(playerNum);
   });
 
   useEffect(() => {
+    dispatch(getCurrRoom());
+  }, []);
+
+  useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
-      dispatch(getRoomsAC(playrRoom));
+      dispatch(getCurrRoomAC(playrRoom));
       console.log('new user in room');
     });
-  }, [rooms]);
+  }, [currRoom]);
 
   useEffect(() => { // loading all images
     const skin1 = new window.Image();
@@ -574,86 +578,94 @@ function Game({ socket, listenKey, currRoomId }) {
   }, [gameState]);
 
   return (
-    <div className="flex justify-center items-center mt-24">
-      <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
-        <Layer>
-          {splash?.map((el) => el.pos.map((el2) => (
+    <>
+      <div>
+        {currRoom.map((el) => (
+          <div key={el.userId}>{el.name}</div>
+        ))}
+      </div>
+
+      <div className="flex justify-center items-center mt-24">
+        <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
+          <Layer>
+            {splash?.map((el) => el.pos.map((el2) => (
+              <Image
+                image={splashState}
+                x={el2.x * gridsize}
+                y={el2.y * gridsize}
+                width={gameState.gridsize}
+                height={gameState.gridsize}
+                ref={splashRef}
+                key={el2.id}
+              />
+            )))}
+          </Layer>
+          <Layer>
+            {walls?.map((el) => (
+              <Rect
+                x={el.x * gridsize}
+                y={el.y * gridsize}
+                width={gameState.gridsize}
+                height={gameState.gridsize}
+                fill="red"
+                key={el.id}
+              />
+            ))}
+          </Layer>
+          <Layer>
+            {bombs?.map((el) => (
+              <Image
+                image={balloonState}
+                x={el.x * gridsize}
+                y={el.y * gridsize}
+                width={gameState.gridsize}
+                height={gameState.gridsize}
+                ref={balloonRef}
+                key={el.id}
+              />
+            ))}
+          </Layer>
+          <Layer>
             <Image
-              image={splashState}
-              x={el2.x * gridsize}
-              y={el2.y * gridsize}
+              image={skin1State}
+              x={gameState.player1.pos.x}
+              y={gameState.player1.pos.y}
               width={gameState.gridsize}
               height={gameState.gridsize}
-              ref={splashRef}
-              key={el2.id}
+              ref={skin1Ref}
+              visible={!!gameState.player1.hp}
             />
-          )))}
-        </Layer>
-        <Layer>
-          {walls?.map((el) => (
-            <Rect
-              x={el.x * gridsize}
-              y={el.y * gridsize}
-              width={gameState.gridsize}
-              height={gameState.gridsize}
-              fill="red"
-              key={el.id}
-            />
-          ))}
-        </Layer>
-        <Layer>
-          {bombs?.map((el) => (
             <Image
-              image={balloonState}
-              x={el.x * gridsize}
-              y={el.y * gridsize}
+              image={skin2State}
+              x={gameState.player2.pos.x}
+              y={gameState.player2.pos.y}
               width={gameState.gridsize}
               height={gameState.gridsize}
-              ref={balloonRef}
-              key={el.id}
+              ref={skin2Ref}
+              visible={!!gameState.player2.hp}
             />
-          ))}
-        </Layer>
-        <Layer>
-          <Image
-            image={skin1State}
-            x={gameState.player1.pos.x}
-            y={gameState.player1.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin1Ref}
-            visible={!!gameState.player1.hp}
-          />
-          <Image
-            image={skin2State}
-            x={gameState.player2.pos.x}
-            y={gameState.player2.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin2Ref}
-            visible={!!gameState.player2.hp}
-          />
-          <Image
-            image={skin3State}
-            x={gameState.player3.pos.x}
-            y={gameState.player3.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin3Ref}
-            visible={!!gameState.player3.hp}
-          />
-          <Image
-            image={skin4State}
-            x={gameState.player4.pos.x}
-            y={gameState.player4.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin4Ref}
-            visible={!!gameState.player4.hp}
-          />
-        </Layer>
-      </Stage>
-    </div>
+            <Image
+              image={skin3State}
+              x={gameState.player3.pos.x}
+              y={gameState.player3.pos.y}
+              width={gameState.gridsize}
+              height={gameState.gridsize}
+              ref={skin3Ref}
+              visible={!!gameState.player3.hp}
+            />
+            <Image
+              image={skin4State}
+              x={gameState.player4.pos.x}
+              y={gameState.player4.pos.y}
+              width={gameState.gridsize}
+              height={gameState.gridsize}
+              ref={skin4Ref}
+              visible={!!gameState.player4.hp}
+            />
+          </Layer>
+        </Stage>
+      </div>
+    </>
   );
 }
 

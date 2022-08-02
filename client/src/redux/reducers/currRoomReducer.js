@@ -1,7 +1,7 @@
-const roomsUserReducer = (state = {}, action) => {
+const currRoomReducer = (state = [], action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'GET_ROOMS':
+    case 'GET_CURR_ROOM':
       return payload;
 
     default:
@@ -9,4 +9,4 @@ const roomsUserReducer = (state = {}, action) => {
   }
 };
 
-export default roomsUserReducer;
+export default currRoomReducer;

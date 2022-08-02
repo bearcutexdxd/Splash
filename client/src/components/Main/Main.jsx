@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typewriter } from 'react-simple-typewriter';
+import { getRooms } from '../../redux/actions/roomsAction';
 
 function Main({ socket }) {
   const dispatch = useDispatch();
@@ -16,10 +17,12 @@ function Main({ socket }) {
 
   function createGameHandle() {
     socket.emit('createRoom');
+    // dispatch(getRooms());
   }
 
   function joinGameHandle() {
     socket.emit('joinRoom', input, user);
+    // dispatch(getRooms());
   }
 
   socket.on('getRoomName', (roomId) => {
@@ -55,6 +58,10 @@ function Main({ socket }) {
           >
             Create game
           </button>
+          <Link to="/rooms">
+            <button className="btn btn-primary mt-4 text-info" type="button">Rooms</button>
+            {' '}
+          </Link>
           <Link to="/game">
             <button
               className="btn btn-primary mt-4 text-info"
