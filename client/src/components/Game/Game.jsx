@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, {
-  useRef, useEffect, memo, useState,
+  useRef, useEffect, memo, useState, useLayoutEffect,
 } from 'react';
 
 import {
@@ -8,6 +8,7 @@ import {
 } from 'react-konva';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { useNavigate } from 'react-router';
 import characterSkin1 from '../../assets/images/skins/pipo-nekonin001.png';
 import characterSkin2 from '../../assets/images/skins/pipo-nekonin002.png';
 import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
@@ -16,21 +17,23 @@ import balloonImage from '../../assets/images/bomb/bomb.png';
 import splashImage from '../../assets/images/splash/splash.png';
 import getRoomsAC from '../../redux/actions/roomsAction';
 
-function Game({ socket, listenKey, currRoomId }) {
+function Game({
+  socket, listenKey, setListenKey, currRoomId,
+}) {
   // store data
   const gameState = useSelector((store) => store.gameState);
   const rooms = useSelector((store) => store.rooms);
+  const currentRoom = useSelector((store) => store.currentRoom);
 
   const { bombs } = gameState;
   const { splash } = gameState;
   const { walls } = gameState;
 
-  // room id state
   const dispatch = useDispatch();
-  // const [currRoomId, setCurrRoomId] = useState();
-  // const [socketRooms, setSocketRooms] = useState([{ userId: '23432' }, { name: 'yes' }]);
+  const navigate = useNavigate();
 
   // player id state
+  const [winner, setWinner] = useState();
   const [playerId, setPlayerId] = useState();
 
   // images states
@@ -40,6 +43,7 @@ function Game({ socket, listenKey, currRoomId }) {
   const [skin4State, setSkin4State] = useState(new window.Image());
   const [balloonState, setBalloonState] = useState(new window.Image());
   const [splashState, setSplashState] = useState(new window.Image());
+  const [gameEnd, setGameEnd] = useState(false);
 
   // images refs
   const skin1Ref = useRef();
@@ -53,13 +57,55 @@ function Game({ socket, listenKey, currRoomId }) {
   const gridsize = 32;
   const tileAmount = 13;
 
-  // socket.on('startGame', (roomId) => {
-  //   setCurrRoomId(roomId);
-  // });
-
   socket.on('playerId', (playerNum) => {
     setPlayerId(playerNum);
   });
+
+  // player lost, show stats from this currGameState
+  socket.on('lose', (currGameState, player) => {
+    if (player === playerId) {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      setGameEnd(true);
+      setListenKey(false);
+      console.log('you lost D:');
+    }
+  });
+
+  // player won, show stats from this currGameState
+  socket.on('win', (currGameState, winnerId) => {
+    setWinner(winnerId);
+    if (winnerId === playerId) {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      setListenKey(false);
+      console.log('you won!');
+    }
+  });
+
+  // game in progress handler
+  socket.on('gameInProgress', () => {
+    navigate('/main');
+    console.log('this game is in progress');
+  });
+
+  // gameEnd without AFK
+  socket.on('gameEnd', (currGameState, alivePlayer) => {
+    setWinner(alivePlayer);
+    if (alivePlayer === playerId) {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      setListenKey(false);
+      console.log('you won! by pure strength');
+    }
+  });
+
+  useEffect(() => {
+  }, [playerId, winner]);
+
+  useEffect(() => () => {
+    socket.emit('disconnectNavigate', currentRoom);
+  }, []);
 
   useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
@@ -117,11 +163,11 @@ function Game({ socket, listenKey, currRoomId }) {
   }, [listenKey]);
 
   function onKeyUp(event) {
-    socket.emit('keyup', event.key, currRoomId, playerId);
+    if (listenKey) socket.emit('keyup', event.key, currRoomId, playerId);
   }
 
   function onKeyDown(event) {
-    socket.emit('keydown', event.key, currRoomId, playerId);
+    if (listenKey) socket.emit('keydown', event.key, currRoomId, playerId);
   }
 
   useEffect(() => { // main drawing
@@ -574,85 +620,88 @@ function Game({ socket, listenKey, currRoomId }) {
   }, [gameState]);
 
   return (
-    <div className="flex justify-center items-center mt-24">
-      <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
-        <Layer>
-          {splash?.map((el) => el.pos.map((el2) => (
+    <div>
+      {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
+      <div className="flex justify-center items-center mt-24">
+        <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
+          <Layer>
+            {splash?.map((el) => el.pos.map((el2) => (
+              <Image
+                image={splashState}
+                x={el2.x * gridsize}
+                y={el2.y * gridsize}
+                width={gameState.gridsize}
+                height={gameState.gridsize}
+                ref={splashRef}
+                key={el2.id}
+              />
+            )))}
+          </Layer>
+          <Layer>
+            {walls?.map((el) => (
+              <Rect
+                x={el.x * gridsize}
+                y={el.y * gridsize}
+                width={gameState.gridsize}
+                height={gameState.gridsize}
+                fill="red"
+                key={el.id}
+              />
+            ))}
+          </Layer>
+          <Layer>
+            {bombs?.map((el) => (
+              <Image
+                image={balloonState}
+                x={el.x * gridsize}
+                y={el.y * gridsize}
+                width={gameState.gridsize}
+                height={gameState.gridsize}
+                ref={balloonRef}
+                key={el.id}
+              />
+            ))}
+          </Layer>
+          <Layer>
             <Image
-              image={splashState}
-              x={el2.x * gridsize}
-              y={el2.y * gridsize}
+              image={skin1State}
+              x={gameState.player1.pos.x}
+              y={gameState.player1.pos.y}
               width={gameState.gridsize}
               height={gameState.gridsize}
-              ref={splashRef}
-              key={el2.id}
+              ref={skin1Ref}
+              visible={!!gameState.player1.hp}
             />
-          )))}
-        </Layer>
-        <Layer>
-          {walls?.map((el) => (
-            <Rect
-              x={el.x * gridsize}
-              y={el.y * gridsize}
-              width={gameState.gridsize}
-              height={gameState.gridsize}
-              fill="red"
-              key={el.id}
-            />
-          ))}
-        </Layer>
-        <Layer>
-          {bombs?.map((el) => (
             <Image
-              image={balloonState}
-              x={el.x * gridsize}
-              y={el.y * gridsize}
+              image={skin2State}
+              x={gameState.player2.pos.x}
+              y={gameState.player2.pos.y}
               width={gameState.gridsize}
               height={gameState.gridsize}
-              ref={balloonRef}
-              key={el.id}
+              ref={skin2Ref}
+              visible={!!gameState.player2.hp}
             />
-          ))}
-        </Layer>
-        <Layer>
-          <Image
-            image={skin1State}
-            x={gameState.player1.pos.x}
-            y={gameState.player1.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin1Ref}
-            visible={!!gameState.player1.hp}
-          />
-          <Image
-            image={skin2State}
-            x={gameState.player2.pos.x}
-            y={gameState.player2.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin2Ref}
-            visible={!!gameState.player2.hp}
-          />
-          <Image
-            image={skin3State}
-            x={gameState.player3.pos.x}
-            y={gameState.player3.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin3Ref}
-            visible={!!gameState.player3.hp}
-          />
-          <Image
-            image={skin4State}
-            x={gameState.player4.pos.x}
-            y={gameState.player4.pos.y}
-            width={gameState.gridsize}
-            height={gameState.gridsize}
-            ref={skin4Ref}
-            visible={!!gameState.player4.hp}
-          />
-        </Layer>
-      </Stage>
+            <Image
+              image={skin3State}
+              x={gameState.player3.pos.x}
+              y={gameState.player3.pos.y}
+              width={gameState.gridsize}
+              height={gameState.gridsize}
+              ref={skin3Ref}
+              visible={!!gameState.player3.hp}
+            />
+            <Image
+              image={skin4State}
+              x={gameState.player4.pos.x}
+              y={gameState.player4.pos.y}
+              width={gameState.gridsize}
+              height={gameState.gridsize}
+              ref={skin4Ref}
+              visible={!!gameState.player4.hp}
+            />
+          </Layer>
+        </Stage>
+      </div>
     </div>
   );
 }

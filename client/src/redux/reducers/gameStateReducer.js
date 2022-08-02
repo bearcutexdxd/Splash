@@ -15,6 +15,7 @@ const initialState = {
       y: 0,
     },
     hp: 1,
+    isAlive: true,
   },
   player2: {
     direction: 'down',
@@ -27,6 +28,7 @@ const initialState = {
       y: 0,
     },
     hp: 1,
+    isAlive: true,
   },
   player3: {
     direction: 'down',
@@ -39,6 +41,7 @@ const initialState = {
       y: 384,
     },
     hp: 1,
+    isAlive: true,
   },
   player4: {
     direction: 'down',
@@ -51,6 +54,7 @@ const initialState = {
       y: 384,
     },
     hp: 1,
+    isAlive: true,
   },
   bombs: [],
   splash: [],
