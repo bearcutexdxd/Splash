@@ -7,7 +7,6 @@ import { Typewriter } from 'react-simple-typewriter';
 import { getRooms } from '../../redux/actions/roomsAction';
 import currentRoomAC from '../../redux/actions/currentRoomAction';
 
-
 function Main({ socket }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();

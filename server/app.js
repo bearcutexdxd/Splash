@@ -9,7 +9,7 @@ const FileStore = require('session-file-store')(session);
 const http = require('http');
 const { Module } = require('module');
 const {
-  initialGameState, globalGameState, rooms, socketRooms, findRoomGameState,
+  initialGameState, globalGameState, rooms, findRoomGameState,
 } = require('./game/gameState');
 let { socketRooms } = require('./game/gameState');
 const { keydownHandle } = require('./game/keydownHandle');
@@ -90,8 +90,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinRoom', (roomId, user) => {
-
-
     currRoom = roomId;
 
     if (globalGameState[roomId]) {
@@ -275,6 +273,5 @@ app.get('/rooms', (req, res) => {
 app.use('/auth', authRouter);
 app.use('/statistics', statisicsRouter);
 app.use('/shop', skinRouter);
-
 
 server.listen(PORT, console.log('Server running on Port ', PORT));

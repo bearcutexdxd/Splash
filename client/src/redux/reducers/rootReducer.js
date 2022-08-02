@@ -7,7 +7,6 @@ import roomsReducer from './roomsReducer';
 import currRoomReducer from './currRoomReducer';
 import currentRoomReducer from './currentRoomReducer';
 
-
 const rootReducer = combineReducers({
   user: userReducer,
   stats: statisticsReducer,

@@ -17,7 +17,6 @@ import Rooms from './components/Rooms/Rooms';
 
 import Shop from './components/Shop/Shop';
 
-
 const socket = io(endPoints.host());
 socket.on('connect', () => console.log(socket.id));
 
@@ -46,7 +45,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />
 
-  
           <Route path="/rooms" element={<PrivateRoute><Rooms socket={socket} /></PrivateRoute>} />
           <Route
             path="/game"
@@ -54,7 +52,7 @@ function App() {
               <PrivateRoute>
                 <Game listenKey={listenKey} setListenKey={setListenKey} socket={socket} />
               </PrivateRoute>
-)}
+            )}
           />
           <Route path="/personalArea/:id" element={<PrivateRoute><PersonalArea /></PrivateRoute>} />
           <Route path="/about" element={<About />} />
