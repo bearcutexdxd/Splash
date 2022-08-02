@@ -1,8 +1,11 @@
+/* eslint-disable prefer-const */
 /* eslint-disable max-len */
 const { v4: uuidv4 } = require('uuid');
 
 const globalGameState = {};
-const socketRooms = [];
+
+const rooms = {};
+let socketRooms = [];
 
 function initialGameState() {
   const timer = 30;
@@ -19,6 +22,7 @@ function initialGameState() {
         y: 0,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -33,6 +37,7 @@ function initialGameState() {
         y: 0,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -47,6 +52,7 @@ function initialGameState() {
         y: 384,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -61,6 +67,7 @@ function initialGameState() {
         y: 384,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -233,6 +240,7 @@ function initialGameState() {
     ],
     intervalCounter: 0,
     gridsize: 32,
+    intervalCounter: 0,
   };
 }
 
@@ -249,5 +257,5 @@ function findRoomGameState(roomId) {
 }
 
 module.exports = {
-  initialGameState, globalGameState, socketRooms, findRoomGameState,
+  initialGameState, globalGameState, rooms, socketRooms, findRoomGameState,
 };

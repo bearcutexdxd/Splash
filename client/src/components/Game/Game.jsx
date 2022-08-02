@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, {
-  useRef, useEffect, memo, useState,
+  useRef, useEffect, memo, useState, useLayoutEffect,
 } from 'react';
 
 import Konva from 'konva';
@@ -10,34 +10,42 @@ import {
 } from 'react-konva';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { useNavigate } from 'react-router';
 import characterSkin1 from '../../assets/images/skins/pipo-nekonin001.png';
 import characterSkin2 from '../../assets/images/skins/pipo-nekonin002.png';
 import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
 import characterSkin4 from '../../assets/images/skins/pipo-nekonin004.png';
 import balloonImage from '../../assets/images/bomb/bomb.png';
 import splashImage from '../../assets/images/splash/splash.png';
+
+import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
 import wallImage from '../../assets/images/walls/wall.png';
-import getRoomsAC from '../../redux/actions/roomsAction';
 import bonusImage1 from '../../assets/images/skins/pipo-nekonin006.png';
 import bonusImage2 from '../../assets/images/skins/pipo-nekonin007.png';
 import bonusImage3 from '../../assets/images/skins/pipo-nekonin008.png';
 
-function Game({ socket, listenKey, currRoomId }) {
+function Game({
+  socket, listenKey, setListenKey, currRoomId,
+}) {
   // store data
   const gameState = useSelector((store) => store.gameState);
+
+  const currRoom = useSelector((store) => store.currRoom);
+
   const rooms = useSelector((store) => store.rooms);
+  const currentRoom = useSelector((store) => store.currentRoom);
 
   const { bombs } = gameState;
   const { splash } = gameState;
   const { walls } = gameState;
-  const { bonuses } = gameState;
 
-  // room id state
   const dispatch = useDispatch();
-  // const [currRoomId, setCurrRoomId] = useState();
-  // const [socketRooms, setSocketRooms] = useState([{ userId: '23432' }, { name: 'yes' }]);
+
+  const { bonuses } = gameState;
+  const navigate = useNavigate();
 
   // player id state
+  const [winner, setWinner] = useState();
   const [playerId, setPlayerId] = useState();
 
   // images states
@@ -47,6 +55,10 @@ function Game({ socket, listenKey, currRoomId }) {
   const [skin4State, setSkin4State] = useState(new window.Image());
   const [balloonState, setBalloonState] = useState(new window.Image());
   const [splashState, setSplashState] = useState(new window.Image());
+
+  const [gameEnd, setGameEnd] = useState(false);
+  const [scoreWin, setScoreWin] = useState(true);
+
   const [wallState, setWallState] = useState(new window.Image());
   const [bonus1State, setBonus1State] = useState(new window.Image());
   const [bonus2State, setBonus2State] = useState(new window.Image());
@@ -68,20 +80,87 @@ function Game({ socket, listenKey, currRoomId }) {
   const gridsize = 32;
   const tileAmount = 13;
 
-  // socket.on('startGame', (roomId) => {
-  //   setCurrRoomId(roomId);
-  // });
-
   socket.on('playerId', (playerNum) => {
+    console.log('in socket player id');
     setPlayerId(playerNum);
   });
 
+  // player lost, show stats from this currGameState
+  socket.on('lose', (currGameState, player) => {
+    if (player === playerId) {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      setGameEnd(true);
+      setListenKey(false);
+      setScoreWin(false);
+      console.log('you lost D:');
+    }
+  });
+
+  useEffect(() => {
+    if (scoreWin) {
+      socket.on('win', (currGameState, winnerId) => {
+        setWinner(winnerId);
+        if (winnerId === playerId) {
+          console.log(scoreWin);
+          window.removeEventListener('keydown', onKeyDown);
+          window.removeEventListener('keyup', onKeyUp);
+          setListenKey(false);
+          console.log('you won!');
+        }
+      });
+    }
+  }, [scoreWin]);
+
+  // // player won, show stats from this currGameState
+  // socket.on('win', (currGameState, winnerId) => {
+  //   setWinner(winnerId);
+  //   if (winnerId === playerId) {
+  //     console.log(scoreWin);
+  //     if (scoreWin) {
+  //       window.removeEventListener('keydown', onKeyDown);
+  //       window.removeEventListener('keyup', onKeyUp);
+  //       setListenKey(false);
+  //       console.log('you won!');
+  //     }
+  //   }
+  // });
+
+  // game in progress handler
+  socket.on('gameInProgress', () => {
+    navigate('/main');
+    console.log('this game is in progress');
+  });
+
+  // gameEnd without AFK
+  socket.on('gameEnd', (currGameState, alivePlayer) => {
+    setWinner(alivePlayer);
+    if (alivePlayer === playerId) {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      setListenKey(false);
+      console.log('you won! by pure strength');
+    }
+  });
+
+  useEffect(() => {
+  }, [playerId, winner]);
+
+  useEffect(() => () => {
+    socket.emit('disconnectNavigate', currentRoom);
+    setScoreWin(true);
+  }, []);
+
+  useEffect(() => {
+    dispatch(getCurrRoom());
+  }, []);
+
   useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
-      dispatch(getRoomsAC(playrRoom));
+      dispatch(getCurrRoomAC(playrRoom));
       console.log('new user in room');
     });
-  }, [rooms]);
+  }, [currRoom]);
 
   useEffect(() => { // loading all images
     const skin1 = new window.Image();
@@ -148,11 +227,11 @@ function Game({ socket, listenKey, currRoomId }) {
   }, [listenKey]);
 
   function onKeyUp(event) {
-    socket.emit('keyup', event.key, currRoomId, playerId);
+    if (listenKey) socket.emit('keyup', event.key, currRoomId, playerId);
   }
 
   function onKeyDown(event) {
-    socket.emit('keydown', event.key, currRoomId, playerId);
+    if (listenKey) socket.emit('keydown', event.key, currRoomId, playerId);
   }
 
   useEffect(() => {
@@ -612,147 +691,163 @@ function Game({ socket, listenKey, currRoomId }) {
   }, [gameState]);
 
   return (
-    <div className="min-h-[100vh] bg-gray-700">
-      <div className="flex justify-center items-center pt-32">
-        <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
-          <Layer>
-            {splash?.map((el) => el.pos.map((el2) => (
-              <Image
-                image={splashState}
-                x={el2.x * gridsize}
-                y={el2.y * gridsize}
-                width={gameState.gridsize}
-                height={gameState.gridsize}
-                ref={splashRef}
-                key={el2.id}
-              />
-            )))}
-          </Layer>
-          <Layer>
-            {walls?.map((el) => {
-              if (el.timer % 10 < 5 && el.timer !== 30) {
-                return (
-                  <Image
-                    image={wallState}
-                    x={el.x * gridsize}
-                    y={el.y * gridsize}
-                    // filters={[Konva.Filters.Brighten]}
-                    // brightness={0.3}
-                    width={gameState.gridsize}
-                    height={gameState.gridsize}
-                    key={el.id}
-                    opacity={0.2}
-                    ref={wallRef}
-                  />
-                );
-              }
-              return (
-                <Image
-                  image={wallState}
-                  x={el.x * gridsize}
-                  y={el.y * gridsize}
-                  // filters={[Konva.Filters.Brighten]}
-                  // brightness={0.3}
-                  width={gameState.gridsize}
-                  height={gameState.gridsize}
-                  key={el.id}
-                  opacity={1}
-                  ref={wallRef}
-                />
-              );
-            })}
-          </Layer>
-          <Layer>
-            {bombs?.map((el) => (
-              <Image
-                image={balloonState}
-                x={el.x * gridsize}
-                y={el.y * gridsize}
-                width={gameState.gridsize}
-                height={gameState.gridsize}
-                ref={balloonRef}
-                key={el.id}
-              />
-            ))}
-          </Layer>
-          <Layer>
-            <Image
-              image={skin1State}
-              x={gameState.player1.pos.x}
-              y={gameState.player1.pos.y}
-              width={gameState.gridsize}
-              height={gameState.gridsize}
-              ref={skin1Ref}
-              visible={!!gameState.player1.hp}
-            />
-            <Image
-              image={skin2State}
-              x={gameState.player2.pos.x}
-              y={gameState.player2.pos.y}
-              width={gameState.gridsize}
-              height={gameState.gridsize}
-              ref={skin2Ref}
-              visible={!!gameState.player2.hp}
-            />
-            <Image
-              image={skin3State}
-              x={gameState.player3.pos.x}
-              y={gameState.player3.pos.y}
-              width={gameState.gridsize}
-              height={gameState.gridsize}
-              ref={skin3Ref}
-              visible={!!gameState.player3.hp}
-            />
-            <Image
-              image={skin4State}
-              x={gameState.player4.pos.x}
-              y={gameState.player4.pos.y}
-              width={gameState.gridsize}
-              height={gameState.gridsize}
-              ref={skin4Ref}
-              visible={!!gameState.player4.hp}
-            />
-          </Layer>
-          <Layer>
-            {bonuses.map((el) => {
-              if (el.bonus === 'speed') {
-                return (
-                  <Image
-                    image={bonus1State}
-                    x={el.x * gridsize}
-                    y={el.y * gridsize}
-                    width={gameState.gridsize}
-                    height={gameState.gridsize}
-                    ref={bonus1Ref}
-                  />
-                );
-              } if (el.bonus === 'life') {
-                return (
-                  <Image
-                    image={bonus2State}
-                    x={el.x * gridsize}
-                    y={el.y * gridsize}
-                    width={gameState.gridsize}
-                    height={gameState.gridsize}
-                    ref={bonus2Ref}
-                  />
-                );
-              }
-              return (
-                <Image
-                  image={bonus3State}
-                  x={el.x * gridsize}
-                  y={el.y * gridsize}
-                  width={gameState.gridsize}
-                  height={gameState.gridsize}
-                  ref={bonus3Ref}
-                />
-              );
-            })}
-          </Layer>
-        </Stage>
+
+    <>
+      <div>
+        {currRoom.map((el) => (
+          <div key={el.userId}>{el.name}</div>
+        ))}
       </div>
-    </div>
+
+      <div className="flex justify-center items-center mt-24 min-h-[100vh] bg-gray-700">
+        {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
+        <div className="min-h-[100vh] bg-gray-700">
+          <div className="flex justify-center items-center pt-32">
+
+            <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
+              <Layer>
+                {splash?.map((el) => el.pos.map((el2) => (
+                  <Image
+                    image={splashState}
+                    x={el2.x * gridsize}
+                    y={el2.y * gridsize}
+                    width={gameState.gridsize}
+                    height={gameState.gridsize}
+                    ref={splashRef}
+                    key={el2.id}
+                  />
+                )))}
+              </Layer>
+              <Layer>
+
+                {walls?.map((el) => {
+                  if (el.timer % 10 < 5 && el.timer !== 30) {
+                    return (
+                      <Image
+                        image={wallState}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        // filters={[Konva.Filters.Brighten]}
+                        // brightness={0.3}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                        opacity={0.2}
+                        ref={wallRef}
+                      />
+                    );
+                  }
+                  return (
+                    <Image
+                      image={wallState}
+                      x={el.x * gridsize}
+                      y={el.y * gridsize}
+                      // filters={[Konva.Filters.Brighten]}
+                      // brightness={0.3}
+                      width={gameState.gridsize}
+                      height={gameState.gridsize}
+                      key={el.id}
+                      opacity={1}
+                      ref={wallRef}
+                    />
+                  );
+                })}
+
+              </Layer>
+              <Layer>
+                {bombs?.map((el) => (
+                  <Image
+                    image={balloonState}
+                    x={el.x * gridsize}
+                    y={el.y * gridsize}
+                    width={gameState.gridsize}
+                    height={gameState.gridsize}
+                    ref={balloonRef}
+                    key={el.id}
+                  />
+                ))}
+              </Layer>
+              <Layer>
+                <Image
+                  image={skin1State}
+                  x={gameState.player1.pos.x}
+                  y={gameState.player1.pos.y}
+                  width={gameState.gridsize}
+                  height={gameState.gridsize}
+                  ref={skin1Ref}
+                  visible={!!gameState.player1.hp}
+                />
+                <Image
+                  image={skin2State}
+                  x={gameState.player2.pos.x}
+                  y={gameState.player2.pos.y}
+                  width={gameState.gridsize}
+                  height={gameState.gridsize}
+                  ref={skin2Ref}
+                  visible={!!gameState.player2.hp}
+                />
+                <Image
+                  image={skin3State}
+                  x={gameState.player3.pos.x}
+                  y={gameState.player3.pos.y}
+                  width={gameState.gridsize}
+                  height={gameState.gridsize}
+                  ref={skin3Ref}
+                  visible={!!gameState.player3.hp}
+                />
+                <Image
+                  image={skin4State}
+                  x={gameState.player4.pos.x}
+                  y={gameState.player4.pos.y}
+                  width={gameState.gridsize}
+                  height={gameState.gridsize}
+                  ref={skin4Ref}
+                  visible={!!gameState.player4.hp}
+                />
+              </Layer>
+
+              <Layer>
+                {bonuses.map((el) => {
+                  if (el.bonus === 'speed') {
+                    return (
+                      <Image
+                        image={bonus1State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        ref={bonus1Ref}
+                      />
+                    );
+                  } if (el.bonus === 'life') {
+                    return (
+                      <Image
+                        image={bonus2State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        ref={bonus2Ref}
+                      />
+                    );
+                  }
+                  return (
+                    <Image
+                      image={bonus3State}
+                      x={el.x * gridsize}
+                      y={el.y * gridsize}
+                      width={gameState.gridsize}
+                      height={gameState.gridsize}
+                      ref={bonus3Ref}
+                    />
+                  );
+                })}
+              </Layer>
+            </Stage>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

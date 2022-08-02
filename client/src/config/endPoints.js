@@ -8,3 +8,5 @@ export const checkAuth = () => `${host()}/auth/check`;
 export const getAllUsers = () => `${host()}/users`;
 export const editUser = (id) => `${host()}/users/${id}`;
 export const getUser = (id) => `${host()}/users/${id}`;
+export const getCurrRoom = () => `${host()}/curr/room`;
+export const getRooms = () => `${host()}/rooms`;
