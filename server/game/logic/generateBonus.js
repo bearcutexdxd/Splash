@@ -10,7 +10,7 @@ function generateBonus(gameStateArg) {
 
   currGameState.walls.forEach((el) => {
     if (el.timer === 0) {
-      if ((Math.round(Math.random(10) - 0.5)) === 0) {
+      if ((Math.round(Math.random(8) - 0.5)) === 0) {
         currGameState.bonuses.push({
           x: el.x, y: el.y, id: uuidv4(), bonus: getRandomBonus(),
         });
