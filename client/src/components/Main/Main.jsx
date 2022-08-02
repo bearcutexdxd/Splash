@@ -41,7 +41,6 @@ function Main({ socket }) {
   }
 
   socket.on('sendRooms', (socketRooms) => {
-    navigate('/main');
     console.log(socketRooms);
   });
 

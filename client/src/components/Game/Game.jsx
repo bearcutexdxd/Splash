@@ -699,9 +699,9 @@ function Game({
         ))}
       </div>
 
-      <div className="flex justify-center items-center mt-24">
+      <div className="flex justify-center items-center mt-24 min-h-[100vh] bg-gray-700">
+        {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
-          {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
           <div className="flex justify-center items-center pt-32">
 
             <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
