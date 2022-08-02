@@ -1,8 +1,9 @@
+/* eslint-disable prefer-const */
 /* eslint-disable max-len */
 const { v4: uuidv4 } = require('uuid');
 
 const globalGameState = {};
-const socketRooms = [];
+let socketRooms = [];
 
 function initialGameState() {
   const timer = 30;
@@ -19,6 +20,7 @@ function initialGameState() {
         y: 0,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -33,6 +35,7 @@ function initialGameState() {
         y: 0,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -47,6 +50,7 @@ function initialGameState() {
         y: 384,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -61,6 +65,7 @@ function initialGameState() {
         y: 384,
       },
       hp: 1,
+      isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
     },
@@ -233,6 +238,7 @@ function initialGameState() {
     ],
     intervalCounter: 0,
     gridsize: 32,
+    intervalCounter: 0,
   };
 }
 
