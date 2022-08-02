@@ -3,6 +3,8 @@ import React, {
   useRef, useEffect, memo, useState, useLayoutEffect,
 } from 'react';
 
+import Konva from 'konva';
+
 import {
   Image, Layer, Rect, Stage,
 } from 'react-konva';
@@ -15,7 +17,11 @@ import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
 import characterSkin4 from '../../assets/images/skins/pipo-nekonin004.png';
 import balloonImage from '../../assets/images/bomb/bomb.png';
 import splashImage from '../../assets/images/splash/splash.png';
+import wallImage from '../../assets/images/walls/wall.png';
 import getRoomsAC from '../../redux/actions/roomsAction';
+import bonusImage1 from '../../assets/images/skins/pipo-nekonin006.png';
+import bonusImage2 from '../../assets/images/skins/pipo-nekonin007.png';
+import bonusImage3 from '../../assets/images/skins/pipo-nekonin008.png';
 
 function Game({
   socket, listenKey, setListenKey, currRoomId,
@@ -28,6 +34,7 @@ function Game({
   const { bombs } = gameState;
   const { splash } = gameState;
   const { walls } = gameState;
+  const { bonuses } = gameState;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,7 +50,14 @@ function Game({
   const [skin4State, setSkin4State] = useState(new window.Image());
   const [balloonState, setBalloonState] = useState(new window.Image());
   const [splashState, setSplashState] = useState(new window.Image());
+
   const [gameEnd, setGameEnd] = useState(false);
+
+  const [wallState, setWallState] = useState(new window.Image());
+  const [bonus1State, setBonus1State] = useState(new window.Image());
+  const [bonus2State, setBonus2State] = useState(new window.Image());
+  const [bonus3State, setBonus3State] = useState(new window.Image());
+
 
   // images refs
   const skin1Ref = useRef();
@@ -52,6 +66,10 @@ function Game({
   const skin4Ref = useRef();
   const balloonRef = useRef();
   const splashRef = useRef();
+  const wallRef = useRef();
+  const bonus1Ref = useRef();
+  const bonus2Ref = useRef();
+  const bonus3Ref = useRef();
 
   // const values
   const gridsize = 32;
@@ -139,6 +157,22 @@ function Game({
     splashImg.src = splashImage;
     setSplashState(splashImg);
 
+    const wallImg = new window.Image();
+    wallImg.src = wallImage;
+    setWallState(wallImg);
+
+    const bonus1 = new window.Image();
+    bonus1.src = bonusImage1;
+    setBonus1State(bonus1);
+
+    const bonus2 = new window.Image();
+    bonus2.src = bonusImage2;
+    setBonus2State(bonus2);
+
+    const bonus3 = new window.Image();
+    bonus3.src = bonusImage3;
+    setBonus3State(bonus3);
+
     skin1Ref.current.setAttrs({
       cropX: gridsize, cropY: 0, cropWidth: gridsize, cropHeight: gridsize,
     });
@@ -170,8 +204,15 @@ function Game({
     if (listenKey) socket.emit('keydown', event.key, currRoomId, playerId);
   }
 
+  useEffect(() => {
+    wallRef?.current?.cache();
+  }, [wallState]);
+
   useEffect(() => { // main drawing
-    // first player crop animation
+    wallRef?.current?.cache();
+    wallRef?.current?.filters([Konva.Filters.Brighten]);
+    wallRef?.current?.brightness(0.3);
+
     switch (gameState.player1.direction) {
       case 'up':
         switch (gameState.player1.animation) {
@@ -620,9 +661,10 @@ function Game({
   }, [gameState]);
 
   return (
-    <div>
+    <div className="min-h-[100vh] bg-gray-700">
       {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
-      <div className="flex justify-center items-center mt-24">
+      <div className="flex justify-center items-center pt-32">
+
         <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
           <Layer>
             {splash?.map((el) => el.pos.map((el2) => (
@@ -638,16 +680,39 @@ function Game({
             )))}
           </Layer>
           <Layer>
-            {walls?.map((el) => (
-              <Rect
-                x={el.x * gridsize}
-                y={el.y * gridsize}
-                width={gameState.gridsize}
-                height={gameState.gridsize}
-                fill="red"
-                key={el.id}
-              />
-            ))}
+
+            {walls?.map((el) => {
+              if (el.timer % 10 < 5 && el.timer !== 30) {
+                return (
+                  <Image
+                    image={wallState}
+                    x={el.x * gridsize}
+                    y={el.y * gridsize}
+                    // filters={[Konva.Filters.Brighten]}
+                    // brightness={0.3}
+                    width={gameState.gridsize}
+                    height={gameState.gridsize}
+                    key={el.id}
+                    opacity={0.2}
+                    ref={wallRef}
+                  />
+                );
+              }
+              return (
+                <Image
+                  image={wallState}
+                  x={el.x * gridsize}
+                  y={el.y * gridsize}
+                  // filters={[Konva.Filters.Brighten]}
+                  // brightness={0.3}
+                  width={gameState.gridsize}
+                  height={gameState.gridsize}
+                  key={el.id}
+                  opacity={1}
+                  ref={wallRef}
+                />
+              );
+            })}
           </Layer>
           <Layer>
             {bombs?.map((el) => (
@@ -699,6 +764,44 @@ function Game({
               ref={skin4Ref}
               visible={!!gameState.player4.hp}
             />
+          </Layer>
+
+          <Layer>
+            {bonuses.map((el) => {
+              if (el.bonus === 'speed') {
+                return (
+                  <Image
+                    image={bonus1State}
+                    x={el.x * gridsize}
+                    y={el.y * gridsize}
+                    width={gameState.gridsize}
+                    height={gameState.gridsize}
+                    ref={bonus1Ref}
+                  />
+                );
+              } if (el.bonus === 'life') {
+                return (
+                  <Image
+                    image={bonus2State}
+                    x={el.x * gridsize}
+                    y={el.y * gridsize}
+                    width={gameState.gridsize}
+                    height={gameState.gridsize}
+                    ref={bonus2Ref}
+                  />
+                );
+              }
+              return (
+                <Image
+                  image={bonus3State}
+                  x={el.x * gridsize}
+                  y={el.y * gridsize}
+                  width={gameState.gridsize}
+                  height={gameState.gridsize}
+                  ref={bonus3Ref}
+                />
+              );
+            })}
           </Layer>
         </Stage>
       </div>
