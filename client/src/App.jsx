@@ -12,6 +12,7 @@ import { checkAuth } from './redux/actions/userAction';
 import PrivateRoute from './components/PrivateRouter/PrivateRouter';
 import PersonalArea from './components/PersonalArea/PersonalArea';
 import setGameStateAC from './redux/actions/gameStateAction';
+import Shop from './components/Shop/Shop';
 
 const socket = io(endPoints.host());
 socket.on('connect', () => console.log(socket.id));
@@ -41,8 +42,16 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />
           <Route path="/game" element={<PrivateRoute><Game listenKey={listenKey} socket={socket} /></PrivateRoute>} />
-          <Route path="/personalArea/:id" element={<PrivateRoute><PersonalArea /></PrivateRoute>} />
+          <Route
+            path="/personalArea/:id"
+            element={(
+              <PrivateRoute>
+                <PersonalArea />
+              </PrivateRoute>
+)}
+          />
           <Route path="/about" element={<About />} />
+          <Route path="/shop" element={<Shop />} />
         </Routes>
       </div>
 

@@ -16,6 +16,7 @@ const { keyupHandle } = require('./game/keyupHandle');
 require('dotenv').config();
 const authRouter = require('./src/routes/auth.router');
 const statisicsRouter = require('./src/routes/statistics.Router');
+const skinRouter = require('./src/routes/skin.router');
 
 // check functions
 
@@ -154,5 +155,6 @@ app.use(session(sessionConfig));
 
 app.use('/auth', authRouter);
 app.use('/statistics', statisicsRouter);
+app.use('/shop', skinRouter);
 
 server.listen(PORT, console.log('Server running on Port ', PORT));
