@@ -59,6 +59,7 @@ function Game({
   const [splashState, setSplashState] = useState(new window.Image());
 
   const [gameEnd, setGameEnd] = useState(false);
+  const [scoreWin, setScoreWin] = useState(true);
 
   const [wallState, setWallState] = useState(new window.Image());
   const [bonus1State, setBonus1State] = useState(new window.Image());
@@ -93,20 +94,39 @@ function Game({
       window.removeEventListener('keyup', onKeyUp);
       setGameEnd(true);
       setListenKey(false);
+      setScoreWin(false);
       console.log('you lost D:');
     }
   });
 
-  // player won, show stats from this currGameState
-  socket.on('win', (currGameState, winnerId) => {
-    setWinner(winnerId);
-    if (winnerId === playerId) {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
-      setListenKey(false);
-      console.log('you won!');
+  useEffect(() => {
+    if (scoreWin) {
+      socket.on('win', (currGameState, winnerId) => {
+        setWinner(winnerId);
+        if (winnerId === playerId) {
+          console.log(scoreWin);
+          window.removeEventListener('keydown', onKeyDown);
+          window.removeEventListener('keyup', onKeyUp);
+          setListenKey(false);
+          console.log('you won!');
+        }
+      });
     }
-  });
+  }, [scoreWin]);
+
+  // // player won, show stats from this currGameState
+  // socket.on('win', (currGameState, winnerId) => {
+  //   setWinner(winnerId);
+  //   if (winnerId === playerId) {
+  //     console.log(scoreWin);
+  //     if (scoreWin) {
+  //       window.removeEventListener('keydown', onKeyDown);
+  //       window.removeEventListener('keyup', onKeyUp);
+  //       setListenKey(false);
+  //       console.log('you won!');
+  //     }
+  //   }
+  // });
 
   // game in progress handler
   socket.on('gameInProgress', () => {
@@ -130,6 +150,7 @@ function Game({
 
   useEffect(() => () => {
     socket.emit('disconnectNavigate', currentRoom);
+    setScoreWin(true);
   }, []);
 
   useEffect(() => {
