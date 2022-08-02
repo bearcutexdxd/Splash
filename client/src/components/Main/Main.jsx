@@ -56,11 +56,6 @@ function Main({ socket }) {
       </div>
       <div className="flex justify-center items-center">
         <div className="m-auto h-screen flex justify-center items-center flex-col">
-          <Link to="/game">
-            <button className="btn btn-primary mt-4 text-info" type="button">
-              play
-            </button>
-          </Link>
           <button
             className="btn btn-primary mt-4 text-info"
             type="button"
