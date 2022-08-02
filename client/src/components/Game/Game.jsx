@@ -58,7 +58,6 @@ function Game({
   const [bonus2State, setBonus2State] = useState(new window.Image());
   const [bonus3State, setBonus3State] = useState(new window.Image());
 
-
   // images refs
   const skin1Ref = useRef();
   const skin2Ref = useRef();

@@ -11,6 +11,7 @@ function PersonalArea() {
   useEffect(() => {
     dispatch(getStats(user.id));
   }, []);
+  console.log(stats);
 
   return (
     <>

@@ -1,11 +1,11 @@
-const roomsReducer = (state = [], action) => {
+const skinReducer = (state = {}, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'GET_ROOMS':
+    case 'GET_SKIN':
       return payload;
     default:
       return state;
   }
 };
 
-export default roomsReducer;
+export default skinReducer;

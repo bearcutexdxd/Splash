@@ -38,9 +38,9 @@ function Main({ socket }) {
   });
 
   return (
-    <>
+    <div className="backmain">
       <div className="flex justify-center items-center flex-col">
-        <h1 className="text-2xl mt-12 text-info">
+        <h1 className="text-2xl mt-12 text-warning">
           <span>
             <Typewriter
               cursor
@@ -56,9 +56,6 @@ function Main({ socket }) {
       </div>
       <div className="flex justify-center items-center">
         <div className="m-auto h-screen flex justify-center items-center flex-col">
-          <button className="btn btn-primary mt-4 text-info" type="button">
-            <Link to="/game">play</Link>
-          </button>
           <button
             className="btn btn-primary mt-4 text-info"
             type="button"
@@ -76,6 +73,11 @@ function Main({ socket }) {
               Join game
             </button>
           </Link>
+          <Link to="/shop">
+            <button className="btn btn-primary mt-4 text-info" type="button">
+              Shop
+            </button>
+          </Link>
           <input
             onChange={inputHandle}
             type="text"
@@ -85,7 +87,7 @@ function Main({ socket }) {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
