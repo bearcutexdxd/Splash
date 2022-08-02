@@ -13,17 +13,12 @@ body{
   @apply rounded-full;
 } */
 
-.game-container {
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-}
-
 .game-canvas {
-  border: 5px solid #fa8072;
+  border: 5px solid #fdc34d;
   align-self: center;
   image-rendering: pixelated;
   transform: scale(1.8)  translateY(14%);
+  background-color: #fde68b;
 }
 
 .back {

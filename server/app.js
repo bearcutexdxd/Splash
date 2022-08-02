@@ -27,8 +27,14 @@ const { checkIsPlayerHit } = require('./game/check/checkIsPlayerHit');
 const { resetCountersOverflow } = require('./game/logic/animation/resetCountersOverflow');
 const { setAnimation } = require('./game/logic/animation/setAnimation');
 const { checkSplash } = require('./game/check/checkSplash');
+const { changeCoordsStart, changeCoordsFinish } = require('./game/logic/changeCoords');
+const { checkSolidBomb } = require('./game/check/checkSolidBomb');
+const { resetBombsCounter } = require('./game/logic/reserBombsCounter');
+const { deleteWalls } = require('./game/logic/deleteWalls');
+const { wallAnimation } = require('./game/logic/animation/wallAnimation');
+const { generateBonus } = require('./game/logic/generateBonus');
 
-let intervalCounter = 0;
+const intervalCounter = 0;
 
 const PORT = process.env.PORT || 3030;
 
@@ -64,7 +70,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinRoom', (roomId, user) => {
-    intervalCounter += 1;
+    globalGameState[roomId].intervalCounter += 1;
 
     const socketId = String(socket.id);
     const socketUser = user;
@@ -110,15 +116,20 @@ io.on('connection', (socket) => {
     const animationFrame = 120;
 
     socket.on('keydown', (key, roomId2, playerId) => {
+      currGameState = changeCoordsStart(currGameState);
       currGameState = keydownHandle(key, currGameState, playerId);
+      currGameState = changeCoordsFinish(currGameState);
     });
 
     socket.on('keyup', (key, roomId2, playerId) => {
+      currGameState = changeCoordsStart(currGameState);
       currGameState = keyupHandle(key, currGameState, playerId);
+      currGameState = changeCoordsFinish(currGameState);
     });
 
-    if (intervalCounter === 1) {
+    if (globalGameState[roomId].intervalCounter === 1) {
       setInterval(() => {
+        currGameState = changeCoordsStart(currGameState);
         lastGameState = JSON.parse(JSON.stringify(currGameState));
 
         // movement logic
@@ -136,6 +147,20 @@ io.on('connection', (socket) => {
 
         // splash check
         currGameState = checkSplash(currGameState);
+
+        // bomb solid check
+        currGameState = checkSolidBomb(currGameState);
+
+        // wall animation
+        currGameState = wallAnimation(currGameState);
+
+        // generate bonus
+        currGameState = generateBonus(currGameState);
+
+        // delete walls if destroyed
+        currGameState = deleteWalls(currGameState);
+
+        currGameState = changeCoordsFinish(currGameState);
 
         if (JSON.stringify(lastGameState) !== JSON.stringify(currGameState)) {
           io.sockets.in(roomId).emit('gameState', currGameState);
