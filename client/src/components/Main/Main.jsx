@@ -1,15 +1,27 @@
 /* eslint-disable no-shadow */
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typewriter } from 'react-simple-typewriter';
+
 import { getRooms } from '../../redux/actions/roomsAction';
+import currentRoomAC from '../../redux/actions/currentRoomAction';
+
 
 function Main({ socket }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [input, setInput] = useState('');
   const [gameName, setGameName] = useState('');
   const user = useSelector((store) => store.user);
+
+  useEffect(() => {
+    if (gameName) {
+      console.log(gameName);
+      socket.emit('joinRoom', gameName, user);
+      navigate('/game');
+    }
+  }, [gameName]);
 
   function inputHandle(e) {
     setInput(e.target.value);
@@ -27,12 +39,13 @@ function Main({ socket }) {
 
   socket.on('getRoomName', (roomId) => {
     setGameName(roomId);
+    dispatch(currentRoomAC(roomId));
   });
 
   return (
-    <>
+    <div className="backmain">
       <div className="flex justify-center items-center flex-col">
-        <h1 className="text-2xl mt-12 text-info">
+        <h1 className="text-2xl mt-12 text-warning">
           <span>
             <Typewriter
               cursor
@@ -48,9 +61,6 @@ function Main({ socket }) {
       </div>
       <div className="flex justify-center items-center">
         <div className="m-auto h-screen flex justify-center items-center flex-col">
-          <button className="btn btn-primary mt-4 text-info" type="button">
-            <Link to="/game">play</Link>
-          </button>
           <button
             className="btn btn-primary mt-4 text-info"
             type="button"
@@ -71,6 +81,11 @@ function Main({ socket }) {
               Join game
             </button>
           </Link>
+          <Link to="/shop">
+            <button className="btn btn-primary mt-4 text-info" type="button">
+              Shop
+            </button>
+          </Link>
           <input
             onChange={inputHandle}
             type="text"
@@ -80,7 +95,7 @@ function Main({ socket }) {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

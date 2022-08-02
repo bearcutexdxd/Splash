@@ -37,19 +37,27 @@ export default function Navbar() {
             {user.id ? (
               <>
                 <li>
-                  <Link className="text-white animation" to={`/personalArea/${user.id}`}>{user.name}</Link>
+                  <Link className="text-white animation" to={`/personalArea/${user.id}`}>
+                    {user.name}
+                  </Link>
                 </li>
                 <li>
-                  <button type="button" className="text-white animation" onClick={clicktHandler}>SignOut</button>
+                  <button type="button" className="text-white animation" onClick={clicktHandler}>
+                    SignOut
+                  </button>
                 </li>
               </>
             ) : (
               <>
                 <li>
-                  <button type="button" className="text-white animation" onClick={() => setSigInActive(true)}>SigIn</button>
+                  <button type="button" className="text-white animation" onClick={() => setSigInActive(true)}>
+                    SigIn
+                  </button>
                 </li>
                 <li>
-                  <button type="button" className="text-white animation" onClick={() => setSiginUpActive(true)}>SiginUp</button>
+                  <button type="button" className="text-white animation" onClick={() => setSiginUpActive(true)}>
+                    SiginUp
+                  </button>
                 </li>
               </>
             )}

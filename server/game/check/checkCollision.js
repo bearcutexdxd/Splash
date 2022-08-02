@@ -1,4 +1,4 @@
-function checkCollision(gameStateArg, positionArg) {
+function checkCollision(gameStateArg, positionArg, playerId) {
   const currGameState = gameStateArg;
   let check = true;
   const position = {
@@ -6,9 +6,24 @@ function checkCollision(gameStateArg, positionArg) {
     y: Math.round(positionArg.y / currGameState.gridsize),
   };
 
-  console.log(position);
   currGameState.walls.forEach((el) => {
     if (el.x === position.x && el.y === position.y) {
+      check = false;
+    }
+  });
+
+  currGameState.boundaries.forEach((el) => {
+    if (el.x === position.x && el.y === position.y) {
+      check = false;
+    }
+  });
+
+  currGameState.bombs.forEach((el) => {
+    if (playerId === el.owner) {
+      if (el.x === position.x && el.y === position.y && el.isSolid === true) {
+        check = false;
+      }
+    } else if (el.x === position.x && el.y === position.y) {
       check = false;
     }
   });
