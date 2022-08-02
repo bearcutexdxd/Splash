@@ -17,6 +17,8 @@ import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
 import characterSkin4 from '../../assets/images/skins/pipo-nekonin004.png';
 import balloonImage from '../../assets/images/bomb/bomb.png';
 import splashImage from '../../assets/images/splash/splash.png';
+
+import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
 import wallImage from '../../assets/images/walls/wall.png';
 import getRoomsAC from '../../redux/actions/roomsAction';
 import bonusImage1 from '../../assets/images/skins/pipo-nekonin006.png';
@@ -28,15 +30,20 @@ function Game({
 }) {
   // store data
   const gameState = useSelector((store) => store.gameState);
+
+  const currRoom = useSelector((store) => store.currRoom);
+
   const rooms = useSelector((store) => store.rooms);
   const currentRoom = useSelector((store) => store.currentRoom);
 
   const { bombs } = gameState;
   const { splash } = gameState;
   const { walls } = gameState;
-  const { bonuses } = gameState;
 
+  
   const dispatch = useDispatch();
+
+  const { bonuses } = gameState;
   const navigate = useNavigate();
 
   // player id state
@@ -76,6 +83,7 @@ function Game({
   const tileAmount = 13;
 
   socket.on('playerId', (playerNum) => {
+    console.log('in socket player id');
     setPlayerId(playerNum);
   });
 
@@ -146,11 +154,15 @@ function Game({
   }, []);
 
   useEffect(() => {
+    dispatch(getCurrRoom());
+  }, []);
+
+  useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
-      dispatch(getRoomsAC(playrRoom));
+      dispatch(getCurrRoomAC(playrRoom));
       console.log('new user in room');
     });
-  }, [rooms]);
+  }, [currRoom]);
 
   useEffect(() => { // loading all images
     const skin1 = new window.Image();
@@ -681,6 +693,15 @@ function Game({
   }, [gameState]);
 
   return (
+
+    <>
+      <div>
+        {currRoom.map((el) => (
+          <div key={el.userId}>{el.name}</div>
+        ))}
+      </div>
+
+      <div className="flex justify-center items-center mt-24">
     <div className="min-h-[100vh] bg-gray-700">
       {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
       <div className="flex justify-center items-center pt-32">
@@ -733,6 +754,7 @@ function Game({
                 />
               );
             })}
+            
           </Layer>
           <Layer>
             {bombs?.map((el) => (
@@ -826,6 +848,9 @@ function Game({
         </Stage>
       </div>
     </div>
+   </Stage>
+      </div>
+    </>
   );
 }
 

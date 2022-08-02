@@ -3,6 +3,8 @@
 const { v4: uuidv4 } = require('uuid');
 
 const globalGameState = {};
+
+const rooms = {};
 let socketRooms = [];
 
 function initialGameState() {
@@ -255,5 +257,5 @@ function findRoomGameState(roomId) {
 }
 
 module.exports = {
-  initialGameState, globalGameState, socketRooms, findRoomGameState,
+  initialGameState, globalGameState, rooms, socketRooms, findRoomGameState,
 };

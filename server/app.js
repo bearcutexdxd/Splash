@@ -7,8 +7,9 @@ const cors = require('cors');
 const socketIo = require('socket.io');
 const FileStore = require('session-file-store')(session);
 const http = require('http');
+const { Module } = require('module');
 const {
-  initialGameState, globalGameState, findRoomGameState,
+  initialGameState, globalGameState, rooms, socketRooms, findRoomGameState,
 } = require('./game/gameState');
 let { socketRooms } = require('./game/gameState');
 const { keydownHandle } = require('./game/keydownHandle');
@@ -17,9 +18,9 @@ const { keyupHandle } = require('./game/keyupHandle');
 require('dotenv').config();
 const authRouter = require('./src/routes/auth.router');
 const statisicsRouter = require('./src/routes/statistics.Router');
-
+// const roomsRouter = require('./src/routes/rooms.router');
+const skinRouter = require('./src/routes/skin.router');
 // check functions
-
 const { checkMovement } = require('./game/check/checkMovement');
 const { resetCountersStop } = require('./game/logic/animation/resetCountersStop');
 const { movement } = require('./game/logic/movement');
@@ -28,6 +29,8 @@ const { checkIsPlayerHit } = require('./game/check/checkIsPlayerHit');
 const { resetCountersOverflow } = require('./game/logic/animation/resetCountersOverflow');
 const { setAnimation } = require('./game/logic/animation/setAnimation');
 const { checkSplash } = require('./game/check/checkSplash');
+
+let currRoom;
 
 const { checkIsPlayerDead } = require('./game/check/checkIsPlayerDead');
 const { checkRemoveDeadPlayers } = require('./game/check/checkRemoveDeadPlayers');
@@ -78,6 +81,7 @@ io.on('connection', (socket) => {
   socket.on('createRoom', () => {
     const roomId = makeid();
     socket.emit('getRoomName', roomId);
+    socket.emit('rooms', roomId);
 
     globalGameState[roomId] = initialGameState();
     console.log(globalGameState, '\n ^ all game states');
@@ -86,6 +90,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinRoom', (roomId, user) => {
+
+
+    currRoom = roomId;
+
     if (globalGameState[roomId]) {
       globalGameState[roomId].intervalCounter += 1;
       if (globalGameState[roomId].intervalCounter > 2) { // change for 4 players
@@ -97,6 +105,7 @@ io.on('connection', (socket) => {
     const socketId = String(socket.id);
     const socketUser = user;
     const currRoomSockets = [];
+    const rooms = {};
 
     socketRooms.forEach((el) => {
       const elRoom = Object.values(el);
@@ -105,6 +114,7 @@ io.on('connection', (socket) => {
           [socketId]: roomId,
           name: socketUser.name,
           userId: socketUser.id,
+          room: roomId,
         });
       }
     });
@@ -114,11 +124,15 @@ io.on('connection', (socket) => {
     socket.number = socketsNumber + 1;
 
     socketRooms.push({
+
       [socketId]: roomId, name: socketUser.name, userId: socketUser.id, room: roomId, playerId: socket.number,
     });
     socket.join(roomId);
     console.log(socketRooms, '\n ^ users and rooms');
+    socket.number = socketsNumber + 1;
+    socket.emit('socketRooms', socketRooms.filter((el) => el.room === currRoom));
     socket.to(roomId).emit('socketRooms', socketRooms);
+
     socket.emit('playerId', socket.number);
 
     socket.emit('sendRooms', socketRooms);
@@ -245,7 +259,22 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session(sessionConfig));
 
+app.get('/curr/room', (req, res) => {
+  const roomUsers = socketRooms.filter((el) => el.room === currRoom);
+  console.log('roms!!!!!', currRoom);
+  res.json(roomUsers);
+});
+app.get('/rooms', (req, res) => {
+  console.log('roms!!!!!', socketRooms);
+  const obj = {};
+  socketRooms.forEach((el) => (obj[el.room] ? obj[el.room] += 1 : obj[el.room] = 1));
+
+  res.json(obj);
+});
+
 app.use('/auth', authRouter);
 app.use('/statistics', statisicsRouter);
+app.use('/shop', skinRouter);
+
 
 server.listen(PORT, console.log('Server running on Port ', PORT));
