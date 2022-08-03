@@ -12,6 +12,7 @@ import { checkAuth } from './redux/actions/userAction';
 import PrivateRoute from './components/PrivateRouter/PrivateRouter';
 import PersonalArea from './components/PersonalArea/PersonalArea';
 import setGameStateAC from './redux/actions/gameStateAction';
+import setListenKeyAC from './redux/actions/listenKeyAction';
 
 import Rooms from './components/Rooms/Rooms';
 
@@ -21,11 +22,11 @@ const socket = io(endPoints.host());
 socket.on('connect', () => console.log(socket.id));
 
 function App() {
-  const [listenKey, setListenKey] = useState(false);
   const dispatch = useDispatch();
+  const listenKey = useSelector((store) => store.listenKey);
 
   socket.on('startGame', (roomId) => {
-    setListenKey(true);
+    dispatch(setListenKeyAC(true));
     console.log('game started!');
   });
 
@@ -50,7 +51,7 @@ function App() {
             path="/game"
             element={(
               <PrivateRoute>
-                <Game listenKey={listenKey} setListenKey={setListenKey} socket={socket} />
+                <Game socket={socket} />
               </PrivateRoute>
             )}
           />

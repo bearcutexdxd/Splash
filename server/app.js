@@ -39,6 +39,7 @@ const { checkWinnerInStarted } = require('./game/check/checkWinnerInStarted');
 const { checkStopGame } = require('./game/check/checkStopGame');
 const { checkAlivePlayer } = require('./game/check/checkAlivePlayer');
 const { checkStopLastPlayer } = require('./game/check/checkStopLastPlayer');
+const { checkStopGameOnLeave } = require('./game/check/checkStopGameOnLeave');
 
 const { changeCoordsStart, changeCoordsFinish } = require('./game/logic/changeCoords');
 const { checkSolidBomb } = require('./game/check/checkSolidBomb');
@@ -69,13 +70,12 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ['http://localhost:3000', 'https://admin.socket.io'],
+    origin: '*',
   },
 });
 
 io.on('connection', (socket) => {
   socket.on('getRooms', () => {
-    socket.emit('sendRooms', socketRooms);
   });
 
   socket.on('createRoom', () => {
@@ -85,8 +85,6 @@ io.on('connection', (socket) => {
 
     globalGameState[roomId] = initialGameState();
     console.log(globalGameState, '\n ^ all game states');
-
-    socket.emit('sendRooms', socketRooms);
   });
 
   socket.on('joinRoom', (roomId, user) => {
@@ -127,13 +125,10 @@ io.on('connection', (socket) => {
     });
     socket.join(roomId);
     console.log(socketRooms, '\n ^ users and rooms');
-    socket.number = socketsNumber + 1;
     socket.emit('socketRooms', socketRooms.filter((el) => el.room === currRoom));
     socket.to(roomId).emit('socketRooms', socketRooms);
 
     socket.emit('playerId', socket.number);
-
-    socket.emit('sendRooms', socketRooms);
 
     if (socketsNumber === 1) { // starting game, (players number === 4)
       io.sockets.in(roomId).emit('startGame', roomId);
@@ -154,8 +149,6 @@ io.on('connection', (socket) => {
       socketRooms = checkIsRoomEmpty(roomId, socket);
       socket.leave(roomId);
 
-      socket.emit('sendRooms', socketRooms);
-
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
       const winner = checkWinnerInStarted(roomId, currSocketRooms);
@@ -167,8 +160,6 @@ io.on('connection', (socket) => {
       console.log('Socket disconnected from navigate!');
       socketRooms = checkIsRoomEmpty(currentRoom, socket);
       socket.leave(roomId);
-
-      socket.emit('sendRooms', socketRooms);
 
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
@@ -209,6 +200,11 @@ io.on('connection', (socket) => {
           const alivePlayer = checkAlivePlayer(currGameState);
           // sending gameState
           io.sockets.in(roomId).emit('gameEnd', currGameState, alivePlayer);
+          clearInterval(interval);
+        }
+
+        // stopGame on leave check
+        if (checkStopGameOnLeave(roomId, socketRooms, currGameState)) { // change inside for 4 players!
           clearInterval(interval);
         }
 
@@ -266,7 +262,6 @@ app.get('/rooms', (req, res) => {
   console.log('roms!!!!!', socketRooms);
   const obj = {};
   socketRooms.forEach((el) => (obj[el.room] ? obj[el.room] += 1 : obj[el.room] = 1));
-
   res.json(obj);
 });
 

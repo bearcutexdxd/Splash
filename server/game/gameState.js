@@ -240,7 +240,6 @@ function initialGameState() {
     ],
     intervalCounter: 0,
     gridsize: 32,
-    intervalCounter: 0,
   };
 }
 
