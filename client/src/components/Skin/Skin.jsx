@@ -25,7 +25,6 @@ function Skin({ name, skinId, img }) {
             onClick={() => { SkinIdHandler(); }}
           >
             Buy now!
-
           </button>
         </div>
       </div>

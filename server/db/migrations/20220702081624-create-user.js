@@ -16,6 +16,9 @@ module.exports = {
       current_skin: {
         type: Sequelize.TEXT,
       },
+      balance: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

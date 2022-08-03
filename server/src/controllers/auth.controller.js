@@ -11,7 +11,8 @@ const signUp = async (req, res) => {
         defaults: {
           name: playerName,
           password: await bcrypt.hash(password, 10),
-          current_skin: 0,
+          current_skin: '0',
+          balance: 0,
         },
       });
 
