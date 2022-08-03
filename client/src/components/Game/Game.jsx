@@ -93,6 +93,10 @@ function Game({
     setPlayerId(playerNum);
   });
 
+  socket.on('roomUsersNicknames', (roomUsersNicknames) => {
+    console.log(roomUsersNicknames);
+  });
+
   // player lost, show stats from this currGameState
   socket.on('lose', (currGameState, player) => {
     if (player === playerId) {
