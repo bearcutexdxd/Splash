@@ -1,7 +1,7 @@
 function deleteWalls(gameStateArg) {
   const currGameState = gameStateArg;
 
-  currGameState.walls = currGameState.walls.filter((el) => el.timer !== 0);
+  currGameState.walls = currGameState.walls.filter((el) => el.wallTimer !== 0);
   return currGameState;
 }
 
