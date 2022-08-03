@@ -9,7 +9,7 @@ function checkIsRoomEmpty(roomId, socket) {
 
   // deleting room game state
   const currUsersInRoom = socketRooms.filter((el) => el.room === roomId);
-  if (!(currUsersInRoom.length)) {
+  if (currUsersInRoom.length === 0) {
     delete globalGameState[roomId];
     console.log(globalGameState, '\n NEW GLOBAL GAMESTATE');
   }
