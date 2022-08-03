@@ -40,7 +40,7 @@ function Main({ socket }) {
   return (
     <div className="backmain">
       <div className="flex justify-center items-center flex-col">
-        <h1 className="text-2xl mt-12 text-warning">
+        <h1 className="text-2xl text-warning">
           <span>
             <Typewriter
               cursor
@@ -55,7 +55,7 @@ function Main({ socket }) {
         <h2>{gameName}</h2>
       </div>
       <div className="flex justify-center items-center">
-        <div className="m-auto h-screen flex justify-center items-center flex-col">
+        <div className="m-auto min-h-screen flex justify-center items-center flex-col">
           <button
             className="btn btn-primary mt-4 text-info"
             type="button"

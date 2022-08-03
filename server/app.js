@@ -65,7 +65,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ['http://localhost:3000', 'https://admin.socket.io'],
+    origin: '*',
   },
 });
 
@@ -81,7 +81,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinRoom', (roomId, user) => {
-
     if (globalGameState[roomId]) {
       globalGameState[roomId].intervalCounter += 1;
       if (globalGameState[roomId].intervalCounter > 2) { // change for 4 players
@@ -89,7 +88,6 @@ io.on('connection', (socket) => {
       }
     }
     console.log(globalGameState, '\n ^ all game states');
-
 
     const socketId = String(socket.id);
     const socketUser = user;
@@ -167,9 +165,7 @@ io.on('connection', (socket) => {
       currGameState = changeCoordsFinish(currGameState);
     });
 
-
     if (globalGameState[roomId]?.intervalCounter === 1) {
-
       setInterval(() => {
         currGameState = changeCoordsStart(currGameState);
         lastGameState = JSON.parse(JSON.stringify(currGameState));

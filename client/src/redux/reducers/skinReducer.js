@@ -3,6 +3,8 @@ const skinReducer = (state = {}, action) => {
   switch (type) {
     case 'GET_SKIN':
       return payload;
+    case 'ADD_SKIN':
+      return [...state, payload];
     default:
       return state;
   }

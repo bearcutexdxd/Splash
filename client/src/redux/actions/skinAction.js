@@ -1,3 +1,5 @@
+import * as endPoints from '../../config/endPoints';
+
 export const getSkinAC = (data) => ({ type: 'GET_SKIN', payload: data });
 
 export const getSkinThunk = () => async (dispatch) => {
