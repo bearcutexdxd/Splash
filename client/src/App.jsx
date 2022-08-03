@@ -28,6 +28,7 @@ function App() {
   socket.on('startGame', (roomId) => {
     dispatch(setListenKeyAC(true));
     console.log('game started!');
+    console.log(listenKey);
   });
 
   socket.on('gameState', (state) => {

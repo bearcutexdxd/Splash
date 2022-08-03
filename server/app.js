@@ -94,6 +94,7 @@ io.on('connection', (socket) => {
       globalGameState[roomId].intervalCounter += 1;
       if (globalGameState[roomId].intervalCounter > 2) { // change for 4 players
         socket.emit('gameInProgress');
+        return;
       }
     }
     console.log(globalGameState, '\n ^ all game states');
@@ -102,6 +103,14 @@ io.on('connection', (socket) => {
     const socketUser = user;
     const currRoomSockets = [];
     const rooms = {};
+
+    // same player connects
+    const sameUser = socketRooms.find((el) => el.userId === socketUser.id);
+    if (sameUser) {
+      socket.emit('userAlreadyInGame');
+      globalGameState[roomId].intervalCounter -= 1;
+      return;
+    }
 
     socketRooms.forEach((el) => {
       const elRoom = Object.values(el);
@@ -114,7 +123,15 @@ io.on('connection', (socket) => {
         });
       }
     });
+
     console.log(currRoomSockets, '\n ^ curr room users');
+
+    // if (currRoomSockets) {
+    //   if (currRoomSockets.filter((el) => el.name === socketUser.name)) {
+    //     socket.emit('userAlreadyInGame');
+    //     return;
+    //   }
+    // }
 
     const socketsNumber = currRoomSockets.length;
     socket.number = socketsNumber + 1;
@@ -168,15 +185,20 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keydown', (key, roomId2, playerId) => {
-      currGameState = changeCoordsStart(currGameState);
-      currGameState = keydownHandle(key, currGameState, playerId);
-      currGameState = changeCoordsFinish(currGameState);
+      console.log(playerId);
+      if (currGameState.intervalCounter > 1) {
+        currGameState = changeCoordsStart(currGameState);
+        currGameState = keydownHandle(key, currGameState, playerId);
+        currGameState = changeCoordsFinish(currGameState);
+      }
     });
 
     socket.on('keyup', (key, roomId2, playerId) => {
-      currGameState = changeCoordsStart(currGameState);
-      currGameState = keyupHandle(key, currGameState, playerId);
-      currGameState = changeCoordsFinish(currGameState);
+      if (currGameState.intervalCounter > 1) {
+        currGameState = changeCoordsStart(currGameState);
+        currGameState = keyupHandle(key, currGameState, playerId);
+        currGameState = changeCoordsFinish(currGameState);
+      }
     });
 
     let interval;

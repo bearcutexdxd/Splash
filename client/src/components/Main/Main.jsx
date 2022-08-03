@@ -85,15 +85,6 @@ function Main({ socket }) {
             <button className="btn btn-primary mt-4 text-info" type="button">Rooms</button>
             {' '}
           </Link>
-          <Link to="/game">
-            <button
-              className="btn btn-primary mt-4 text-info"
-              type="button"
-              onClick={joinGameHandle}
-            >
-              Join game
-            </button>
-          </Link>
           <Link to="/shop">
             <button className="btn btn-primary mt-4 text-info" type="button">
               Shop

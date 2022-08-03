@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, {
-  useRef, useEffect, memo, useState, useLayoutEffect,
+  useRef, useEffect, memo, useState, useLayoutEffect, useCallback,
 } from 'react';
 
 import Konva from 'konva';
@@ -117,6 +117,20 @@ function Game({
     }
   }, [scoreWin, playerId]);
 
+  // if (scoreWin) {
+  //   socket.on('win', (currGameState, winnerId) => {
+  //     setWinner(winnerId);
+  //     console.log(winnerId, playerId);
+  //     if (winnerId === playerId) {
+  //       window.removeEventListener('keydown', onKeyDown);
+  //       window.removeEventListener('keyup', onKeyUp);
+  //       dispatch(setListenKeyAC(false));
+  //       dispatch(setPlayerIdAC(null));
+  //       console.log('you won!');
+  //     }
+  //   });
+  // }
+
   // gameEnd without AFK
   socket.on('gameEnd', (currGameState, alivePlayer) => {
     setWinner(alivePlayer);
@@ -135,13 +149,25 @@ function Game({
     console.log('this game is in progress');
   });
 
+  // user connected to the same room
+  socket.on('userAlreadyInGame', () => {
+    navigate('/main');
+    console.log('you are already playing the game, leave lobby first');
+  });
+
   useEffect(() => {
-  }, [playerId, winner]);
+  }, [playerId, winner, listenKey]);
 
   // on dismount
   useEffect(() => () => {
     socket.emit('disconnectNavigate', currentRoom);
     setScoreWin(true);
+    window.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('keyup', onKeyUp);
+    dispatch(setListenKeyAC(false));
+    dispatch(setPlayerIdAC(null));
+    console.log('\n dismounted \n');
+    window.location.reload();
   }, []);
 
   useEffect(() => {
@@ -212,6 +238,7 @@ function Game({
 
   useEffect(() => { // event listeners
     if (listenKey) {
+      console.log('povesil');
       window.addEventListener('keydown', onKeyDown);
     }
     if (listenKey) {
@@ -219,8 +246,30 @@ function Game({
     }
   }, [listenKey]);
 
+  // const onKeyDown = useCallback(
+  //   (event) => {
+  //     console.log(listenKey);
+  //     if (listenKey) socket.emit('keydown', event.key, currentRoom, playerId);
+  //   },
+  //   [],
+  // );
+
+  // const onKeyUp = useCallback(
+  //   (event) => {
+  //     console.log(listenKey);
+  //     if (listenKey) {
+  //       console.log(playerId);
+  //       socket.emit('keyup', event.key, currentRoom, playerId);
+  //     }
+  //   },
+  //   [],
+  // );
+
   function onKeyUp(event) {
-    if (listenKey) socket.emit('keyup', event.key, currentRoom, playerId);
+    if (listenKey) {
+      console.log(playerId);
+      socket.emit('keyup', event.key, currentRoom, playerId);
+    }
   }
 
   function onKeyDown(event) {
