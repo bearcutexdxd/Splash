@@ -14,6 +14,9 @@ function checkIsPlayerHit(currGameState) {
         if (currGameState.player1.invulnerability.active === false) {
           currGameState.player1.invulnerability.active = true;
           currGameState.player1.hp -= 1;
+          if (splash[i].owner !== 1) {
+            currGameState.player1.lastDamageFrom = splash[i].owner;
+          }
         }
       }
       if (Math.round(player2Pos.x / gridsize) === splash[i].pos[j].x
@@ -21,6 +24,9 @@ function checkIsPlayerHit(currGameState) {
         if (currGameState.player2.invulnerability.active === false) {
           currGameState.player2.invulnerability.active = true;
           currGameState.player2.hp -= 1;
+          if (splash[i].owner !== 2) {
+            currGameState.player2.lastDamageFrom = splash[i].owner;
+          }
         }
       }
       if (Math.round(player3Pos.x / gridsize) === splash[i].pos[j].x
@@ -28,6 +34,9 @@ function checkIsPlayerHit(currGameState) {
         if (currGameState.player3.invulnerability.active === false) {
           currGameState.player3.invulnerability.active = true;
           currGameState.player3.hp -= 1;
+          if (splash[i].owner !== 3) {
+            currGameState.player3.lastDamageFrom = splash[i].owner;
+          }
         }
       }
       if (Math.round(player4Pos.x / gridsize) === splash[i].pos[j].x
@@ -35,6 +44,9 @@ function checkIsPlayerHit(currGameState) {
         if (currGameState.player4.invulnerability.active === false) {
           currGameState.player4.invulnerability.active = true;
           currGameState.player4.hp -= 1;
+          if (splash[i].owner !== 4) {
+            currGameState.player4.lastDamageFrom = splash[i].owner;
+          }
         }
       }
     }

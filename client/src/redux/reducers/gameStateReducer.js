@@ -25,6 +25,7 @@ const initialState = {
     skin: 0,
     maxBombs: 1,
     bombsCounter: 0,
+    lastDamageFrom: 0,
     invulnerability: { active: false, timer: invulnerabilityTimer },
     bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
     statistics: {
@@ -47,6 +48,7 @@ const initialState = {
     skin: 0,
     maxBombs: 1,
     bombsCounter: 0,
+    lastDamageFrom: 0,
     invulnerability: { active: false, timer: invulnerabilityTimer },
     bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
     statistics: {
@@ -68,6 +70,7 @@ const initialState = {
     isAlive: true,
     maxBombs: 1,
     bombsCounter: 0,
+    lastDamageFrom: 0,
     invulnerability: { active: false, timer: invulnerabilityTimer },
     bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
     statistics: {
@@ -89,6 +92,7 @@ const initialState = {
     isAlive: true,
     maxBombs: 1,
     bombsCounter: 0,
+    lastDamageFrom: 0,
     invulnerability: { active: false, timer: invulnerabilityTimer },
     bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
     statistics: {

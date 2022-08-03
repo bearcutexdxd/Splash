@@ -807,6 +807,110 @@ function Game({
         </div>
       </div>
 
+      <div className="absolute mt-32 right-0 mr-4">
+        <div className="mt-8 text-red-200">
+          player 1:
+          <div>
+            kills:
+            {' '}
+            {gameState.player1.statistics.kills}
+          </div>
+          <div>
+            deaths:
+            {' '}
+            {gameState.player1.statistics.deaths}
+          </div>
+          <div>
+            loses:
+            {' '}
+            {gameState.player1.statistics.loses}
+            {' '}
+          </div>
+          <div>
+            wins:
+            {' '}
+            {gameState.player1.statistics.wins}
+            {' '}
+          </div>
+        </div>
+        <div className="mt-8 text-red-200">
+          player 2:
+          <div>
+            kills:
+            {' '}
+            {gameState.player2.statistics.kills}
+          </div>
+          <div>
+            deaths:
+            {' '}
+            {gameState.player2.statistics.deaths}
+          </div>
+          <div>
+            loses:
+            {' '}
+            {gameState.player2.statistics.loses}
+            {' '}
+          </div>
+          <div>
+            wins:
+            {' '}
+            {gameState.player2.statistics.wins}
+            {' '}
+          </div>
+        </div>
+        <div className="mt-8 text-red-200">
+          player 3:
+          <div>
+            kills:
+            {' '}
+            {gameState.player3.statistics.kills}
+          </div>
+          <div>
+            deaths:
+            {' '}
+            {gameState.player3.statistics.deaths}
+          </div>
+          <div>
+            loses:
+            {' '}
+            {gameState.player3.statistics.loses}
+            {' '}
+          </div>
+          <div>
+            wins:
+            {' '}
+            {gameState.player3.statistics.wins}
+            {' '}
+          </div>
+        </div>
+        <div className="mt-8 text-red-200">
+          player 4:
+          <div>
+            kills:
+            {' '}
+            {gameState.player4.statistics.kills}
+          </div>
+          <div>
+            deaths:
+            {' '}
+            {gameState.player4.statistics.deaths}
+          </div>
+          <div>
+            loses:
+            {' '}
+            {gameState.player4.statistics.loses}
+            {' '}
+          </div>
+          <div>
+            wins:
+            {' '}
+            {gameState.player4.statistics.wins}
+            {' '}
+          </div>
+        </div>
+
+      </div>
+
       <div className="flex justify-center items-center min-h-[100vh] bg-gray-700">
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
