@@ -32,7 +32,7 @@ export const postSkinThunk = (id, skinId) => async (dispatch) => {
 
 export const putSkinUserThunk = (id, newSkin) => async (dispatch) => {
   try {
-    const response = await fetch(endPoints.postAllSkins(), {
+    const response = await fetch(endPoints.postSkin(), {
       method: 'put',
       headers: {
         'Content-type': 'application/json',
