@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { resetBombsCounter } = require('./reserBombsCounter');
 
-function generateSplash(currGameState, playerId) {
+function generateSplash(currGameState) {
   const dyingBombs = currGameState.bombs.filter((el) => el.timer === 0);
   for (let i = 0; i < dyingBombs.length; i += 1) {
     const splash = {
@@ -13,7 +13,7 @@ function generateSplash(currGameState, playerId) {
         { x: dyingBombs[i].x, y: dyingBombs[i].y - 1, id: uuidv4() },
       ],
       timer: 30,
-      owner: playerId,
+      owner: dyingBombs[i].owner,
     };
     currGameState.splash.push(splash);
   }
@@ -21,12 +21,12 @@ function generateSplash(currGameState, playerId) {
   return currGameState;
 }
 
-function setSplash(gameStateArg, socketNumber) {
+function setSplash(gameStateArg) {
   let currGameState = gameStateArg;
   if (currGameState.bombs.length) { // generating splash
     currGameState.bombs = currGameState.bombs.map((el) => ({ ...el, timer: el.timer - 1 }));
     if (currGameState.bombs.filter((el) => el.timer === 0)) {
-      currGameState = generateSplash(currGameState, socketNumber);
+      currGameState = generateSplash(currGameState);
     }
     currGameState = resetBombsCounter(currGameState);
     currGameState.bombs = currGameState.bombs.filter((el) => el.timer !== 0);

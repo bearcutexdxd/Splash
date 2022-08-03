@@ -29,6 +29,7 @@ function initialGameState() {
       isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
+      lastDamageFrom: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
       statistics: {
@@ -50,6 +51,7 @@ function initialGameState() {
       isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
+      lastDamageFrom: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
       statistics: {
@@ -71,6 +73,7 @@ function initialGameState() {
       isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
+      lastDamageFrom: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
       statistics: {
@@ -92,6 +95,7 @@ function initialGameState() {
       isAlive: true,
       maxBombs: 1,
       bombsCounter: 0,
+      lastDamageFrom: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
       statistics: {

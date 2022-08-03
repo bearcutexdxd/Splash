@@ -51,6 +51,7 @@ const { checkBonusesTimer } = require('./game/check/checkBonusesTimer');
 const { checkInvulnerabilityTimer } = require('./game/check/checkInvulnerabilityTimer');
 const { checkWallInvulnerabilityTimer } = require('./game/check/checkWallInvulnerabilityTimer');
 const { changeTimePlayed } = require('./game/logic/changeTimePlayed');
+const { setPlayerWin } = require('./game/logic/setPlayerWin');
 
 const PORT = process.env.PORT || 3030;
 
@@ -220,7 +221,12 @@ io.on('connection', (socket) => {
           currGameState = checkStopLastPlayer(currGameState);
           // finding alive winner
           const alivePlayer = checkAlivePlayer(currGameState);
+
+          // add win statistic for winner
+          currGameState = setPlayerWin(currGameState, alivePlayer);
+
           // sending gameState
+          // io.sockets.in(roomId).emit('gameState', currGameState);
           io.sockets.in(roomId).emit('gameEnd', currGameState, alivePlayer);
           clearInterval(interval);
         }
@@ -248,7 +254,7 @@ io.on('connection', (socket) => {
         currGameState = checkWallInvulnerabilityTimer(currGameState);
 
         // splash generation
-        currGameState = setSplash(currGameState, socket.number);
+        currGameState = setSplash(currGameState);
 
         // splash check
         currGameState = checkSplash(currGameState);
