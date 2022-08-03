@@ -3,7 +3,10 @@ import { SET_GAMESTATE } from '../types';
 
 const { v4: uuidv4 } = require('uuid');
 
-const timer = 30;
+const wallTimer = 30;
+const invulnerabilityTimer = 30;
+const speed = 1;
+const bonusesTimer = 600;
 
 const initialState = {
   player1: {
@@ -17,10 +20,13 @@ const initialState = {
       y: 0,
     },
     hp: 1,
+    speed,
     isAlive: true,
     skin: 0,
     maxBombs: 1,
     bombsCounter: 0,
+    invulnerability: { active: false, timer: invulnerabilityTimer },
+    bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
   },
   player2: {
     direction: 'down',
@@ -33,10 +39,13 @@ const initialState = {
       y: 0,
     },
     hp: 1,
+    speed,
     isAlive: true,
     skin: 0,
     maxBombs: 1,
     bombsCounter: 0,
+    invulnerability: { active: false, timer: invulnerabilityTimer },
+    bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
   },
   player3: {
     direction: 'down',
@@ -49,10 +58,12 @@ const initialState = {
       y: 384,
     },
     hp: 1,
-
+    speed,
     isAlive: true,
     maxBombs: 1,
     bombsCounter: 0,
+    invulnerability: { active: false, timer: invulnerabilityTimer },
+    bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
   },
   player4: {
     direction: 'down',
@@ -65,9 +76,12 @@ const initialState = {
       y: 384,
     },
     hp: 1,
+    speed,
     isAlive: true,
     maxBombs: 1,
     bombsCounter: 0,
+    invulnerability: { active: false, timer: invulnerabilityTimer },
+    bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
   },
   bombs: [],
   splash: [],
@@ -128,112 +142,112 @@ const initialState = {
   ],
   walls: [
     {
-      x: 1, y: 1, id: uuidv4(), hp: 1, timer,
+      x: 1, y: 1, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 3, y: 1, id: uuidv4(), hp: 1, timer,
+      x: 3, y: 1, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 5, y: 1, id: uuidv4(), hp: 1, timer,
+      x: 5, y: 1, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 7, y: 1, id: uuidv4(), hp: 1, timer,
+      x: 7, y: 1, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 9, y: 1, id: uuidv4(), hp: 1, timer,
+      x: 9, y: 1, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 11, y: 1, id: uuidv4(), hp: 1, timer,
+      x: 11, y: 1, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 1, y: 3, id: uuidv4(), hp: 1, timer,
+      x: 1, y: 3, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 3, y: 3, id: uuidv4(), hp: 1, timer,
+      x: 3, y: 3, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 5, y: 3, id: uuidv4(), hp: 1, timer,
+      x: 5, y: 3, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 7, y: 3, id: uuidv4(), hp: 1, timer,
+      x: 7, y: 3, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 9, y: 3, id: uuidv4(), hp: 1, timer,
+      x: 9, y: 3, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 11, y: 3, id: uuidv4(), hp: 1, timer,
+      x: 11, y: 3, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 1, y: 5, id: uuidv4(), hp: 1, timer,
+      x: 1, y: 5, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 3, y: 5, id: uuidv4(), hp: 1, timer,
+      x: 3, y: 5, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 5, y: 5, id: uuidv4(), hp: 1, timer,
+      x: 5, y: 5, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 7, y: 5, id: uuidv4(), hp: 1, timer,
+      x: 7, y: 5, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 9, y: 5, id: uuidv4(), hp: 1, timer,
+      x: 9, y: 5, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 11, y: 5, id: uuidv4(), hp: 1, timer,
+      x: 11, y: 5, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 1, y: 7, id: uuidv4(), hp: 1, timer,
+      x: 1, y: 7, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 3, y: 7, id: uuidv4(), hp: 1, timer,
+      x: 3, y: 7, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 5, y: 7, id: uuidv4(), hp: 1, timer,
+      x: 5, y: 7, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 7, y: 7, id: uuidv4(), hp: 1, timer,
+      x: 7, y: 7, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 9, y: 7, id: uuidv4(), hp: 1, timer,
+      x: 9, y: 7, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 11, y: 7, id: uuidv4(), hp: 1, timer,
+      x: 11, y: 7, id: uuidv4(), hp: 2, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 1, y: 9, id: uuidv4(), hp: 1, timer,
+      x: 1, y: 9, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 3, y: 9, id: uuidv4(), hp: 1, timer,
+      x: 3, y: 9, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 5, y: 9, id: uuidv4(), hp: 1, timer,
+      x: 5, y: 9, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 7, y: 9, id: uuidv4(), hp: 1, timer,
+      x: 7, y: 9, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 9, y: 9, id: uuidv4(), hp: 1, timer,
+      x: 9, y: 9, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 11, y: 9, id: uuidv4(), hp: 1, timer,
+      x: 11, y: 9, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 1, y: 11, id: uuidv4(), hp: 1, timer,
+      x: 1, y: 11, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 3, y: 11, id: uuidv4(), hp: 1, timer,
+      x: 3, y: 11, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 5, y: 11, id: uuidv4(), hp: 1, timer,
+      x: 5, y: 11, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 7, y: 11, id: uuidv4(), hp: 1, timer,
+      x: 7, y: 11, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 9, y: 11, id: uuidv4(), hp: 1, timer,
+      x: 9, y: 11, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
     {
-      x: 11, y: 11, id: uuidv4(), hp: 1, timer,
+      x: 11, y: 11, id: uuidv4(), hp: 1, wallTimer, invulnerability: { active: false, timer: invulnerabilityTimer },
     },
   ],
   gridsize: 32,

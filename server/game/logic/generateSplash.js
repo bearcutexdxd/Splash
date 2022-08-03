@@ -12,7 +12,7 @@ function generateSplash(currGameState, playerId) {
         { x: dyingBombs[i].x, y: dyingBombs[i].y + 1, id: uuidv4() },
         { x: dyingBombs[i].x, y: dyingBombs[i].y - 1, id: uuidv4() },
       ],
-      timer: 60,
+      timer: 30,
       owner: playerId,
     };
     currGameState.splash.push(splash);
