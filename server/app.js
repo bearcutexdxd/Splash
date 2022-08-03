@@ -272,6 +272,6 @@ app.get('/rooms', (req, res) => {
 
 app.use('/auth', authRouter);
 app.use('/statistics', statisicsRouter);
-app.use('/shop', skinRouter);
+app.use('/skins', skinRouter);
 
 server.listen(PORT, console.log('Server running on Port ', PORT));

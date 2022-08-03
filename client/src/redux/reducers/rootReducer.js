@@ -6,6 +6,7 @@ import roomsReducer from './roomsReducer';
 
 import currRoomReducer from './currRoomReducer';
 import currentRoomReducer from './currentRoomReducer';
+import { skinReducer, userSkinsReducer } from './skinsReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -14,6 +15,8 @@ const rootReducer = combineReducers({
   currRoom: currRoomReducer,
   rooms: roomsReducer,
   currentRoom: currentRoomReducer,
+  skins: skinReducer,
+  userSkins: userSkinsReducer,
 });
 
 export default rootReducer;

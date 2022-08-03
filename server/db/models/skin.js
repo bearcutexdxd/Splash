@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Skin.init({
     name: DataTypes.STRING,
+    img: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'Skin',

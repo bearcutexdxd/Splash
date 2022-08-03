@@ -13,6 +13,9 @@ module.exports = {
       password: {
         type: Sequelize.TEXT,
       },
+      current_skin: {
+        type: Sequelize.TEXT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

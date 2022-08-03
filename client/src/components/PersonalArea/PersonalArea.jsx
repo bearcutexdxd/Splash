@@ -14,10 +14,12 @@ function PersonalArea() {
   console.log(stats);
 
   return (
-    <>
-      <div>{user.name}</div>
-      <div>{stats.Statistic.kills}</div>
-    </>
+    <div>
+      <button type="button"><img src={user.current_skin} /></button>
+      <ul>
+        <li />
+      </ul>
+    </div>
   );
 }
 

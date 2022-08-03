@@ -1,16 +1,10 @@
-const router = require('express').Router();
-const { Skin } = require('../../db/models');
+const { Router } = require('express');
+const skinController = require('../controllers/skin.controller');
 
-router
-  .route('/')
-  .get(async (req, res) => {
-    try {
-      const allSkins = await Skin.findAll();
-      return res.json(allSkins);
-    } catch (error) {
-      console.error(error);
-      return res.sendStatus(500);
-    }
-  });
+const skinRouter = Router();
+skinRouter.get('/', skinController.allSkinsGet);
+skinRouter.post('/', skinController.skinPost);
+skinRouter.get('/user/:id', skinController.userSkinsGet);
+skinRouter.put('/user', skinController.skinUserPut);
 
-module.exports = router;
+module.exports = skinRouter;
