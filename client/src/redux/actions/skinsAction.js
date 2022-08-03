@@ -15,7 +15,7 @@ export const getSkinsThunk = () => async (dispatch) => {
   }
 };
 
-export const postSkinThunk = (id, skinId) => async (dispatch) => {
+export const postSkinThunk = (user, skinId) => async (dispatch) => {
   try {
     const response = await fetch(endPoints.postSkin(), {
       method: 'post',
@@ -23,8 +23,9 @@ export const postSkinThunk = (id, skinId) => async (dispatch) => {
         'Content-type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({ id, skinId }),
+      body: JSON.stringify({ id: user.id, skinId }),
     });
+    console.log(user, skinId);
   } catch (error) {
     console.log(error.message);
   }

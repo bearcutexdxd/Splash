@@ -5,8 +5,10 @@ function PersonalArea() {
   const dispatch = useDispatch();
 
   const user = useSelector((store) => store.user);
-
   const stats = useSelector((store) => store.stats);
+  const userSkins = useSelector((store) => store.stats);
+
+
 
   return (
     <div>
@@ -14,7 +16,9 @@ function PersonalArea() {
         {/* <img src={user.current_skin} /> */}
       </button>
       <ul>
-        <li />
+     {stats?.map((el)=>(
+      <li></li>
+     ))}
       </ul>
     </div>
   );

@@ -12,6 +12,7 @@ const allSkinsGet = async (req, res) => {
 
 const skinPost = async (req, res) => {
   const { id, skinId } = req.body;
+  console.log('!!!!!', id, skinId);
   try {
     await User_Skin.create({
       user_id: id,
