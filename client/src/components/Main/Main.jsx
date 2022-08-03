@@ -6,16 +6,22 @@ import { Typewriter } from 'react-simple-typewriter';
 
 import { getRooms } from '../../redux/actions/roomsAction';
 import currentRoomAC from '../../redux/actions/currentRoomAction';
+import setPlayerIdAC from '../../redux/actions/playerIdAction';
+import setListenKeyAC from '../../redux/actions/listenKeyAction';
 
 function Main({ socket }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [input, setInput] = useState('');
   const [gameName, setGameName] = useState('');
+  const playerId = useSelector((store) => store.playerId);
   const user = useSelector((store) => store.user);
+  const listenKey = useSelector((store) => store.listenKey);
 
   useEffect(() => {
     socket.emit('getRooms');
+    dispatch(setPlayerIdAC(null));
+    dispatch(setListenKeyAC(false));
   }, []);
 
   useEffect(() => {
@@ -78,15 +84,6 @@ function Main({ socket }) {
           <Link to="/rooms">
             <button className="btn btn-primary mt-4 text-info" type="button">Rooms</button>
             {' '}
-          </Link>
-          <Link to="/game">
-            <button
-              className="btn btn-primary mt-4 text-info"
-              type="button"
-              onClick={joinGameHandle}
-            >
-              Join game
-            </button>
           </Link>
           <Link to="/shop">
             <button className="btn btn-primary mt-4 text-info" type="button">

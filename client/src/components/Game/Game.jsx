@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import React, {
-  useRef, useEffect, memo, useState, useLayoutEffect,
+  useRef, useEffect, memo, useState, useLayoutEffect, useCallback,
 } from 'react';
 
 import Konva from 'konva';
@@ -12,6 +12,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNavigate } from 'react-router';
+import setPlayerIdAC from '../../redux/actions/playerIdAction';
+import setListenKeyAC from '../../redux/actions/listenKeyAction';
+
 import characterSkin1 from '../../assets/images/skins/pipo-nekonin001.png';
 import characterSkin2 from '../../assets/images/skins/pipo-nekonin002.png';
 import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
@@ -32,12 +35,12 @@ import bonusImage2 from '../../assets/images/bonuses/life.png';
 import bonusImage3 from '../../assets/images/bonuses/largerBomb.png';
 
 function Game({
-  socket, listenKey, setListenKey, currRoomId,
+  socket,
 }) {
   // store data
   const gameState = useSelector((store) => store.gameState);
-
   const currRoom = useSelector((store) => store.currRoom);
+  const listenKey = useSelector((store) => store.listenKey);
 
   const rooms = useSelector((store) => store.rooms);
   const currentRoom = useSelector((store) => store.currentRoom);
@@ -54,7 +57,8 @@ function Game({
   const [scoreWin, setScoreWin] = useState(true);
 
   const [winner, setWinner] = useState();
-  const [playerId, setPlayerId] = useState();
+  // const [playerId, setPlayerId] = useState();
+  const playerId = useSelector((store) => store.playerId);
 
   // images states
   const [skin1State, setSkin1State] = useState(new window.Image());
@@ -89,8 +93,7 @@ function Game({
   const tileAmount = 13;
 
   socket.on('playerId', (playerNum) => {
-    console.log('in socket player id');
-    setPlayerId(playerNum);
+    dispatch(setPlayerIdAC(playerNum));
   });
 
   // player lost, show stats from this currGameState
@@ -99,46 +102,42 @@ function Game({
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       setGameEnd(true);
-      setListenKey(false);
+      dispatch(setListenKeyAC(false));
       setScoreWin(false);
+      dispatch(setPlayerIdAC(null));
       console.log('you lost D:');
     }
   });
 
-  useEffect(() => {
+  useEffect(() => { // here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (scoreWin) {
       socket.on('win', (currGameState, winnerId) => {
         setWinner(winnerId);
+        console.log(winnerId, playerId);
         if (winnerId === playerId) {
-          console.log(scoreWin);
           window.removeEventListener('keydown', onKeyDown);
           window.removeEventListener('keyup', onKeyUp);
-          setListenKey(false);
+          dispatch(setListenKeyAC(false));
+          dispatch(setPlayerIdAC(null));
           console.log('you won!');
         }
       });
     }
-  }, [scoreWin]);
+  }, [scoreWin, playerId]);
 
-  // // player won, show stats from this currGameState
-  // socket.on('win', (currGameState, winnerId) => {
-  //   setWinner(winnerId);
-  //   if (winnerId === playerId) {
-  //     console.log(scoreWin);
-  //     if (scoreWin) {
+  // if (scoreWin) {
+  //   socket.on('win', (currGameState, winnerId) => {
+  //     setWinner(winnerId);
+  //     console.log(winnerId, playerId);
+  //     if (winnerId === playerId) {
   //       window.removeEventListener('keydown', onKeyDown);
   //       window.removeEventListener('keyup', onKeyUp);
-  //       setListenKey(false);
+  //       dispatch(setListenKeyAC(false));
+  //       dispatch(setPlayerIdAC(null));
   //       console.log('you won!');
   //     }
-  //   }
-  // });
-
-  // game in progress handler
-  socket.on('gameInProgress', () => {
-    navigate('/main');
-    console.log('this game is in progress');
-  });
+  //   });
+  // }
 
   // gameEnd without AFK
   socket.on('gameEnd', (currGameState, alivePlayer) => {
@@ -146,17 +145,37 @@ function Game({
     if (alivePlayer === playerId) {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
-      setListenKey(false);
+      dispatch(setListenKeyAC(false));
+      dispatch(setPlayerIdAC(null));
       console.log('you won! by pure strength');
     }
   });
 
-  useEffect(() => {
-  }, [playerId, winner]);
+  // game in progress handler
+  socket.on('gameInProgress', () => {
+    navigate('/main');
+    console.log('this game is in progress');
+  });
 
+  // user connected to the same room
+  socket.on('userAlreadyInGame', () => {
+    navigate('/main');
+    console.log('you are already playing the game, leave lobby first');
+  });
+
+  useEffect(() => {
+  }, [playerId, winner, listenKey]);
+
+  // on dismount
   useEffect(() => () => {
     socket.emit('disconnectNavigate', currentRoom);
     setScoreWin(true);
+    window.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('keyup', onKeyUp);
+    dispatch(setListenKeyAC(false));
+    dispatch(setPlayerIdAC(null));
+    console.log('\n dismounted \n');
+    window.location.reload();
   }, []);
 
   useEffect(() => {
@@ -251,6 +270,7 @@ function Game({
 
   useEffect(() => { // event listeners
     if (listenKey) {
+      console.log('povesil');
       window.addEventListener('keydown', onKeyDown);
     }
     if (listenKey) {
@@ -258,12 +278,34 @@ function Game({
     }
   }, [listenKey]);
 
+  // const onKeyDown = useCallback(
+  //   (event) => {
+  //     console.log(listenKey);
+  //     if (listenKey) socket.emit('keydown', event.key, currentRoom, playerId);
+  //   },
+  //   [],
+  // );
+
+  // const onKeyUp = useCallback(
+  //   (event) => {
+  //     console.log(listenKey);
+  //     if (listenKey) {
+  //       console.log(playerId);
+  //       socket.emit('keyup', event.key, currentRoom, playerId);
+  //     }
+  //   },
+  //   [],
+  // );
+
   function onKeyUp(event) {
-    if (listenKey) socket.emit('keyup', event.key, currRoomId, playerId);
+    if (listenKey) {
+      console.log(playerId);
+      socket.emit('keyup', event.key, currentRoom, playerId);
+    }
   }
 
   function onKeyDown(event) {
-    if (listenKey) socket.emit('keydown', event.key, currRoomId, playerId);
+    if (listenKey) socket.emit('keydown', event.key, currentRoom, playerId);
   }
 
   useEffect(() => { // main drawing
