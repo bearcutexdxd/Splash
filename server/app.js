@@ -51,8 +51,7 @@ const { checkTakeBonus } = require('./game/check/checkTakeBonus');
 const { checkBonusesTimer } = require('./game/check/checkBonusesTimer');
 const { checkInvulnerabilityTimer } = require('./game/check/checkInvulnerabilityTimer');
 const { checkWallInvulnerabilityTimer } = require('./game/check/checkWallInvulnerabilityTimer');
-
-const intervalCounter = 0;
+const { changeTimePlayed } = require('./game/logic/changeTimePlayed');
 
 const PORT = process.env.PORT || 3030;
 
@@ -93,6 +92,7 @@ io.on('connection', (socket) => {
 
   socket.on('joinRoom', (roomId, user) => {
     currRoom = roomId;
+    let gameStarted = false;
 
     if (globalGameState[roomId]) {
       globalGameState[roomId].intervalCounter += 1;
@@ -207,11 +207,18 @@ io.on('connection', (socket) => {
       }
     });
 
+    socket.on('start game timer', () => {
+      gameStarted = true;
+    });
+
     let interval;
 
     if (globalGameState[roomId]?.intervalCounter === 1) {
+      // if (socketsNumber === 1) {
+      //   gameStarted = true;
+      // }
       interval = setInterval(() => {
-        currGameState = changeCoordsStart(currGameState);
+        currGameState = changeCoordsStart(currGameState, gameStarted);
         lastGameState = JSON.parse(JSON.stringify(currGameState));
 
         // playerIsDead check
@@ -230,6 +237,9 @@ io.on('connection', (socket) => {
           io.sockets.in(roomId).emit('gameEnd', currGameState, alivePlayer);
           clearInterval(interval);
         }
+
+        // change timePlayed for players
+        currGameState = changeTimePlayed(currGameState, gameStarted);
 
         // stopGame on leave check
         if (checkStopGameOnLeave(roomId, socketRooms, currGameState)) { // change inside for 4 players!
