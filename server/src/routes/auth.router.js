@@ -3,7 +3,6 @@ const authController = require('../controllers/auth.controller');
 const checkAuth = require('../middlewares/checkAuth');
 
 const authRouter = Router();
-console.log('защел');
 authRouter.post('/signup', authController.signUp);
 authRouter.post('/signin', authController.signIn);
 authRouter.get('/signout', authController.signOut);

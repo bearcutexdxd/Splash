@@ -105,34 +105,35 @@ function Game({
     }
   });
 
-  useEffect(() => {
-    if (scoreWin) {
-      socket.on('win', (currGameState, winnerId) => {
-        setWinner(winnerId);
-        if (winnerId === playerId) {
-          console.log(scoreWin);
-          window.removeEventListener('keydown', onKeyDown);
-          window.removeEventListener('keyup', onKeyUp);
-          setListenKey(false);
-          console.log('you won!');
-        }
-      });
-    }
-  }, [scoreWin]);
-
-  // // player won, show stats from this currGameState
-  // socket.on('win', (currGameState, winnerId) => {
-  //   setWinner(winnerId);
-  //   if (winnerId === playerId) {
-  //     console.log(scoreWin);
-  //     if (scoreWin) {
-  //       window.removeEventListener('keydown', onKeyDown);
-  //       window.removeEventListener('keyup', onKeyUp);
-  //       setListenKey(false);
-  //       console.log('you won!');
-  //     }
+  // useEffect(() => {
+  //   console.log('pobeditel');
+  //   if (scoreWin) {
+  //     socket.on('win', (currGameState, winnerId) => {
+  //       setWinner(winnerId);
+  //       if (winnerId === playerId) {
+  //         console.log(scoreWin);
+  //         window.removeEventListener('keydown', onKeyDown);
+  //         window.removeEventListener('keyup', onKeyUp);
+  //         setListenKey(false);
+  //         console.log('you won!');
+  //       }
+  //     });
   //   }
-  // });
+  // }, [scoreWin]);
+
+  // player won, show stats from this currGameState
+  socket.on('win', (currGameState, winnerId) => {
+    setWinner(winnerId);
+    if (winnerId === playerId) {
+      console.log(scoreWin);
+      if (scoreWin) {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+        setListenKey(false);
+        console.log('you won!');
+      }
+    }
+  });
 
   // game in progress handler
   socket.on('gameInProgress', () => {
@@ -151,12 +152,20 @@ function Game({
     }
   });
 
+  // user connected to the same room
+  socket.on('userAlreadyInGame', () => {
+    navigate('/main');
+    console.log('you are already playing the game, leave lobby first');
+  });
+
   useEffect(() => {
   }, [playerId, winner]);
 
+  // on dismount
   useEffect(() => () => {
     socket.emit('disconnectNavigate', currentRoom);
     setScoreWin(true);
+    window.location.reload();
   }, []);
 
   useEffect(() => {

@@ -10,7 +10,6 @@ import currentRoomAC from '../../redux/actions/currentRoomAction';
 function Main({ socket }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [input, setInput] = useState('');
   const [gameName, setGameName] = useState('');
   const user = useSelector((store) => store.user);
 
@@ -26,23 +25,10 @@ function Main({ socket }) {
     }
   }, [gameName]);
 
-  function inputHandle(e) {
-    setInput(e.target.value);
-  }
-
   function createGameHandle() {
     socket.emit('createRoom');
     // dispatch(getRooms());
   }
-
-  function joinGameHandle() {
-    socket.emit('joinRoom', input, user);
-    // dispatch(getRooms());
-  }
-
-  socket.on('sendRooms', (socketRooms) => {
-    console.log(socketRooms);
-  });
 
   socket.on('getRoomName', (roomId) => {
     setGameName(roomId);
@@ -79,27 +65,11 @@ function Main({ socket }) {
             <button className="btn btn-primary mt-4 text-info" type="button">Rooms</button>
             {' '}
           </Link>
-          <Link to="/game">
-            <button
-              className="btn btn-primary mt-4 text-info"
-              type="button"
-              onClick={joinGameHandle}
-            >
-              Join game
-            </button>
-          </Link>
           <Link to="/shop">
             <button className="btn btn-primary mt-4 text-info" type="button">
               Shop
             </button>
           </Link>
-          <input
-            onChange={inputHandle}
-            type="text"
-            value={input}
-            placeholder="Type here"
-            className="input mt-4 input-bordered input-warning w-full max-w-xs text-info text-center"
-          />
         </div>
       </div>
     </div>
