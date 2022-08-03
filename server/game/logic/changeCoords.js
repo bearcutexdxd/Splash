@@ -1,4 +1,4 @@
-function changeCoordsStart(gameStateArg) {
+function changeCoordsStart(gameStateArg, gameStarted) {
   const currGameState = gameStateArg;
   const value = 10;
 
@@ -13,6 +13,10 @@ function changeCoordsStart(gameStateArg) {
 
   // currGameState.player4.pos.x += value;
   currGameState.player4.pos.y += value;
+
+  if (gameStarted) {
+    currGameState.gameTimer += 1;
+  }
 
   return currGameState;
 }

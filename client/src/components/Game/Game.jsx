@@ -723,6 +723,7 @@ function Game({
         ))}
       </div>
       <div className="absolute mt-32 ml-4 ">
+        {gameState.gameTimer}
         <div className="mt-8 text-red-200">
           player 1:
           <div>

@@ -31,6 +31,9 @@ function initialGameState() {
       bombsCounter: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
+      statistics: {
+        kills: 0, deaths: 0, loses: 0, wins: 0, timePlayed: 0,
+      },
     },
     player2: {
       direction: 'down',
@@ -49,6 +52,9 @@ function initialGameState() {
       bombsCounter: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
+      statistics: {
+        kills: 0, deaths: 0, loses: 0, wins: 0, timePlayed: 0,
+      },
     },
     player3: {
       direction: 'down',
@@ -67,6 +73,9 @@ function initialGameState() {
       bombsCounter: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
+      statistics: {
+        kills: 0, deaths: 0, loses: 0, wins: 0, timePlayed: 0,
+      },
     },
     player4: {
       direction: 'down',
@@ -85,6 +94,9 @@ function initialGameState() {
       bombsCounter: 0,
       invulnerability: { active: false, timer: invulnerabilityTimer },
       bonusesTimer: { speed: { active: false, timer: bonusesTimer }, moreBombs: { active: false, timer: bonusesTimer } },
+      statistics: {
+        kills: 0, deaths: 0, loses: 0, wins: 0, timePlayed: 0,
+      },
     },
     bombs: [],
     splash: [],
@@ -255,6 +267,7 @@ function initialGameState() {
     ],
     intervalCounter: 0,
     gridsize: 32,
+    gameTimer: 0,
   };
 }
 

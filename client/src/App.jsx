@@ -27,6 +27,7 @@ function App() {
   socket.on('startGame', (roomId) => {
     setListenKey(true);
     console.log('game started!');
+    socket.emit('start game timer');
   });
 
   socket.on('gameState', (state) => {
