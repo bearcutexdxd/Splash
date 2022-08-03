@@ -141,12 +141,18 @@ io.on('connection', (socket) => {
     socket.emit('playerId', socket.number);
 
     // sending lobby users
-    const roomUsersNicknames = socketRooms.map((el) => {
-      const userInfo = { nickname: el.name, playerId: el.playerId };
-      return userInfo;
-    });
+    if (globalGameState[roomId].intervalCounter > 1) {
+      let roomUsersNicknames = socketRooms.map((el) => {
+        if (el.room === roomId) {
+          const userInfo = { nickname: el.name, playerId: el.playerId };
+          return userInfo;
+        }
+      });
+      roomUsersNicknames = roomUsersNicknames.filter((el) => el !== undefined);
+      io.sockets.in(roomId).emit('roomUsersNicknames', roomUsersNicknames);
 
-    console.log(roomUsersNicknames, '\n users nicmaknames!!!!!!!!!!!!!! \n');
+      console.log(roomUsersNicknames, '\n users nicmaknames!!!!!!!!!!!!!! \n');
+    }
 
     if (socketsNumber === 1) { // starting game, (players number === 4) intervalCounter
       io.sockets.in(roomId).emit('startGame', roomId);
