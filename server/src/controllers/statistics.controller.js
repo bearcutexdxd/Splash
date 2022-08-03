@@ -1,29 +1,40 @@
+/* eslint-disable max-len */
 const { User, Statistics } = require('../../db/models');
 
 const statPut = async (req, res) => {
-  const {
-    id, kills, deaths, loses, wins,
-  } = req.body;
-  try {
-    const userStat = await Statistics.findOne({ where: { user_id: id } });
-    if (kills) {
-      userStat.kills += kills;
+  const { gameState } = req.body;
+  const { roomNicknames } = req.body;
+
+  const data = roomNicknames.map((el) => {
+    if (el.playerId === 1) {
+      return { ...el, statistics: gameState.player1.statistics };
     }
-    if (deaths) {
-      userStat.deaths += deaths;
+    if (el.playerId === 2) {
+      return { ...el, statistics: gameState.player2.statistics };
     }
-    if (loses) {
-      userStat.loses += loses;
+    if (el.playerId === 3) {
+      return { ...el, statistics: gameState.player3.statistics };
     }
-    if (wins) {
-      userStat.wins += wins;
+    if (el.playerId === 4) {
+      return { ...el, statistics: gameState.player4.statistics };
     }
-    userStat.save();
-    return res.sendStatus(200);
-  } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
-  }
+    return el;
+  });
+
+  data.forEach(async (el) => {
+    try {
+      const user = await User.findOne({ where: { name: el.nickname, include: { model: Statistics } } });
+      user.Statistics.kills += el.statistics.kills;
+      user.Statistics.deaths += el.statistics.deaths;
+      user.Statistics.wins += el.statistics.wins;
+      user.Statistics.loses += el.statistics.loses;
+
+      await user.save();
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+    }
+  });
 };
 
 const statGet = async (req, res) => {

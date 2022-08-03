@@ -30,6 +30,7 @@ import hitWallImage from '../../assets/images/walls/wallhit1.png';
 import bonusImage1 from '../../assets/images/bonuses/speed.png';
 import bonusImage2 from '../../assets/images/bonuses/life.png';
 import bonusImage3 from '../../assets/images/bonuses/largerBomb.png';
+import sendStatistics from '../../utils';
 
 function Game({
   socket, listenKey, setListenKey, currRoomId,
@@ -55,6 +56,9 @@ function Game({
 
   const [winner, setWinner] = useState();
   const [playerId, setPlayerId] = useState();
+
+  // room nicknames state
+  const [roomNicknames, setRoomNicknames] = useState([]);
 
   // images states
   const [skin1State, setSkin1State] = useState(new window.Image());
@@ -94,7 +98,9 @@ function Game({
   });
 
   socket.on('roomUsersNicknames', (roomUsersNicknames) => {
-    console.log(roomUsersNicknames);
+    // console.log(roomUsersNicknames);
+    setRoomNicknames(roomUsersNicknames);
+    console.log(roomNicknames);
   });
 
   // player lost, show stats from this currGameState
@@ -137,6 +143,7 @@ function Game({
         console.log('you won!');
       }
     }
+    sendStatistics(currGameState, roomNicknames);
   });
 
   // game in progress handler
@@ -154,6 +161,7 @@ function Game({
       setListenKey(false);
       console.log('you won! by pure strength');
     }
+    sendStatistics(currGameState, roomNicknames);
   });
 
   // user connected to the same room
