@@ -52,7 +52,7 @@ function Main({ socket }) {
   return (
     <div className="backmain">
       <div className="flex justify-center items-center flex-col">
-        <h1 className="text-2xl mt-12 text-warning">
+        <h1 className="text-2xl text-warning">
           <span>
             <Typewriter
               cursor
