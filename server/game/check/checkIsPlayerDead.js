@@ -5,7 +5,6 @@ function checkIsPlayerDead(currGameState, io, roomId) {
   if (!(currGameState.player1.hp) && currGameState.player1.isAlive) {
     io.sockets.in(roomId).emit('lose', currGameState, 1);
     currGameState.player1.statistics.deaths += 1;
-    currGameState.player1.statistics.loses += 1;
 
     if (currGameState.player1.lastDamageFrom === 2) {
       currGameState.player2.statistics.kills += 1;
@@ -25,7 +24,6 @@ function checkIsPlayerDead(currGameState, io, roomId) {
   if (!(currGameState.player2.hp) && currGameState.player2.isAlive) {
     io.sockets.in(roomId).emit('lose', currGameState, 2);
     currGameState.player2.statistics.deaths += 1;
-    currGameState.player2.statistics.loses += 1;
 
     if (currGameState.player2.lastDamageFrom === 1) {
       currGameState.player1.statistics.kills += 1;
@@ -45,7 +43,6 @@ function checkIsPlayerDead(currGameState, io, roomId) {
   if (!(currGameState.player3.hp) && currGameState.player3.isAlive) {
     io.sockets.in(roomId).emit('lose', currGameState, 3);
     currGameState.player3.statistics.deaths += 1;
-    currGameState.player3.statistics.loses += 1;
 
     if (currGameState.player3.lastDamageFrom === 1) {
       currGameState.player1.statistics.kills += 1;
@@ -65,7 +62,6 @@ function checkIsPlayerDead(currGameState, io, roomId) {
   if (!(currGameState.player4.hp) && currGameState.player4.isAlive) {
     io.sockets.in(roomId).emit('lose', currGameState, 4);
     currGameState.player4.statistics.deaths += 1;
-    currGameState.player4.statistics.loses += 1;
 
     if (currGameState.player4.lastDamageFrom === 1) {
       currGameState.player1.statistics.kills += 1;
