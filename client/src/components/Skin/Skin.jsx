@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { hostFrontSkin } from '../../config/endPoints';
-import { getSkinThunk } from '../../redux/actions/skinAction';
 
 function Skin(name, id, img) {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   function SkinIdHandler() {
-    dispatch(getSkinThunk(user, id));
+    // dispatch(getSkinThunk(user, id));
   }
   const nameCard = 'pipo-nekonin010.png';
 
