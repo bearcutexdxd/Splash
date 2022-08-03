@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import React, {
   useRef, useEffect, memo, useState, useLayoutEffect, useCallback,
@@ -18,14 +19,20 @@ import characterSkin1 from '../../assets/images/skins/pipo-nekonin001.png';
 import characterSkin2 from '../../assets/images/skins/pipo-nekonin002.png';
 import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
 import characterSkin4 from '../../assets/images/skins/pipo-nekonin004.png';
-import balloonImage from '../../assets/images/bomb/bomb.png';
+import bomb1 from '../../assets/images/bomb/bomb1.png';
+import bomb2 from '../../assets/images/bomb/bomb2.png';
+import bomb3 from '../../assets/images/bomb/bomb3.png';
+import bomb4 from '../../assets/images/bomb/bomb4.png';
 import splashImage from '../../assets/images/splash/splash.png';
 
 import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
-import wallImage from '../../assets/images/walls/wall.png';
-import bonusImage1 from '../../assets/images/skins/pipo-nekonin006.png';
-import bonusImage2 from '../../assets/images/skins/pipo-nekonin007.png';
-import bonusImage3 from '../../assets/images/skins/pipo-nekonin008.png';
+import unbreakableWallImage from '../../assets/images/walls/wall1.png';
+import oneHPwallImage from '../../assets/images/walls/wall4.png';
+import twoHPwallImage from '../../assets/images/walls/wall3.png';
+import hitWallImage from '../../assets/images/walls/wallhit1.png';
+import bonusImage1 from '../../assets/images/bonuses/speed.png';
+import bonusImage2 from '../../assets/images/bonuses/life.png';
+import bonusImage3 from '../../assets/images/bonuses/largerBomb.png';
 
 function Game({
   socket,
@@ -41,13 +48,14 @@ function Game({
   const { bombs } = gameState;
   const { splash } = gameState;
   const { walls } = gameState;
+  const { bonuses } = gameState;
 
   const dispatch = useDispatch();
-
-  const { bonuses } = gameState;
   const navigate = useNavigate();
 
-  // player id state
+  const [gameEnd, setGameEnd] = useState(false);
+  const [scoreWin, setScoreWin] = useState(true);
+
   const [winner, setWinner] = useState();
   // const [playerId, setPlayerId] = useState();
   const playerId = useSelector((store) => store.playerId);
@@ -57,13 +65,19 @@ function Game({
   const [skin2State, setSkin2State] = useState(new window.Image());
   const [skin3State, setSkin3State] = useState(new window.Image());
   const [skin4State, setSkin4State] = useState(new window.Image());
-  const [balloonState, setBalloonState] = useState(new window.Image());
+
+  const [bomb1State, setBomb1State] = useState(new window.Image());
+  const [bomb2State, setBomb2State] = useState(new window.Image());
+  const [bomb3State, setBomb3State] = useState(new window.Image());
+  const [bomb4State, setBomb4State] = useState(new window.Image());
+
   const [splashState, setSplashState] = useState(new window.Image());
 
-  const [gameEnd, setGameEnd] = useState(false);
-  const [scoreWin, setScoreWin] = useState(true);
+  const [unbreakableWallState, setUnbreakableWallState] = useState(new window.Image());
+  const [twoHPwallState, setTwoHPwallState] = useState(new window.Image());
+  const [oneHPwallState, setOneHPwallState] = useState(new window.Image());
+  const [hitWallState, sethitWallState] = useState(new window.Image());
 
-  const [wallState, setWallState] = useState(new window.Image());
   const [bonus1State, setBonus1State] = useState(new window.Image());
   const [bonus2State, setBonus2State] = useState(new window.Image());
   const [bonus3State, setBonus3State] = useState(new window.Image());
@@ -73,12 +87,6 @@ function Game({
   const skin2Ref = useRef();
   const skin3Ref = useRef();
   const skin4Ref = useRef();
-  const balloonRef = useRef();
-  const splashRef = useRef();
-  const wallRef = useRef();
-  const bonus1Ref = useRef();
-  const bonus2Ref = useRef();
-  const bonus3Ref = useRef();
 
   // const values
   const gridsize = 32;
@@ -198,17 +206,41 @@ function Game({
     skin4.src = characterSkin4;
     setSkin4State(skin4);
 
-    const balloon = new window.Image();
-    balloon.src = balloonImage;
-    setBalloonState(balloon);
+    const bomb1Img = new window.Image();
+    bomb1Img.src = bomb1;
+    setBomb1State(bomb1Img);
+
+    const bomb2Img = new window.Image();
+    bomb2Img.src = bomb2;
+    setBomb2State(bomb2Img);
+
+    const bomb3Img = new window.Image();
+    bomb3Img.src = bomb3;
+    setBomb3State(bomb3Img);
+
+    const bomb4Img = new window.Image();
+    bomb4Img.src = bomb4;
+    setBomb4State(bomb4Img);
 
     const splashImg = new window.Image();
     splashImg.src = splashImage;
     setSplashState(splashImg);
 
-    const wallImg = new window.Image();
-    wallImg.src = wallImage;
-    setWallState(wallImg);
+    const unbreakableWallImg = new window.Image();
+    unbreakableWallImg.src = unbreakableWallImage;
+    setUnbreakableWallState(unbreakableWallImg);
+
+    const oneHPwallImg = new window.Image();
+    oneHPwallImg.src = oneHPwallImage;
+    setOneHPwallState(oneHPwallImg);
+
+    const twoHPwallImg = new window.Image();
+    twoHPwallImg.src = twoHPwallImage;
+    setTwoHPwallState(twoHPwallImg);
+
+    const hitWallImg = new window.Image();
+    hitWallImg.src = hitWallImage;
+    sethitWallState(hitWallImg);
 
     const bonus1 = new window.Image();
     bonus1.src = bonusImage1;
@@ -276,15 +308,7 @@ function Game({
     if (listenKey) socket.emit('keydown', event.key, currentRoom, playerId);
   }
 
-  useEffect(() => {
-    wallRef?.current?.cache();
-  }, [wallState]);
-
   useEffect(() => { // main drawing
-    wallRef?.current?.cache();
-    wallRef?.current?.filters([Konva.Filters.Brighten]);
-    wallRef?.current?.brightness(0.3);
-
     switch (gameState.player1.direction) {
       case 'up':
         switch (gameState.player1.animation) {
@@ -735,13 +759,87 @@ function Game({
   return (
 
     <>
-      <div>
+      <div className="absolute text-white mt-4 ml-4">
         {currRoom.map((el) => (
           <div key={el.userId}>{el.name}</div>
         ))}
       </div>
+      <div className="absolute mt-32 ml-4 ">
+        <div className="mt-8 text-red-200">
+          player 1:
+          <div>
+            life:
+            {' '}
+            {gameState.player1.hp}
+          </div>
+          <div>
+            speed:
+            {' '}
+            {gameState.player1.bonusesTimer.speed.active ? gameState.player1.bonusesTimer.speed.timer : null}
+          </div>
+          <div>
+            more bombs:
+            {' '}
+            {gameState.player1.bonusesTimer.moreBombs.active ? gameState.player1.bonusesTimer.moreBombs.timer : null}
+          </div>
+        </div>
+        <div className="mt-8 text-green-200">
+          player 2:
+          <div>
+            life:
+            {' '}
+            {gameState.player2.hp}
+          </div>
+          <div>
+            speed:
+            {' '}
+            {gameState.player2.bonusesTimer.speed.active ? gameState.player2.bonusesTimer.speed.timer : null}
+          </div>
+          <div>
+            more bombs:
+            {' '}
+            {gameState.player2.bonusesTimer.moreBombs.active ? gameState.player2.bonusesTimer.moreBombs.timer : null}
+          </div>
+        </div>
+        <div className="mt-8 text-blue-200">
+          player 3:
+          <div>
+            life:
+            {' '}
+            {gameState.player3.hp}
+          </div>
+          <div>
+            speed:
+            {' '}
+            {gameState.player3.bonusesTimer.speed.active ? gameState.player3.bonusesTimer.speed.timer : null}
+          </div>
+          <div>
+            more bombs:
+            {' '}
+            {gameState.player3.bonusesTimer.moreBombs.active ? gameState.player3.bonusesTimer.moreBombs.timer : null}
+          </div>
+        </div>
+        <div className="mt-8 text-yellow-100">
+          player 4:
+          <div>
+            life:
+            {' '}
+            {gameState.player4.hp}
+          </div>
+          <div>
+            speed:
+            {' '}
+            {gameState.player4.bonusesTimer.speed.active ? gameState.player4.bonusesTimer.speed.timer : null}
+          </div>
+          <div>
+            more bombs:
+            {' '}
+            {gameState.player4.bonusesTimer.moreBombs.active ? gameState.player4.bonusesTimer.moreBombs.timer : null}
+          </div>
+        </div>
+      </div>
 
-      <div className="flex justify-center items-center mt-24 min-h-[100vh] bg-gray-700">
+      <div className="flex justify-center items-center min-h-[100vh] bg-gray-700">
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
           <div className="flex justify-center items-center pt-32">
@@ -755,7 +853,6 @@ function Game({
                     y={el2.y * gridsize}
                     width={gameState.gridsize}
                     height={gameState.gridsize}
-                    ref={splashRef}
                     key={el2.id}
                   />
                 )))}
@@ -763,51 +860,102 @@ function Game({
               <Layer>
 
                 {walls?.map((el) => {
-                  if (el.timer % 10 < 5 && el.timer !== 30) {
+                  if (el.wallTimer % 10 < 5 && el.wallTimer !== 30) {
                     return (
                       <Image
-                        image={wallState}
+                        image={hitWallState}
                         x={el.x * gridsize}
                         y={el.y * gridsize}
-                        // filters={[Konva.Filters.Brighten]}
-                        // brightness={0.3}
                         width={gameState.gridsize}
                         height={gameState.gridsize}
                         key={el.id}
-                        opacity={0.2}
-                        ref={wallRef}
+                      />
+                    );
+                  } if (el.hp === 1) {
+                    return (
+                      <Image
+                        image={oneHPwallState}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  } if (el.hp === 2) {
+                    return (
+                      <Image
+                        image={twoHPwallState}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  } if (el.hp === 'infinity') {
+                    return (
+                      <Image
+                        image={unbreakableWallState}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
                       />
                     );
                   }
-                  return (
-                    <Image
-                      image={wallState}
-                      x={el.x * gridsize}
-                      y={el.y * gridsize}
-                      // filters={[Konva.Filters.Brighten]}
-                      // brightness={0.3}
-                      width={gameState.gridsize}
-                      height={gameState.gridsize}
-                      key={el.id}
-                      opacity={1}
-                      ref={wallRef}
-                    />
-                  );
                 })}
 
               </Layer>
               <Layer>
-                {bombs?.map((el) => (
-                  <Image
-                    image={balloonState}
-                    x={el.x * gridsize}
-                    y={el.y * gridsize}
-                    width={gameState.gridsize}
-                    height={gameState.gridsize}
-                    ref={balloonRef}
-                    key={el.id}
-                  />
-                ))}
+                {bombs?.map((el) => {
+                  if (el.timer <= 120 && el.timer > 90) {
+                    return (
+                      <Image
+                        image={bomb1State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  } if (el.timer <= 90 && el.timer > 60) {
+                    return (
+                      <Image
+                        image={bomb2State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  } if (el.timer <= 60 && el.timer > 30) {
+                    return (
+                      <Image
+                        image={bomb3State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  } if (el.timer <= 30) {
+                    return (
+                      <Image
+                        image={bomb4State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  }
+                })}
               </Layer>
               <Layer>
                 <Image
@@ -858,7 +1006,7 @@ function Game({
                         y={el.y * gridsize}
                         width={gameState.gridsize}
                         height={gameState.gridsize}
-                        ref={bonus1Ref}
+                        key={el.id}
                       />
                     );
                   } if (el.bonus === 'life') {
@@ -869,7 +1017,7 @@ function Game({
                         y={el.y * gridsize}
                         width={gameState.gridsize}
                         height={gameState.gridsize}
-                        ref={bonus2Ref}
+                        key={el.id}
                       />
                     );
                   }
@@ -880,7 +1028,7 @@ function Game({
                       y={el.y * gridsize}
                       width={gameState.gridsize}
                       height={gameState.gridsize}
-                      ref={bonus3Ref}
+                      key={el.id}
                     />
                   );
                 })}

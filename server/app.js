@@ -47,6 +47,10 @@ const { resetBombsCounter } = require('./game/logic/reserBombsCounter');
 const { deleteWalls } = require('./game/logic/deleteWalls');
 const { wallAnimation } = require('./game/logic/animation/wallAnimation');
 const { generateBonus } = require('./game/logic/generateBonus');
+const { checkTakeBonus } = require('./game/check/checkTakeBonus');
+const { checkBonusesTimer } = require('./game/check/checkBonusesTimer');
+const { checkInvulnerabilityTimer } = require('./game/check/checkInvulnerabilityTimer');
+const { checkWallInvulnerabilityTimer } = require('./game/check/checkWallInvulnerabilityTimer');
 
 const intervalCounter = 0;
 
@@ -157,6 +161,8 @@ io.on('connection', (socket) => {
       counter1: 0, counter2: 0, counter3: 0, counter4: 0,
     };
     let lastGameState = {};
+
+    // constants
     const fps = 60;
     const animationFrame = 120;
 
@@ -229,6 +235,9 @@ io.on('connection', (socket) => {
         if (checkStopGameOnLeave(roomId, socketRooms, currGameState)) { // change inside for 4 players!
           clearInterval(interval);
         }
+        
+        // check bonuses timer
+        currGameState = checkBonusesTimer(currGameState);
 
         // movement logic
         currGameState = movement(currGameState);
@@ -239,6 +248,12 @@ io.on('connection', (socket) => {
         animation = resetCountersOverflow(animation, animationFrame);
         currGameState = setAnimation(currGameState, animation, animationFrame).currGameState;
         animation = setAnimation(currGameState, animation, animationFrame).animation;
+
+        // check player invulnerability
+        currGameState = checkInvulnerabilityTimer(currGameState);
+
+        // check walls invulnerability
+        currGameState = checkWallInvulnerabilityTimer(currGameState);
 
         // splash generation
         currGameState = setSplash(currGameState, socket.number);
@@ -254,6 +269,9 @@ io.on('connection', (socket) => {
 
         // generate bonus
         currGameState = generateBonus(currGameState);
+
+        // take bonus
+        currGameState = checkTakeBonus(currGameState);
 
         // delete walls if destroyed
         currGameState = deleteWalls(currGameState);
