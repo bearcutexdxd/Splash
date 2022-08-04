@@ -88,6 +88,8 @@ function Game({
   const gridsize = 32;
   const tileAmount = 13;
 
+  const audio = new Audio('https://disk.yandex.com/d/Cf7HJ2EC2c_ZEA');
+
   socket.on('playerId', (playerNum) => {
     console.log('in socket player id');
     setPlayerId(playerNum);
@@ -174,6 +176,7 @@ function Game({
 
   useEffect(() => {
     dispatch(getCurrRoom());
+    audio.play();
   }, []);
 
   useEffect(() => {
