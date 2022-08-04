@@ -11,13 +11,19 @@ const allSkinsGet = async (req, res) => {
 };
 
 const skinPost = async (req, res) => {
-  const { id, skinId } = req.body;
+  const { id, skinId, price } = req.body;
+  const user = await User.findOne({ where: { id } });
   console.log('!!!!!', id, skinId);
   try {
     await User_Skin.create({
       user_id: id,
       skin_id: skinId,
     });
+    if (price) {
+      user.balance -= price;
+      await user.save();
+    }
+
     res.sendStatus(200);
   } catch (error) {
     console.error(error);

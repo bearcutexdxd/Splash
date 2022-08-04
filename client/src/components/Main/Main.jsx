@@ -57,13 +57,10 @@ function Main({ socket }) {
         </div>
         <div className="flex justify-center items-center">
           <div className="m-auto h-screen flex justify-center items-center flex-col">
-            <button
-              className="btn btn-primary mt-4 text-info"
-              type="button"
-              onClick={createGameHandle}
-            >
-              Create game
-            </button>
+            <Link to={`/PersonalArea/${user.id}`}>
+              <button className="btn btn-primary mt-4 text-info" type="button">Profail</button>
+              {' '}
+            </Link>
             <Link to="/rooms">
               <button className="btn btn-primary mt-4 text-info" type="button">Rooms</button>
               {' '}

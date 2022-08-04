@@ -54,7 +54,6 @@ export const checkAuth = () => async (dispatch) => {
     if (response.ok) {
       const data = await response.json();
       dispatch(addUserAC(data));
-      console.log('redax s');
     }
   } catch (error) {
     console.log(error.message);

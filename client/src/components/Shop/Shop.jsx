@@ -10,7 +10,6 @@ function Shop() {
   useEffect(() => {
     dispatch(getSkinsThunk());
   }, []);
-  console.log('skins!!!!', skins);
   return (
     <>
       <Navbar />
@@ -19,7 +18,7 @@ function Shop() {
           Магазин Четыре лапы
           <div className="grid grid-cols-6">
             {skins?.map((el) => (
-              <Skin key={el.id} skinId={el.id} name={el.name} img={el.img} />
+              <Skin key={el.id} skinId={el.id} name={el.name} img={el.img} price={el.price} />
             ))}
           </div>
         </div>

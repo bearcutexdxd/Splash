@@ -19,7 +19,7 @@ function PersonalArea() {
 
   function SkinIdHandler(img) {
     dispatch(putSkinUserThunk(user, img));
-    console.log('pull user');
+    setActive(false);
   }
   const user = useSelector((store) => store.user);
   console.log('user', user);
@@ -30,22 +30,25 @@ function PersonalArea() {
   return (
     <>
       <Navbar />
-      <div className="flex items-center flex-row main">
-        <div className="div ">
+      <div className="flex items-center flex-row area text-primary">
+        <div className="div">
           <button className="m-auto" type="button" onClick={() => setActive(true)}>
+            {`${user.balance} S.coin`}
             <img className="catScin" src={`${hostFrontSkin()}${user.skin}`} alt="BEST" />
           </button>
         </div>
-        <div className="div">
-          <h2>Statistics</h2>
-          {stats?.map((el) => (
-            <ul key={el.id}>
-              <li>{`Kills ${el.kills}`}</li>
-              <li>{`Deaths ${el.deaths}`}</li>
-              <li>{`loses ${el.loses}`}</li>
-              <li>{`Wins ${el.wins}`}</li>
-            </ul>
-          ))}
+        <div className="div2">
+          <div className="m-auto">
+            <h2 className="text-6xl ">Statistics</h2>
+            {stats?.map((el) => (
+              <ul className="flex flex-col items-center text-3xl" key={el.id}>
+                <li>{`Kills--${el.kills}`}</li>
+                <li>{`Deaths--${el.deaths}`}</li>
+                <li>{`loses--${el.loses}`}</li>
+                <li>{`Wins--${el.wins}`}</li>
+              </ul>
+            ))}
+          </div>
         </div>
       </div>
       <Modal active={active} setActive={setActive}>
