@@ -41,7 +41,6 @@ function App() {
   return (
     <div>
       <div className="App">
-        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />

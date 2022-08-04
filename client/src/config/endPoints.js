@@ -1,5 +1,6 @@
 export const host = () => 'http://localhost:3030';
 export const getStats = (id) => `${host()}/statistics/${id}`;
+export const sendStats = () => `${host()}/statistics/new`;
 export const signUp = () => `${host()}/auth/signup`;
 export const signIn = () => `${host()}/auth/signin`;
 export const signOut = () => `${host()}/auth/signout`;
