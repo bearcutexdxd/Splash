@@ -9,7 +9,6 @@ import currentRoomReducer from './currentRoomReducer';
 import { skinReducer, userSkinsReducer } from './skinsReducer';
 import errorReducer from './errorReducer';
 
-
 const rootReducer = combineReducers({
   user: userReducer,
   stats: statisticsReducer,
