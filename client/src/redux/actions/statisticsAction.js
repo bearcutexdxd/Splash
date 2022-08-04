@@ -7,6 +7,7 @@ export const getStats = (id) => async (dispatch) => {
     const response = await fetch(endPoints.getStats(id), {
       credentials: 'include',
     });
+    console.log('!!!!! pull', id);
     if (response.ok) {
       const data = await response.json();
       dispatch(getStatsAC(data));

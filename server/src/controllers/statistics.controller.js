@@ -1,4 +1,4 @@
-const { User, Statistics } = require('../../db/models');
+const { Statistics } = require('../../db/models');
 
 const statPut = async (req, res) => {
   const {
@@ -30,7 +30,7 @@ const statGet = async (req, res) => {
   const { id } = req.params;
   console.log('!!!!!', id);
   try {
-    const userStat = await User.findOne({ where: { id }, include: Statistics });
+    const userStat = await Statistics.findAll({ where: { user_id: id } });
     return res.json(userStat);
   } catch (error) {
     console.error(error);

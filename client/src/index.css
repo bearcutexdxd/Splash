@@ -70,3 +70,20 @@ body {
 .shop {
   min-width: 200px;
 }
+.skinImg{
+  width: 80px;
+}
+
+.main{
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid red;
+}
+
+.div{
+  width: 50%;
+}
+
+.catScin{
+  height: 20vh;
+}

@@ -1,4 +1,5 @@
 import * as endPoints from '../../config/endPoints';
+import { checkAuth } from './userAction';
 
 export const getSkinsAC = (data) => ({ type: 'GET_SKINS', payload: data });
 export const getUserSkinsAC = (data) => ({ type: 'GET_USER_SKINS', payload: data });
@@ -31,16 +32,18 @@ export const postSkinThunk = (user, skinId) => async (dispatch) => {
   }
 };
 
-export const putSkinUserThunk = (id, newSkin) => async (dispatch) => {
+export const putSkinUserThunk = (user, newSkin) => async (dispatch) => {
   try {
-    const response = await fetch(endPoints.postSkin(), {
+    const response = await fetch(endPoints.putSkinUser(), {
       method: 'put',
       headers: {
         'Content-type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({ id, newSkin }),
+      body: JSON.stringify({ id: user.id, newSkin }),
     });
+    if (!response.ok) throw Error('bad request');
+    dispatch(checkAuth());
   } catch (error) {
     console.log(error.message);
   }
@@ -52,6 +55,7 @@ export const getUserSkinsThunk = (id) => async (dispatch) => {
     if (response.ok) {
       const data = await response.json();
       dispatch(getUserSkinsAC(data));
+      console.log('data!!!!', data);
     }
   } catch (error) {
     console.log(error.message);
