@@ -103,13 +103,14 @@ function Game({
     window.location.reload();
   }
 
+  socket.on('playerId', (playerNum) => {
+    console.log('in socket player id');
+    console.log('playerNum', playerNum);
+    setPlayerId(playerNum);
+  });
+
   useEffect(() => {
     dispatch(getCurrRoom());
-
-    socket.on('playerId', (playerNum) => {
-      console.log('in socket player id');
-      setPlayerId(playerNum);
-    });
 
     socket.on('roomUsersNicknames', (roomUsersNicknames) => {
       // console.log(roomUsersNicknames);
