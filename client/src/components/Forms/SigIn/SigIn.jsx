@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signIn } from '../../../redux/actions/userAction';
 
 function SigIn({ setActive }) {
   const [input, setInput] = useState({});
+  const error = useSelector((store) => store.error);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ function SigIn({ setActive }) {
         <button className="btn btn-primary text-info text-center mt-4" type="submit">
           Sig in
         </button>
+        {error.error}
         {/* <div>
           {login ? (
             <div className={styles.noyLogin}>Wrong login or password</div>

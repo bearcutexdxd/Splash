@@ -37,6 +37,7 @@ function generateBomb(gameStateArg, currPlayer, playerId) {
             timer,
             owner: playerId,
             isSolid: false,
+            strength: currGameState.player1.strength,
             id: uuidv4(),
           });
           currGameState.player1.bombsCounter += 1;
@@ -61,6 +62,7 @@ function generateBomb(gameStateArg, currPlayer, playerId) {
             timer,
             owner: playerId,
             isSolid: false,
+            strength: currGameState.player2.strength,
             id: uuidv4(),
           });
           currGameState.player2.bombsCounter += 1;
@@ -85,6 +87,7 @@ function generateBomb(gameStateArg, currPlayer, playerId) {
             timer,
             owner: playerId,
             isSolid: false,
+            strength: currGameState.player3.strength,
             id: uuidv4(),
           });
           currGameState.player3.bombsCounter += 1;
@@ -109,6 +112,7 @@ function generateBomb(gameStateArg, currPlayer, playerId) {
             timer,
             owner: playerId,
             isSolid: false,
+            strength: currGameState.player4.strength,
             id: uuidv4(),
           });
           currGameState.player4.bombsCounter += 1;

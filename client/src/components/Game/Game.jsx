@@ -4,10 +4,8 @@ import React, {
   useRef, useEffect, memo, useState, useLayoutEffect,
 } from 'react';
 
-import Konva from 'konva';
-
 import {
-  Image, Layer, Rect, Stage,
+  Image, Layer, Stage,
 } from 'react-konva';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -20,16 +18,17 @@ import bomb1 from '../../assets/images/bomb/bomb1.png';
 import bomb2 from '../../assets/images/bomb/bomb2.png';
 import bomb3 from '../../assets/images/bomb/bomb3.png';
 import bomb4 from '../../assets/images/bomb/bomb4.png';
-import splashImage from '../../assets/images/splash/splash.png';
+import splashImage from '../../assets/images/splash/splash2.png';
 
 import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
-import unbreakableWallImage from '../../assets/images/walls/wall1.png';
-import oneHPwallImage from '../../assets/images/walls/wall4.png';
-import twoHPwallImage from '../../assets/images/walls/wall3.png';
+import unbreakableWallImage from '../../assets/images/walls/hard2.png';
+import oneHPwallImage from '../../assets/images/walls/soft1.png';
+import twoHPwallImage from '../../assets/images/walls/hard1.png';
 import hitWallImage from '../../assets/images/walls/wallhit1.png';
-import bonusImage1 from '../../assets/images/bonuses/speed.png';
-import bonusImage2 from '../../assets/images/bonuses/life.png';
-import bonusImage3 from '../../assets/images/bonuses/largerBomb.png';
+import bonusImage1 from '../../assets/images/bonuses/bonus3.png';
+import bonusImage2 from '../../assets/images/bonuses/bonus2.png';
+import bonusImage4 from '../../assets/images/bonuses/bonus1.png';
+import bonusImage3 from '../../assets/images/bonuses/bonus4.png';
 import sendStatistics from '../../utils';
 
 function Game({
@@ -81,6 +80,9 @@ function Game({
   const [bonus1State, setBonus1State] = useState(new window.Image());
   const [bonus2State, setBonus2State] = useState(new window.Image());
   const [bonus3State, setBonus3State] = useState(new window.Image());
+  const [bonus4State, setBonus4State] = useState(new window.Image());
+
+  const [textState, setTextState] = useState({ isDragging: false, x: 0, y: 0 });
 
   // images refs
   const skin1Ref = useRef();
@@ -92,28 +94,69 @@ function Game({
   const gridsize = 32;
   const tileAmount = 13;
 
-  socket.on('playerId', (playerNum) => {
-    console.log('in socket player id');
-    setPlayerId(playerNum);
-  });
+  useEffect(() => {
+    socket.on('playerId', (playerNum) => {
+      console.log('in socket player id');
+      setPlayerId(playerNum);
+    });
 
-  socket.on('roomUsersNicknames', (roomUsersNicknames) => {
-    // console.log(roomUsersNicknames);
-    setRoomNicknames(roomUsersNicknames);
-    console.log(roomNicknames);
-  });
+    socket.on('roomUsersNicknames', (roomUsersNicknames) => {
+      // console.log(roomUsersNicknames);
+      setRoomNicknames(roomUsersNicknames);
+      console.log(roomNicknames);
+    });
+
+    socket.on('gameInProgress', () => {
+      navigate('/main');
+      console.log('this game is in progress');
+    });
+
+    socket.on('userAlreadyInGame', () => {
+      navigate('/main');
+      console.log('you are already playing the game, leave lobby first');
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on('lose', (currGameState, player) => {
+      if (player === playerId) {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+        setGameEnd(true);
+        setListenKey(false);
+        setScoreWin(false);
+        console.log('you lost D:');
+      }
+    });
+
+    socket.on('gameEnd', (currGameState, alivePlayer) => {
+      setWinner(alivePlayer);
+      if (alivePlayer === playerId) {
+        console.log('ya tut');
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+        setListenKey(false);
+        console.log('you won! by pure strength');
+        sendStatistics(currGameState, roomNicknames);
+      }
+    });
+
+    socket.on('win', (currGameState, winnerId) => {
+      setWinner(winnerId);
+      if (winnerId === playerId) {
+        console.log(scoreWin);
+        if (scoreWin) {
+          window.removeEventListener('keydown', onKeyDown);
+          window.removeEventListener('keyup', onKeyUp);
+          setListenKey(false);
+          console.log('you won!');
+          // sendStatistics(currGameState, roomNicknames);
+        }
+      }
+    });
+  }, [playerId]);
 
   // player lost, show stats from this currGameState
-  socket.on('lose', (currGameState, player) => {
-    if (player === playerId) {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
-      setGameEnd(true);
-      setListenKey(false);
-      setScoreWin(false);
-      console.log('you lost D:');
-    }
-  });
 
   // useEffect(() => {
   //   console.log('pobeditel');
@@ -132,43 +175,13 @@ function Game({
   // }, [scoreWin]);
 
   // player won, show stats from this currGameState
-  socket.on('win', (currGameState, winnerId) => {
-    setWinner(winnerId);
-    if (winnerId === playerId) {
-      console.log(scoreWin);
-      if (scoreWin) {
-        window.removeEventListener('keydown', onKeyDown);
-        window.removeEventListener('keyup', onKeyUp);
-        setListenKey(false);
-        console.log('you won!');
-      }
-    }
-    sendStatistics(currGameState, roomNicknames);
-  });
 
   // game in progress handler
-  socket.on('gameInProgress', () => {
-    navigate('/main');
-    console.log('this game is in progress');
-  });
 
   // gameEnd without AFK
-  socket.on('gameEnd', (currGameState, alivePlayer) => {
-    setWinner(alivePlayer);
-    if (alivePlayer === playerId) {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
-      setListenKey(false);
-      console.log('you won! by pure strength');
-    }
-    sendStatistics(currGameState, roomNicknames);
-  });
+  // sendStatistics(currGameState, roomNicknames);
 
   // user connected to the same room
-  socket.on('userAlreadyInGame', () => {
-    navigate('/main');
-    console.log('you are already playing the game, leave lobby first');
-  });
 
   useEffect(() => {
   }, [playerId, winner]);
@@ -255,6 +268,10 @@ function Game({
     const bonus3 = new window.Image();
     bonus3.src = bonusImage3;
     setBonus3State(bonus3);
+
+    const bonus4 = new window.Image();
+    bonus4.src = bonusImage4;
+    setBonus4State(bonus4);
 
     skin1Ref.current.setAttrs({
       cropX: gridsize, cropY: 0, cropWidth: gridsize, cropHeight: gridsize,
@@ -736,7 +753,6 @@ function Game({
   }, [gameState]);
 
   return (
-
     <>
       <div className="absolute text-white mt-4 ml-4">
         {currRoom.map((el) => (
@@ -744,7 +760,6 @@ function Game({
         ))}
       </div>
       <div className="absolute mt-32 ml-4 ">
-        {gameState.gameTimer}
         <div className="mt-8 text-red-200">
           player 1:
           <div>
@@ -761,6 +776,11 @@ function Game({
             more bombs:
             {' '}
             {gameState.player1.bonusesTimer.moreBombs.active ? gameState.player1.bonusesTimer.moreBombs.timer : null}
+          </div>
+          <div>
+            more strength:
+            {' '}
+            {gameState.player1.bonusesTimer.strength.active ? gameState.player1.bonusesTimer.strength.timer : null}
           </div>
         </div>
         <div className="mt-8 text-green-200">
@@ -780,6 +800,11 @@ function Game({
             {' '}
             {gameState.player2.bonusesTimer.moreBombs.active ? gameState.player2.bonusesTimer.moreBombs.timer : null}
           </div>
+          <div>
+            more strength:
+            {' '}
+            {gameState.player2.bonusesTimer.strength.active ? gameState.player2.bonusesTimer.strength.timer : null}
+          </div>
         </div>
         <div className="mt-8 text-blue-200">
           player 3:
@@ -798,6 +823,11 @@ function Game({
             {' '}
             {gameState.player3.bonusesTimer.moreBombs.active ? gameState.player3.bonusesTimer.moreBombs.timer : null}
           </div>
+          <div>
+            more strength:
+            {' '}
+            {gameState.player3.bonusesTimer.strength.active ? gameState.player3.bonusesTimer.strength.timer : null}
+          </div>
         </div>
         <div className="mt-8 text-yellow-100">
           player 4:
@@ -815,6 +845,11 @@ function Game({
             more bombs:
             {' '}
             {gameState.player4.bonusesTimer.moreBombs.active ? gameState.player4.bonusesTimer.moreBombs.timer : null}
+          </div>
+          <div>
+            more strength:
+            {' '}
+            {gameState.player4.bonusesTimer.strength.active ? gameState.player4.bonusesTimer.strength.timer : null}
           </div>
         </div>
       </div>
@@ -926,9 +961,9 @@ function Game({
       <div className="flex justify-center items-center min-h-[100vh] bg-gray-700">
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
-          <div className="flex justify-center items-center pt-32">
+          <div className="flex justify-center items-center pt-16">
 
-            <Stage width={gridsize * tileAmount} height={gridsize * tileAmount} className="game-canvas">
+            <Stage width={gridsize * 23} height={gridsize * 17} className="game-canvas rounded-2xl shadow-lg shadow-teal-200">
               <Layer>
                 {splash?.map((el) => el.pos.map((el2) => (
                   <Image
@@ -942,7 +977,6 @@ function Game({
                 )))}
               </Layer>
               <Layer>
-
                 {walls?.map((el) => {
                   if (el.wallTimer % 10 < 5 && el.wallTimer !== 30) {
                     return (
@@ -990,7 +1024,6 @@ function Game({
                     );
                   }
                 })}
-
               </Layer>
               <Layer>
                 {bombs?.map((el) => {
@@ -1097,6 +1130,17 @@ function Game({
                     return (
                       <Image
                         image={bonus2State}
+                        x={el.x * gridsize}
+                        y={el.y * gridsize}
+                        width={gameState.gridsize}
+                        height={gameState.gridsize}
+                        key={el.id}
+                      />
+                    );
+                  } if (el.bonus === 'strength') {
+                    return (
+                      <Image
+                        image={bonus4State}
                         x={el.x * gridsize}
                         y={el.y * gridsize}
                         width={gameState.gridsize}

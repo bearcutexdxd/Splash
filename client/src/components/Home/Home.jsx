@@ -1,10 +1,14 @@
 import React from 'react';
+import Navbar from '../Navbar/Navbar';
 
 function Home() {
   return (
-    <div className="text-warning backhead text-center">
-      Welcome to the final battle
-    </div>
+    <>
+      <Navbar />
+      <div className="text-warning backhead text-center">
+        Welcome to the final battle
+      </div>
+    </>
   );
 }
 
