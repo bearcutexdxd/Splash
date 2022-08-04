@@ -11,7 +11,7 @@ const signUp = async (req, res) => {
         defaults: {
           name: playerName,
           password: await bcrypt.hash(password, 10),
-          current_skin: '0',
+          current_skin: '/pipo-nekonin001.png',
           balance: 0,
         },
       });
@@ -85,7 +85,9 @@ const signOut = async (req, res) => {
 const checkAuth = async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user.id);
-    return res.json({ id: user.id, name: user.name, skin: user.current_skin });
+    return res.json({
+      id: user.id, name: user.name, skin: user.current_skin, balance: user.balance,
+    });
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);
