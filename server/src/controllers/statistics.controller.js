@@ -2,8 +2,10 @@
 const { User, Statistics } = require('../../db/models');
 
 const statPut = async (req, res) => {
+  console.log('pls work');
   const { gameState } = req.body;
   const { roomNicknames } = req.body;
+  console.log(gameState, roomNicknames);
 
   const data = roomNicknames.map((el) => {
     if (el.playerId === 1) {
@@ -24,6 +26,7 @@ const statPut = async (req, res) => {
   data.forEach(async (el) => {
     try {
       const user = await User.findOne({ where: { name: el.nickname, include: { model: Statistics } } });
+      console.log('nice', user);
       user.Statistics.kills += el.statistics.kills;
       user.Statistics.deaths += el.statistics.deaths;
       user.Statistics.wins += el.statistics.wins;

@@ -12,16 +12,16 @@ export default function Navbar() {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
-  const clicktHandler = (e) => {
+  const clickHandler = (e) => {
     e.preventDefault();
     dispatch(signOut());
   };
 
   return (
     <>
-      <div className="navbar bg-primary ">
+      <div className="navbar bg-primary text-lg">
         <div className="flex-1">
-          <Link className="text-xl text-white animation" to="/">Splash</Link>
+          <Link className="text-xl text-white animation" to="/">Kitty Splash</Link>
         </div>
         <div className="flex-none base">
           <ul className="menu menu-horizontal p-0 ">
@@ -42,7 +42,7 @@ export default function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <button type="button" className="text-white animation" onClick={clicktHandler}>
+                  <button type="button" className="text-white animation" onClick={clickHandler}>
                     SignOut
                   </button>
                 </li>

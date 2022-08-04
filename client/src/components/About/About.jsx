@@ -6,7 +6,7 @@ function About() {
   return (
     <>
       <Navbar />
-      <div className="back h-screen">
+      <div className="back h-screen" id="about">
         <div className="flex flex-col w-full border-opacity-50">
           <div className="grid card rounded-box place-items-center m-7 text-warning text-2xl">
             <span>

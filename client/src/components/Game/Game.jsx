@@ -29,7 +29,7 @@ import bonusImage1 from '../../assets/images/bonuses/bonus3.png';
 import bonusImage2 from '../../assets/images/bonuses/bonus2.png';
 import bonusImage4 from '../../assets/images/bonuses/bonus1.png';
 import bonusImage3 from '../../assets/images/bonuses/bonus4.png';
-import sendStatistics from '../../utils';
+import { sendStatistics, showStatistic } from '../../utils';
 
 function Game({
   socket, listenKey, setListenKey, currRoomId,
@@ -55,6 +55,9 @@ function Game({
 
   const [winner, setWinner] = useState();
   const [playerId, setPlayerId] = useState();
+
+  const [showStats, setShowStats] = useState(false);
+  const [stats, setStats] = useState();
 
   // room nicknames state
   const [roomNicknames, setRoomNicknames] = useState([]);
@@ -126,6 +129,8 @@ function Game({
         setListenKey(false);
         setScoreWin(false);
         console.log('you lost D:');
+        setStats(showStatistic(currGameState, playerId));
+        setShowStats(true);
       }
     });
 
@@ -195,7 +200,6 @@ function Game({
 
   useEffect(() => {
     dispatch(getCurrRoom());
-    audio.play();
   }, []);
 
   useEffect(() => {
@@ -755,6 +759,31 @@ function Game({
 
   return (
     <>
+      {showStats && (
+        <div className="toast">
+          <div className="alert alert-info">
+            <div className="flex justify-center items-center">
+              <label htmlFor="my-modal-4" className="btn modal-button">show stats</label>
+              <span>you won or lost</span>
+            </div>
+          </div>
+        </div>
+      )}
+      <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+      <label htmlFor="my-modal-4" className="modal cursor-pointer">
+        <label className="modal-box relative" htmlFor="">
+          <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
+          kills :
+          {' '}
+          {stats?.kills}
+          deaths:
+          {' '}
+          {stats?.deaths}
+          time played:
+          {' '}
+          {stats?.timePlayed}
+        </label>
+      </label>
       <div className="absolute text-white mt-4 ml-4">
         {currRoom.map((el) => (
           <div key={el.userId}>{el.name}</div>

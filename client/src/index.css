@@ -3,13 +3,21 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "undertale";
-  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
+  font-family: "pixel";
+  src: url('./assets/fonts/TypoGraphica_demo.otf');
 }
 
 body {
-  font-family: "undertale";
+  font-family: "pixel";
 }
+
+/* #about {
+
+} */
+
+/* .navbar {
+  
+} */
 
 /* .btn {
   @apply rounded-full;

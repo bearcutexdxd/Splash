@@ -1,9 +1,9 @@
 import * as endPoints from './config/endPoints';
 
-export default async function sendStatistics(gameState, roomNicknames) {
+async function sendStatistics(gameState, roomNicknames) {
   console.log('sending statistics');
   const response = await fetch(endPoints.sendStats(), {
-    method: 'patch',
+    method: 'put',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -20,3 +20,28 @@ export default async function sendStatistics(gameState, roomNicknames) {
   //   navigate('/auth/signin');
   // }
 }
+
+function showStatistic(currGameState, playerId) {
+  let currPlayer;
+
+  switch (playerId) {
+    case 1:
+      currPlayer = currGameState.player1;
+      break;
+    case 2:
+      currPlayer = currGameState.player2;
+      break;
+    case 3:
+      currPlayer = currGameState.player3;
+      break;
+    case 4:
+      currPlayer = currGameState.player4;
+      break;
+    default:
+      break;
+  }
+
+  return currPlayer.statistics;
+}
+
+export { sendStatistics, showStatistic };
