@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     loses: DataTypes.INTEGER,
     wins: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER,
+    timePlayed: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Statistics',

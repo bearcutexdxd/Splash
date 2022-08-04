@@ -177,7 +177,30 @@ io.on('connection', (socket) => {
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
       const winner = checkWinnerInStarted(roomId, currSocketRooms);
-      if (winner) io.sockets.in(roomId).emit('win', currGameState, winner);
+      if (winner) {
+        if (winner === 1) {
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 2) {
+          currGameState.player1.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 3) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 4) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+        }
+
+        io.sockets.in(roomId).emit('win', currGameState, winner);
+      }
     });
 
     // user leave (navigate)
@@ -189,7 +212,30 @@ io.on('connection', (socket) => {
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
       const winner = checkWinnerInStarted(roomId, currSocketRooms);
-      if (winner) io.sockets.in(roomId).emit('win', currGameState, winner);
+      if (winner) {
+        if (winner === 1) {
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 2) {
+          currGameState.player1.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 3) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 4) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+        }
+
+        io.sockets.in(roomId).emit('win', currGameState, winner);
+      }
     });
 
     socket.on('keydown', (key, roomId2, playerId) => {
