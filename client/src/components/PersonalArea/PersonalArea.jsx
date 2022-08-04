@@ -5,6 +5,8 @@ import { getUserSkinsThunk, putSkinUserThunk } from '../../redux/actions/skinsAc
 import { getStats } from '../../redux/actions/statisticsAction';
 import { checkAuth } from '../../redux/actions/userAction';
 import Modal from '../Modal/Modal';
+import Navbar from '../Navbar/Navbar';
+
 
 function PersonalArea() {
   const [active, setActive] = useState(false);
@@ -28,6 +30,7 @@ function PersonalArea() {
   console.log(skins);
   return (
     <>
+      <Navbar />
       <div className="flex items-center flex-row main">
         <div className="div ">
           <button className="m-auto" type="button" onClick={() => setActive(true)}>

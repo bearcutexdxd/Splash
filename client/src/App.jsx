@@ -27,6 +27,7 @@ function App() {
   socket.on('startGame', (roomId) => {
     setListenKey(true);
     console.log('game started!');
+    socket.emit('start game timer');
   });
 
   socket.on('gameState', (state) => {
@@ -40,7 +41,6 @@ function App() {
   return (
     <div>
       <div className="App">
-        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />

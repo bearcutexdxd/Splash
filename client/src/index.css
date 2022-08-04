@@ -3,24 +3,31 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "undertale";
-  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
+  font-family: "pixel";
+  src: url('./assets/fonts/TypoGraphica_demo.otf');
 }
 
 body {
-  font-family: "undertale";
+  font-family: "pixel";
 }
+
+/* #about {
+
+} */
+
+/* .navbar {
+  
+} */
 
 /* .btn {
   @apply rounded-full;
 } */
 
 .game-canvas {
-  border: 5px solid #fdc34d;
   align-self: center;
   image-rendering: pixelated;
-  transform: scale(1.8) translateY(14%);
-  background-color: #fde68b;
+  transform: scale(1.6) translateY(14%);
+  background-image: url("./assets/images/gamefieldLarger.png");
 }
 
 .back {
@@ -36,7 +43,7 @@ body {
 
 .backmain {
   min-height: 100vh;
-  background: url('./assets/images/picture/simpleguy_kitty_splash_in_the_desert_3140b188-9aac-42c8-8e9b-0f33cb069662.png') center repeat
+  background: url('./assets/images/mainImage.jpg') center repeat
 }
 
 .backhead {

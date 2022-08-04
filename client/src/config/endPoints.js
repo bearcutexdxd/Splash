@@ -1,6 +1,7 @@
 export const host = () => 'http://localhost:3030';
 export const hostFrontSkin = () => 'http://localhost:3000/shop-cards/';
 export const getStats = (id) => `${host()}/statistics/${id}`;
+export const sendStats = () => `${host()}/statistics/new`;
 
 export const signUp = () => `${host()}/auth/signup`;
 export const signIn = () => `${host()}/auth/signin`;

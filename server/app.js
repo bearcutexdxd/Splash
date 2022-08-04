@@ -39,6 +39,7 @@ const { checkWinnerInStarted } = require('./game/check/checkWinnerInStarted');
 const { checkStopGame } = require('./game/check/checkStopGame');
 const { checkAlivePlayer } = require('./game/check/checkAlivePlayer');
 const { checkStopLastPlayer } = require('./game/check/checkStopLastPlayer');
+const { checkStopGameOnLeave } = require('./game/check/checkStopGameOnLeave');
 
 const { changeCoordsStart, changeCoordsFinish } = require('./game/logic/changeCoords');
 const { checkSolidBomb } = require('./game/check/checkSolidBomb');
@@ -46,8 +47,12 @@ const { resetBombsCounter } = require('./game/logic/reserBombsCounter');
 const { deleteWalls } = require('./game/logic/deleteWalls');
 const { wallAnimation } = require('./game/logic/animation/wallAnimation');
 const { generateBonus } = require('./game/logic/generateBonus');
-
-const intervalCounter = 0;
+const { checkTakeBonus } = require('./game/check/checkTakeBonus');
+const { checkBonusesTimer } = require('./game/check/checkBonusesTimer');
+const { checkInvulnerabilityTimer } = require('./game/check/checkInvulnerabilityTimer');
+const { checkWallInvulnerabilityTimer } = require('./game/check/checkWallInvulnerabilityTimer');
+const { changeTimePlayed } = require('./game/logic/changeTimePlayed');
+const { setPlayerWin } = require('./game/logic/setPlayerWin');
 
 const PORT = process.env.PORT || 3030;
 
@@ -65,7 +70,6 @@ const sessionConfig = {
 };
 
 const app = express();
-// app.use(cors());
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -74,10 +78,6 @@ const io = socketIo(server, {
 });
 
 io.on('connection', (socket) => {
-  socket.on('getRooms', () => {
-    socket.emit('sendRooms', socketRooms);
-  });
-
   socket.on('createRoom', () => {
     const roomId = makeid();
     socket.emit('getRoomName', roomId);
@@ -85,12 +85,11 @@ io.on('connection', (socket) => {
 
     globalGameState[roomId] = initialGameState();
     console.log(globalGameState, '\n ^ all game states');
-
-    socket.emit('sendRooms', socketRooms);
   });
 
   socket.on('joinRoom', (roomId, user) => {
     currRoom = roomId;
+    let gameStarted = false;
 
     if (globalGameState[roomId]) {
       globalGameState[roomId].intervalCounter += 1;
@@ -104,6 +103,14 @@ io.on('connection', (socket) => {
     const socketUser = user;
     const currRoomSockets = [];
     const rooms = {};
+
+    // same player connects
+    const sameUser = socketRooms.find((el) => el.userId === socketUser.id);
+    if (sameUser) {
+      socket.emit('userAlreadyInGame');
+      globalGameState[roomId].intervalCounter -= 1;
+      return;
+    }
 
     socketRooms.forEach((el) => {
       const elRoom = Object.values(el);
@@ -127,15 +134,26 @@ io.on('connection', (socket) => {
     });
     socket.join(roomId);
     console.log(socketRooms, '\n ^ users and rooms');
-    socket.number = socketsNumber + 1;
     socket.emit('socketRooms', socketRooms.filter((el) => el.room === currRoom));
     socket.to(roomId).emit('socketRooms', socketRooms);
 
     socket.emit('playerId', socket.number);
 
-    socket.emit('sendRooms', socketRooms);
+    // sending lobby users
+    if (globalGameState[roomId].intervalCounter > 1) {
+      let roomUsersNicknames = socketRooms.map((el) => {
+        if (el.room === roomId) {
+          const userInfo = { nickname: el.name, playerId: el.playerId };
+          return userInfo;
+        }
+      });
+      roomUsersNicknames = roomUsersNicknames.filter((el) => el !== undefined);
+      io.sockets.in(roomId).emit('roomUsersNicknames', roomUsersNicknames);
 
-    if (socketsNumber === 1) { // starting game, (players number === 4)
+      console.log(roomUsersNicknames, '\n users nicmaknames!!!!!!!!!!!!!! \n');
+    }
+
+    if (socketsNumber === 1) { // starting game, (players number === 4) intervalCounter
       io.sockets.in(roomId).emit('startGame', roomId);
     }
 
@@ -145,6 +163,8 @@ io.on('connection', (socket) => {
       counter1: 0, counter2: 0, counter3: 0, counter4: 0,
     };
     let lastGameState = {};
+
+    // constants
     const fps = 60;
     const animationFrame = 120;
 
@@ -153,8 +173,6 @@ io.on('connection', (socket) => {
       console.log('Socket disconnected!');
       socketRooms = checkIsRoomEmpty(roomId, socket);
       socket.leave(roomId);
-
-      socket.emit('sendRooms', socketRooms);
 
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
@@ -168,8 +186,6 @@ io.on('connection', (socket) => {
       socketRooms = checkIsRoomEmpty(currentRoom, socket);
       socket.leave(roomId);
 
-      socket.emit('sendRooms', socketRooms);
-
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
       const winner = checkWinnerInStarted(roomId, currSocketRooms);
@@ -177,22 +193,34 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keydown', (key, roomId2, playerId) => {
-      currGameState = changeCoordsStart(currGameState);
-      currGameState = keydownHandle(key, currGameState, playerId);
-      currGameState = changeCoordsFinish(currGameState);
+      console.log(key);
+      if (currGameState.intervalCounter > 1) {
+        currGameState = changeCoordsStart(currGameState);
+        currGameState = keydownHandle(key, currGameState, playerId);
+        currGameState = changeCoordsFinish(currGameState);
+      }
     });
 
     socket.on('keyup', (key, roomId2, playerId) => {
-      currGameState = changeCoordsStart(currGameState);
-      currGameState = keyupHandle(key, currGameState, playerId);
-      currGameState = changeCoordsFinish(currGameState);
+      if (currGameState.intervalCounter > 1) {
+        currGameState = changeCoordsStart(currGameState);
+        currGameState = keyupHandle(key, currGameState, playerId);
+        currGameState = changeCoordsFinish(currGameState);
+      }
+    });
+
+    socket.on('start game timer', () => {
+      gameStarted = true;
     });
 
     let interval;
 
     if (globalGameState[roomId]?.intervalCounter === 1) {
+      // if (socketsNumber === 1) {
+      //   gameStarted = true;
+      // }
       interval = setInterval(() => {
-        currGameState = changeCoordsStart(currGameState);
+        currGameState = changeCoordsStart(currGameState, gameStarted);
         lastGameState = JSON.parse(JSON.stringify(currGameState));
 
         // playerIsDead check
@@ -207,10 +235,26 @@ io.on('connection', (socket) => {
           currGameState = checkStopLastPlayer(currGameState);
           // finding alive winner
           const alivePlayer = checkAlivePlayer(currGameState);
+
+          // add win statistic for winner
+          currGameState = setPlayerWin(currGameState, alivePlayer);
+
           // sending gameState
+          // io.sockets.in(roomId).emit('gameState', currGameState);
           io.sockets.in(roomId).emit('gameEnd', currGameState, alivePlayer);
           clearInterval(interval);
         }
+
+        // stopGame on leave check
+        if (checkStopGameOnLeave(roomId, socketRooms, currGameState)) { // change inside for 4 players!
+          clearInterval(interval);
+        }
+
+        // change timePlayed for players
+        currGameState = changeTimePlayed(currGameState, gameStarted);
+
+        // check bonuses timer
+        currGameState = checkBonusesTimer(currGameState);
 
         // movement logic
         currGameState = movement(currGameState);
@@ -222,8 +266,14 @@ io.on('connection', (socket) => {
         currGameState = setAnimation(currGameState, animation, animationFrame).currGameState;
         animation = setAnimation(currGameState, animation, animationFrame).animation;
 
+        // check player invulnerability
+        currGameState = checkInvulnerabilityTimer(currGameState);
+
+        // check walls invulnerability
+        currGameState = checkWallInvulnerabilityTimer(currGameState);
+
         // splash generation
-        currGameState = setSplash(currGameState, socket.number);
+        currGameState = setSplash(currGameState);
 
         // splash check
         currGameState = checkSplash(currGameState);
@@ -236,6 +286,9 @@ io.on('connection', (socket) => {
 
         // generate bonus
         currGameState = generateBonus(currGameState);
+
+        // take bonus
+        currGameState = checkTakeBonus(currGameState);
 
         // delete walls if destroyed
         currGameState = deleteWalls(currGameState);
@@ -259,7 +312,6 @@ app.use(session(sessionConfig));
 
 app.get('/curr/room', (req, res) => {
   const roomUsers = socketRooms.filter((el) => el.room === currRoom);
-  console.log('roms!!!!!', currRoom);
   res.json(roomUsers);
 });
 app.get('/rooms', (req, res) => {

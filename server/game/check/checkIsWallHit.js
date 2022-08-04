@@ -5,8 +5,9 @@ function checkIsWallHit(gameStateArg) {
   currGameState.splash.forEach((el) => {
     el.pos.forEach((coords) => {
       currGameState.walls.forEach((wall) => {
-        if (coords.x === wall.x && coords.y === wall.y) {
-          wall.hp = 0;
+        if (coords.x === wall.x && coords.y === wall.y && wall.hp !== 'infinity' && wall.invulnerability.active === false) {
+          wall.invulnerability.active = true;
+          wall.hp -= 1;
         }
       });
     });
