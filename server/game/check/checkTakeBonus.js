@@ -20,6 +20,14 @@ function checkTakeBonus(gameStateArg) {
     // first character
 
     if (x1 === el.x && y1 === el.y) {
+      if (el.bonus === 'strength') {
+        if (currGameState.player1.strength !== 2) {
+          currGameState.player1.strength += 1;
+          currGameState.player1.bonusesTimer.strength.active = true;
+        } else {
+          currGameState.player1.bonusesTimer.strength.timer = bonusesTimer;
+        }
+      }
       if (el.bonus === 'life' && currGameState.player1.hp !== 2) {
         currGameState.player1.hp += addHP;
       }
@@ -45,6 +53,14 @@ function checkTakeBonus(gameStateArg) {
     // second character
 
     if (x2 === el.x && y2 === el.y) {
+      if (el.bonus === 'strength') {
+        if (currGameState.player2.strength !== 2) {
+          currGameState.player2.strength += 1;
+          currGameState.player2.bonusesTimer.strength.active = true;
+        } else {
+          currGameState.player2.bonusesTimer.strength.timer = bonusesTimer;
+        }
+      }
       if (el.bonus === 'life' && currGameState.player2.hp !== 2) {
         currGameState.player2.hp += addHP;
       }
@@ -70,6 +86,14 @@ function checkTakeBonus(gameStateArg) {
     // third character
 
     if (x3 === el.x && y3 === el.y) {
+      if (el.bonus === 'strength') {
+        if (currGameState.player3.strength !== 2) {
+          currGameState.player3.strength += 1;
+          currGameState.player3.bonusesTimer.strength.active = true;
+        } else {
+          currGameState.player3.bonusesTimer.strength.timer = bonusesTimer;
+        }
+      }
       if (el.bonus === 'life' && currGameState.player3.hp !== 2) {
         currGameState.player3.hp += addHP;
       }
@@ -95,6 +119,14 @@ function checkTakeBonus(gameStateArg) {
     // fourth player
 
     if (x4 === el.x && y4 === el.y) {
+      if (el.bonus === 'strength') {
+        if (currGameState.player4.strength !== 2) {
+          currGameState.player4.strength += 1;
+          currGameState.player4.bonusesTimer.strength.active = true;
+        } else {
+          currGameState.player4.bonusesTimer.strength.timer = bonusesTimer;
+        }
+      }
       if (el.bonus === 'life' && currGameState.player4.hp !== 2) {
         currGameState.player4.hp += addHP;
       }

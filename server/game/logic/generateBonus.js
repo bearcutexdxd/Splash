@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 
 function getRandomBonus() {
-  const buffs = ['speed', 'life', 'moreBombs'];
+  const buffs = ['speed', 'life', 'moreBombs', 'strength'];
   return buffs[Math.round(Math.random() * buffs.length - 0.5)];
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../../../redux/actions/userAction';
 
@@ -10,6 +10,7 @@ function SignUp({ setActive }) {
   });
 
   const navigate = useNavigate();
+  const error = useSelector((store) => store.error);
 
   const changeHandler = (e) => {
     setUserSignUp((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -52,6 +53,7 @@ function SignUp({ setActive }) {
         <button type="submit" className="btn btn-primary text-info text-center mt-4">
           Sign Up
         </button>
+        {error.error}
       </form>
     </div>
   );

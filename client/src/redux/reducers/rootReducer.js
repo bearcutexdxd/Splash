@@ -6,6 +6,7 @@ import roomsReducer from './roomsReducer';
 
 import currRoomReducer from './currRoomReducer';
 import currentRoomReducer from './currentRoomReducer';
+import errorReducer from './errorReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   currRoom: currRoomReducer,
   rooms: roomsReducer,
   currentRoom: currentRoomReducer,
+  error: errorReducer,
 });
 
 export default rootReducer;
