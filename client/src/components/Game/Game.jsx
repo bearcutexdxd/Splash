@@ -195,6 +195,7 @@ function Game({
 
   useEffect(() => {
     dispatch(getCurrRoom());
+    audio.play();
   }, []);
 
   useEffect(() => {
@@ -761,7 +762,7 @@ function Game({
       </div>
       <div className="absolute mt-32 ml-4 ">
         <div className="mt-8 text-red-200">
-          player 1:
+          {currRoom[0] ? currRoom[0].name : null}
           <div>
             life:
             {' '}
@@ -784,7 +785,7 @@ function Game({
           </div>
         </div>
         <div className="mt-8 text-green-200">
-          player 2:
+          {currRoom[1] ? currRoom[1].name : null}
           <div>
             life:
             {' '}
@@ -807,7 +808,7 @@ function Game({
           </div>
         </div>
         <div className="mt-8 text-blue-200">
-          player 3:
+          {currRoom[2] ? currRoom[2].name : null}
           <div>
             life:
             {' '}
@@ -830,7 +831,7 @@ function Game({
           </div>
         </div>
         <div className="mt-8 text-yellow-100">
-          player 4:
+          {currRoom[3] ? currRoom[3].name : null}
           <div>
             life:
             {' '}
