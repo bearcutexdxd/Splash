@@ -18,7 +18,9 @@ function SigIn({ setActive }) {
     e.preventDefault();
     dispatch(signIn(input, navigate));
     setInput({});
-    setActive();
+    if (!error.error) {
+      setActive();
+    }
   };
 
   return (
@@ -47,7 +49,9 @@ function SigIn({ setActive }) {
         <button className="btn btn-primary text-info text-center mt-4" type="submit">
           Sig in
         </button>
-        {error.error}
+        <div className="mt-4 text-red-400">
+          {error.error}
+        </div>
         {/* <div>
           {login ? (
             <div className={styles.noyLogin}>Wrong login or password</div>

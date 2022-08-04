@@ -1,10 +1,10 @@
-const errorReducer = (state = {}, action) => {
+const errorReducer = (state = { error: ' ' }, action) => {
   const { type, payload } = action;
   switch (type) {
     case 'SET_ERROR':
       return payload;
     case 'DELETE_ERROR':
-      return {};
+      return { error: ' ' };
     default:
       return state;
   }

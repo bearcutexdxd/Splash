@@ -193,6 +193,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keydown', (key, roomId2, playerId) => {
+      console.log('playerId', playerId);
       if (currGameState.intervalCounter > 1) {
         currGameState = changeCoordsStart(currGameState);
         currGameState = keydownHandle(key, currGameState, playerId);

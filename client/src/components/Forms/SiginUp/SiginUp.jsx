@@ -23,7 +23,9 @@ function SignUp({ setActive }) {
     console.log('!!!sig', userSignUp);
     dispatch(signUp(userSignUp, navigate));
     setUserSignUp({});
-    setActive();
+    if (!error.error) {
+      setActive();
+    }
   };
 
   return (
@@ -53,7 +55,9 @@ function SignUp({ setActive }) {
         <button type="submit" className="btn btn-primary text-info text-center mt-4">
           Sign Up
         </button>
-        {error.error}
+        <div className="mt-4 text-red-400">
+          {error.error}
+        </div>
       </form>
     </div>
   );

@@ -1,5 +1,5 @@
 import * as endPoints from '../../config/endPoints';
-import { setErrorAC } from './errorAction';
+import { deleteErrorAC, setErrorAC } from './errorAction';
 
 export const addUserAC = (payload) => ({ type: 'SET_USER', payload });
 export const deleteUserAC = () => ({ type: 'DELETE_USER' });
@@ -19,6 +19,7 @@ export const signUp = (payload, navigate) => async (dispatch) => {
   // console.log('!!!!!', data);
   if (response.ok) {
     dispatch(addUserAC(data));
+    dispatch(deleteErrorAC());
     navigate('/main');
   } else {
     dispatch(setErrorAC(data));
@@ -38,6 +39,7 @@ export const signIn = (payload, navigate) => async (dispatch) => {
   const data = await response.json();
   if (response.ok) {
     dispatch(addUserAC(data));
+    dispatch(deleteErrorAC());
     navigate('/main');
   } else {
     dispatch(setErrorAC(data));
