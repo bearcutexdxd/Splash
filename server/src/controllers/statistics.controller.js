@@ -23,21 +23,43 @@ const statPut = async (req, res) => {
     return el;
   });
 
-  data.forEach(async (el) => {
-    try {
-      const user = await User.findOne({ where: { name: el.nickname, include: { model: Statistics } } });
-      console.log('nice', user);
-      user.Statistics.kills += el.statistics.kills;
-      user.Statistics.deaths += el.statistics.deaths;
-      user.Statistics.wins += el.statistics.wins;
-      user.Statistics.loses += el.statistics.loses;
+  try {
+    let user = await User.findOne({ where: { name: data[0].nickname } });
+    let stats = await Statistics.findOne({ where: { user_id: user.id } });
+    stats.kills += data[0].statistics.kills;
+    stats.deaths += data[0].statistics.deaths;
+    stats.loses += data[0].statistics.loses;
+    stats.wins += data[0].statistics.wins;
+    await stats.save();
 
-      await user.save();
-      res.sendStatus(200);
-    } catch (error) {
-      res.sendStatus(500);
-    }
-  });
+    user = await User.findOne({ where: { name: data[1].nickname } });
+    stats = await Statistics.findOne({ where: { user_id: user.id } });
+    stats.kills += data[1].statistics.kills;
+    stats.deaths += data[1].statistics.deaths;
+    stats.loses += data[1].statistics.loses;
+    stats.wins += data[1].statistics.wins;
+    await stats.save();
+
+    user = await User.findOne({ where: { name: data[2].nickname } });
+    stats = await Statistics.findOne({ where: { user_id: user.id } });
+    stats.kills += data[2].statistics.kills;
+    stats.deaths += data[2].statistics.deaths;
+    stats.loses += data[2].statistics.loses;
+    stats.wins += data[2].statistics.wins;
+    await stats.save();
+
+    user = await User.findOne({ where: { name: data[3].nickname } });
+    stats = await Statistics.findOne({ where: { user_id: user.id } });
+    stats.kills += data[3].statistics.kills;
+    stats.deaths += data[3].statistics.deaths;
+    stats.loses += data[3].statistics.loses;
+    stats.wins += data[3].statistics.wins;
+    await stats.save();
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(500);
+  }
 };
 
 const statGet = async (req, res) => {

@@ -7,13 +7,18 @@
   src: url('./assets/fonts/TypoGraphica_demo.otf');
 }
 
+@font-face {
+  font-family: "undertale";
+  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
+}
+
 body {
   font-family: "pixel";
 }
 
-/* #about {
-
-} */
+#about {
+  font-family: 'undertale';
+}
 
 /* .navbar {
   

@@ -29,6 +29,8 @@ import bonusImage1 from '../../assets/images/bonuses/bonus3.png';
 import bonusImage2 from '../../assets/images/bonuses/bonus2.png';
 import bonusImage4 from '../../assets/images/bonuses/bonus1.png';
 import bonusImage3 from '../../assets/images/bonuses/bonus4.png';
+import closeButton from '../../assets/images/close.png';
+
 import { sendStatistics, showStatistic } from '../../utils';
 
 function Game({
@@ -97,7 +99,13 @@ function Game({
   const gridsize = 32;
   const tileAmount = 13;
 
+  function exitHandle() {
+    window.location.reload();
+  }
+
   useEffect(() => {
+    dispatch(getCurrRoom());
+
     socket.on('playerId', (playerNum) => {
       console.log('in socket player id');
       setPlayerId(playerNum);
@@ -137,29 +145,33 @@ function Game({
     socket.on('gameEnd', (currGameState, alivePlayer) => {
       setWinner(alivePlayer);
       if (alivePlayer === playerId) {
-        console.log('ya tut');
         window.removeEventListener('keydown', onKeyDown);
         window.removeEventListener('keyup', onKeyUp);
         setListenKey(false);
-        console.log('you won! by pure strength');
-        sendStatistics(currGameState, roomNicknames);
+        setScoreWin(true);
+        console.log('you won! everyone is wet');
+        setStats(showStatistic(currGameState, playerId));
+        setShowStats(true);
+        if (roomNicknames) sendStatistics(currGameState, roomNicknames);
       }
     });
 
     socket.on('win', (currGameState, winnerId) => {
       setWinner(winnerId);
       if (winnerId === playerId) {
-        console.log(scoreWin);
         if (scoreWin) {
           window.removeEventListener('keydown', onKeyDown);
           window.removeEventListener('keyup', onKeyUp);
           setListenKey(false);
-          console.log('you won!');
-          // sendStatistics(currGameState, roomNicknames);
+          setScoreWin(true);
+          console.log('you won! evetyone has left the lobby!');
+          setStats(showStatistic(currGameState, playerId));
+          setShowStats(true);
+          if (roomNicknames) sendStatistics(currGameState, roomNicknames);
         }
       }
     });
-  }, [playerId]);
+  }, [playerId, roomNicknames, winner]);
 
   // player lost, show stats from this currGameState
 
@@ -188,8 +200,8 @@ function Game({
 
   // user connected to the same room
 
-  useEffect(() => {
-  }, [playerId, winner]);
+  // useEffect(() => {
+  // }, [playerId, winner]);
 
   // on dismount
   useEffect(() => () => {
@@ -198,9 +210,9 @@ function Game({
     window.location.reload();
   }, []);
 
-  useEffect(() => {
-    dispatch(getCurrRoom());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getCurrRoom());
+  // }, []);
 
   useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
@@ -759,12 +771,22 @@ function Game({
 
   return (
     <>
+      {!showStats && (
+        <button className="btn btn-circle absolute bg-rose-500 top-0 right-0 mr-8 mt-4 z-10" type="button" onClick={exitHandle}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      )}
+      {showStats && (
+        <button className="btn btn-circle absolute bg-rose-500 top-0 right-0 mr-8 mt-4 z-10 animate-bounce" type="button" onClick={exitHandle}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      )}
       {showStats && (
         <div className="toast">
-          <div className="alert alert-info">
-            <div className="flex justify-center items-center">
+          <div className="alert bg-rose-500 mb-6 mr-6">
+            <div className="">
+              {!scoreWin ? <span className="mr-2 text-2xl">you lost</span> : <span className="mr-3 text-2xl">you win</span>}
               <label htmlFor="my-modal-4" className="btn modal-button">show stats</label>
-              <span>you won or lost</span>
             </div>
           </div>
         </div>
@@ -773,227 +795,133 @@ function Game({
       <label htmlFor="my-modal-4" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
           <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
-          kills :
+          score:
           {' '}
           {stats?.kills}
-          deaths:
-          {' '}
-          {stats?.deaths}
           time played:
           {' '}
           {stats?.timePlayed}
         </label>
       </label>
-      <div className="absolute text-white mt-4 ml-4">
-        {currRoom.map((el) => (
-          <div key={el.userId}>{el.name}</div>
-        ))}
-      </div>
-      <div className="absolute mt-32 ml-4 ">
-        <div className="mt-8 text-red-200">
+      <div className="absolute mt-16 ml-8 ">
+        <div className="mt-8 text-red-200 text-3xl">
           {currRoom[0] ? currRoom[0].name : null}
-          <div>
-            life:
+          <div className="text-2xl">
+            score:
+            {' '}
+            {gameState.player1.statistics.kills}
+          </div>
+          <div className="text-lg">
+            hp:
             {' '}
             {gameState.player1.hp}
           </div>
-          <div>
-            speed:
+          <div className="text-lg">
+            speed up:
             {' '}
             {gameState.player1.bonusesTimer.speed.active ? gameState.player1.bonusesTimer.speed.timer : null}
           </div>
-          <div>
-            more bombs:
+          <div className="text-lg">
+            2 bombs:
             {' '}
             {gameState.player1.bonusesTimer.moreBombs.active ? gameState.player1.bonusesTimer.moreBombs.timer : null}
           </div>
-          <div>
-            more strength:
+          <div className="text-lg">
+            larger splash:
             {' '}
             {gameState.player1.bonusesTimer.strength.active ? gameState.player1.bonusesTimer.strength.timer : null}
           </div>
         </div>
-        <div className="mt-8 text-green-200">
+        <div className="mt-8 text-green-200 text-3xl">
           {currRoom[1] ? currRoom[1].name : null}
-          <div>
-            life:
+          <div className="text-2xl">
+            score:
+            {' '}
+            {gameState.player2.statistics.kills}
+          </div>
+          <div className="text-lg">
+            hp:
             {' '}
             {gameState.player2.hp}
           </div>
-          <div>
-            speed:
+          <div className="text-lg">
+            speed up:
             {' '}
             {gameState.player2.bonusesTimer.speed.active ? gameState.player2.bonusesTimer.speed.timer : null}
           </div>
-          <div>
-            more bombs:
+          <div className="text-lg">
+            2 bombs:
             {' '}
             {gameState.player2.bonusesTimer.moreBombs.active ? gameState.player2.bonusesTimer.moreBombs.timer : null}
           </div>
-          <div>
-            more strength:
+          <div className="text-lg">
+            larger splash:
             {' '}
             {gameState.player2.bonusesTimer.strength.active ? gameState.player2.bonusesTimer.strength.timer : null}
           </div>
         </div>
-        <div className="mt-8 text-blue-200">
+        <div className="mt-8 text-blue-200 text-3xl">
           {currRoom[2] ? currRoom[2].name : null}
-          <div>
-            life:
+          <div className="text-2xl">
+            score:
+            {' '}
+            {gameState.player3.statistics.kills}
+          </div>
+          <div className="text-lg">
+            hp:
             {' '}
             {gameState.player3.hp}
           </div>
-          <div>
-            speed:
+          <div className="text-lg">
+            speed up:
             {' '}
             {gameState.player3.bonusesTimer.speed.active ? gameState.player3.bonusesTimer.speed.timer : null}
           </div>
-          <div>
-            more bombs:
+          <div className="text-lg">
+            2 bombs:
             {' '}
             {gameState.player3.bonusesTimer.moreBombs.active ? gameState.player3.bonusesTimer.moreBombs.timer : null}
           </div>
-          <div>
-            more strength:
+          <div className="text-lg">
+            larger splash:
             {' '}
             {gameState.player3.bonusesTimer.strength.active ? gameState.player3.bonusesTimer.strength.timer : null}
           </div>
         </div>
-        <div className="mt-8 text-yellow-100">
+        <div className="mt-8 text-yellow-100 text-3xl">
           {currRoom[3] ? currRoom[3].name : null}
-          <div>
-            life:
+          <div className="text-2xl">
+            score:
+            {' '}
+            {gameState.player4.statistics.kills}
+          </div>
+          <div className="text-lg">
+            hp:
             {' '}
             {gameState.player4.hp}
           </div>
-          <div>
-            speed:
+          <div className="text-lg">
+            speed up:
             {' '}
             {gameState.player4.bonusesTimer.speed.active ? gameState.player4.bonusesTimer.speed.timer : null}
           </div>
-          <div>
-            more bombs:
+          <div className="text-lg">
+            2 bombs:
             {' '}
             {gameState.player4.bonusesTimer.moreBombs.active ? gameState.player4.bonusesTimer.moreBombs.timer : null}
           </div>
-          <div>
-            more strength:
+          <div className="text-lg">
+            larger splash:
             {' '}
             {gameState.player4.bonusesTimer.strength.active ? gameState.player4.bonusesTimer.strength.timer : null}
           </div>
         </div>
       </div>
-
-      <div className="absolute mt-32 right-0 mr-4">
-        <div className="mt-8 text-red-200">
-          player 1:
-          <div>
-            kills:
-            {' '}
-            {gameState.player1.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player1.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player1.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player1.statistics.wins}
-            {' '}
-          </div>
-        </div>
-        <div className="mt-8 text-red-200">
-          player 2:
-          <div>
-            kills:
-            {' '}
-            {gameState.player2.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player2.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player2.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player2.statistics.wins}
-            {' '}
-          </div>
-        </div>
-        <div className="mt-8 text-red-200">
-          player 3:
-          <div>
-            kills:
-            {' '}
-            {gameState.player3.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player3.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player3.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player3.statistics.wins}
-            {' '}
-          </div>
-        </div>
-        <div className="mt-8 text-red-200">
-          player 4:
-          <div>
-            kills:
-            {' '}
-            {gameState.player4.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player4.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player4.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player4.statistics.wins}
-            {' '}
-          </div>
-        </div>
-
-      </div>
-
       <div className="flex justify-center items-center min-h-[100vh] bg-gray-700">
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
           <div className="flex justify-center items-center pt-16">
-
-            <Stage width={gridsize * 23} height={gridsize * 17} className="game-canvas rounded-2xl shadow-lg shadow-teal-200">
+            <Stage width={gridsize * 23} height={gridsize * 17} className="game-canvas rounded-md">
               <Layer>
                 {splash?.map((el) => el.pos.map((el2) => (
                   <Image

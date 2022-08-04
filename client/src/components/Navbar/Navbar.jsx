@@ -19,14 +19,14 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar bg-primary text-lg">
+      <div className="navbar bg-[#714cba] text-lg">
         <div className="flex-1">
           <Link className="text-xl text-white animation" to="/">Kitty Splash</Link>
         </div>
         <div className="flex-none base">
           <ul className="menu menu-horizontal p-0 ">
             <li className="mr-2">
-              <Link className="bg-blend-color-dodge text-white animation" to="/">Home</Link>
+              <Link className="bg-blend-color-dodge text-white animation" to="/">About</Link>
             </li>
             <li className="mr-2">
               <Link className="bg-blend-color-dodge text-white animation" to="/main">Main</Link>
