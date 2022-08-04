@@ -3,7 +3,6 @@ const currRoomReducer = (state = [], action) => {
   switch (type) {
     case 'GET_CURR_ROOM':
       return payload;
-
     default:
       return state;
   }

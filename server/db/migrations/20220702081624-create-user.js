@@ -13,6 +13,12 @@ module.exports = {
       password: {
         type: Sequelize.TEXT,
       },
+      current_skin: {
+        type: Sequelize.TEXT,
+      },
+      balance: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

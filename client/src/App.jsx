@@ -44,7 +44,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<PrivateRoute><Main socket={socket} /></PrivateRoute>} />
-
           <Route path="/rooms" element={<PrivateRoute><Rooms socket={socket} /></PrivateRoute>} />
           <Route
             path="/game"

@@ -38,7 +38,7 @@ body {
 .backshop {
   text-align: center;
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.discordapp.com/attachments/997270158362034308/1003643553605505054/simpleguy_pixel_cat_shop_40344d36-2b94-4544-9a63-0ebf23bfbca0.png') center center repeat fixed;
+  background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('./assets/images/picture/simpleguy_pixel_cat_shop_40344d36-2b94-4544-9a63-0ebf23bfbca0.png') center center repeat fixed;
 }
 
 .backmain {
@@ -48,7 +48,7 @@ body {
 
 .backhead {
   min-height: 100vh;
-  background: url('https://cdn.discordapp.com/attachments/997270158362034308/1003586176508252170/simpleguy_kitty_splash_1fda5bfb-69f4-4d4c-83f1-b1bb486dd5ed.png') center repeat
+  background: url('./assets/images/picture/simpleguy_kitty_splash_08c8b024-4a62-4acb-ad3d-a5dcfeeb0e16.png') center repeat
 }
 
 .animation:hover {
@@ -76,4 +76,21 @@ body {
 
 .shop {
   min-width: 200px;
+}
+.skinImg{
+  width: 80px;
+}
+
+.main{
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid red;
+}
+
+.div{
+  width: 50%;
+}
+
+.catScin{
+  height: 20vh;
 }

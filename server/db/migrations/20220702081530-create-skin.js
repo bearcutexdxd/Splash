@@ -10,6 +10,15 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      img: {
+        type: Sequelize.TEXT,
+      },
+      descr: {
+        type: Sequelize.TEXT,
+      },
+      price: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
