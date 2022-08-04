@@ -38,7 +38,7 @@ body {
 .backshop {
   text-align: center;
   min-height: 100vh;
-  background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('./assets/images/picture/simpleguy_pixel_cat_shop_40344d36-2b94-4544-9a63-0ebf23bfbca0.png') center center repeat fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./assets/images/picture/simpleguy_pixel_cat_shop_40344d36-2b94-4544-9a63-0ebf23bfbca0.png') center center repeat fixed;
 }
 
 .backmain {
@@ -77,20 +77,21 @@ body {
 .shop {
   min-width: 200px;
 }
-.skinImg{
+
+.skinImg {
   width: 80px;
 }
 
-.main{
+.main2 {
   width: 100vw;
   height: 100vh;
   border: 1px solid red;
 }
 
-.div{
+.div {
   width: 50%;
 }
 
-.catScin{
+.catScin {
   height: 20vh;
 }

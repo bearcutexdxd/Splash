@@ -7,7 +7,6 @@ import { checkAuth } from '../../redux/actions/userAction';
 import Modal from '../Modal/Modal';
 import Navbar from '../Navbar/Navbar';
 
-
 function PersonalArea() {
   const [active, setActive] = useState(false);
   const dispatch = useDispatch();
