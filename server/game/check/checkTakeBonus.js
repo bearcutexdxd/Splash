@@ -2,7 +2,7 @@ function checkTakeBonus(gameStateArg) {
   const currGameState = gameStateArg;
 
   const addHP = 1;
-  const bonusesTimer = 600;
+  const bonusesTimer = 1200;
 
   const x1 = Math.round(currGameState.player1.pos.x / currGameState.gridsize);
   const y1 = Math.round((currGameState.player1.pos.y) / currGameState.gridsize);

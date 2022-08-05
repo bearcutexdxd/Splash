@@ -19,9 +19,9 @@ export default function ThirdPlayerInfo({ currRoom, gameState }) {
         {gameState.player3.hp}
       </div>
       <div className="flex space-x-2 mt-2">
-        {gameState.player3.bonusesTimer.speed.active ? <ProgressBar image={speed} percentage={(gameState.player3.bonusesTimer.speed.timer / 600).toFixed(2) * 100} /> : null}
-        {gameState.player3.bonusesTimer.moreBombs.active ? <ProgressBar image={moreBombs} percentage={(gameState.player3.bonusesTimer.moreBombs.timer / 600).toFixed(2) * 100} /> : null}
-        {gameState.player3.bonusesTimer.strength.active ? <ProgressBar image={strength} percentage={(gameState.player3.bonusesTimer.strength.timer / 600).toFixed(2) * 100} /> : null}
+        {gameState.player3.bonusesTimer.speed.active ? <ProgressBar image={speed} percentage={(gameState.player3.bonusesTimer.speed.timer / 1200).toFixed(2) * 100} /> : null}
+        {gameState.player3.bonusesTimer.moreBombs.active ? <ProgressBar image={moreBombs} percentage={(gameState.player3.bonusesTimer.moreBombs.timer / 1200).toFixed(2) * 100} /> : null}
+        {gameState.player3.bonusesTimer.strength.active ? <ProgressBar image={strength} percentage={(gameState.player3.bonusesTimer.strength.timer / 1200).toFixed(2) * 100} /> : null}
       </div>
     </div>
 

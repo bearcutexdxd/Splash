@@ -32,11 +32,19 @@ function PersonalArea() {
   return (
     <>
       <Navbar />
-      <div className="flex items-center flex-row area text-primary">
+      <div className="flex items-center flex-row area text-primary bgstats">
         <div className="div">
           <button className="m-auto" type="button" onClick={() => setActive(true)}>
-            {`${user.balance} S.coin`}
-            <img className="catScin" src={`${hostFrontSkin()}${user.skin}`} alt="BEST" />
+            <div className="text-xl">
+              current skin
+              <img className="catScin max-h-64 mt-8 mb-8" src={`${hostFrontSkin()}${user.skin}`} alt="BEST" />
+            </div>
+            <div className="text-xl">
+              your balance:
+            </div>
+            <div className="text-sm text-[#fde68b] mt-3">
+              {(user.balance) ? `${user.balance} kitcoins` : '0 kitcoins'}
+            </div>
           </button>
         </div>
         <div className="div2">
@@ -58,9 +66,9 @@ function PersonalArea() {
         <div className="grid grid-cols-6 overflow-scroll">
           {skins?.map((el) => (
             <button type="button" onClick={() => { SkinIdHandler(el.img); }}>
-              <div key={el.id} className="card m-4 skinImg">
-                <h5 className="card-title justify-center text-success text-base">{el.name}</h5>
-                <img className="skinImg" src={`${hostFrontSkin()}${el.img}`} alt="BEST" />
+              <div key={el.id} className="card skinImg mr-16 ml-16 items-center">
+                <h5 className="card-title justify-center mt-4 mb-1 text-sm text-green-400">{el.name}</h5>
+                <img className="skinImg max-h-16 w-12 mb-4" src={`${hostFrontSkin()}${el.img}`} alt="BEST" />
               </div>
             </button>
           ))}
