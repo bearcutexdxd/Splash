@@ -298,24 +298,40 @@ function Game({
   useEffect(() => {
     if (roomNicknames.length === 2) { // change to 4 for 4 player !!!!!!!!!!!!!!
       const skin1 = new window.Image();
-      skin1.src = skins[roomNicknames[0]?.skin];
+      if (skins[roomNicknames[0]?.skin]) {
+        skin1.src = skins[roomNicknames[0]?.skin];
+      } else {
+        skin1.src = skins['/pipo-nekonin001.png'];
+      }
       setSkin1State(skin1);
 
       const skin2 = new window.Image();
-      skin2.src = skins[roomNicknames[1]?.skin];
+      if (skins[roomNicknames[1]?.skin]) {
+        skin2.src = skins[roomNicknames[1]?.skin];
+      } else {
+        skin2.src = skins['/pipo-nekonin001.png'];
+      }
       setSkin2State(skin2);
+
+      const skin3 = new window.Image();
+      if (skins[roomNicknames[2]?.skin]) {
+        skin3.src = skins[roomNicknames[2]?.skin];
+      } else {
+        skin3.src = skins['/pipo-nekonin001.png'];
+      }
+      setSkin3State(skin3);
+
+      const skin4 = new window.Image();
+      if (skins[roomNicknames[3]?.skin]) {
+        skin4.src = skins[roomNicknames[3]?.skin];
+      } else {
+        skin4.src = skins['/pipo-nekonin001.png'];
+      }
+      setSkin4State(skin4);
     }
   }, [roomNicknames]);
 
   useEffect(() => { // loading all images
-    const skin3 = new window.Image();
-    skin3.src = characterSkin3;
-    setSkin3State(skin3);
-
-    const skin4 = new window.Image();
-    skin4.src = characterSkin4;
-    setSkin4State(skin4);
-
     const bomb1Img = new window.Image();
     bomb1Img.src = bomb1;
     setBomb1State(bomb1Img);
