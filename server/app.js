@@ -120,6 +120,7 @@ io.on('connection', (socket) => {
           name: socketUser.name,
           userId: socketUser.id,
           room: roomId,
+          skin: socketUser.skin,
         });
       }
     });
@@ -130,7 +131,7 @@ io.on('connection', (socket) => {
 
     socketRooms.push({
 
-      [socketId]: roomId, name: socketUser.name, userId: socketUser.id, room: roomId, playerId: socket.number,
+      [socketId]: roomId, name: socketUser.name, userId: socketUser.id, room: roomId, playerId: socket.number, skin: socketUser.skin,
     });
     socket.join(roomId);
     console.log(socketRooms, '\n ^ users and rooms');
@@ -140,10 +141,10 @@ io.on('connection', (socket) => {
     socket.emit('playerId', socket.number);
 
     // sending lobby users
-    if (globalGameState[roomId].intervalCounter > 1) {
+    if (globalGameState[roomId].intervalCounter >= 1) {
       let roomUsersNicknames = socketRooms.map((el) => {
         if (el.room === roomId) {
-          const userInfo = { nickname: el.name, playerId: el.playerId };
+          const userInfo = { nickname: el.name, playerId: el.playerId, skin: el.skin };
           return userInfo;
         }
       });
@@ -239,7 +240,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keydown', (key, roomId2, playerId) => {
-      console.log('playerId', playerId);
+      // console.log('playerId', playerId);
       if (currGameState.intervalCounter > 1) {
         currGameState = changeCoordsStart(currGameState);
         currGameState = keydownHandle(key, currGameState, playerId);

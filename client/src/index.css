@@ -27,9 +27,43 @@ body {
   font-family: 'undertale';
 }
 
+
 #home {
   font-family: 'staypixel';
 }
+
+.playerInfo {
+  font-family: 'Fredoka One';
+}
+
+.bgCustom {
+  background-color: #f43f5e;
+  font-size: 0.85rem;
+  text-transform: lowercase;
+}
+
+.win {
+  background-color: #17f468;
+  color: white;
+}
+
+.winButton {
+  color: white;
+  background-color: #4a586d;
+  border-radius: 16px;
+  border: none;
+  text-transform: lowercase;
+  font-size: 1rem;
+}
+
+.winButton:hover {
+  background-color: #374151;
+}
+
+/* .navbar {
+  
+} */
+
 
 #typewritter {
   font-family: 'undertale';

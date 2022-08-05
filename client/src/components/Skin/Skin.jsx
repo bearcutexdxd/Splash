@@ -8,9 +8,12 @@ function Skin({
 }) {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  // console.log(user);
 
   function SkinIdHandler() {
-    if (user.balanc >= price) {
+    console.log('click done');
+    if (user.balance >= price) {
+      console.log('if done');
       dispatch(postSkinThunk(user, skinId, price));
     }
   }
