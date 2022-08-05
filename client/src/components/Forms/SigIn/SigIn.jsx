@@ -18,14 +18,16 @@ function SigIn({ setActive }) {
     e.preventDefault();
     dispatch(signIn(input, navigate));
     setInput({});
-    setActive();
+    if (!error.error) {
+      setActive();
+    }
   };
 
   return (
     <div className="main">
       <form className="flex justify-center items-center flex-col" onSubmit={submitHandler}>
         <div className="login text-info mb-4">
-          Login
+          sign in
         </div>
         <input
           className="input input-bordered input-warning w-full max-w-xs text-info text-center"
@@ -33,21 +35,23 @@ function SigIn({ setActive }) {
           name="name"
           type="name"
           onChange={inputHandler}
-          placeholder="Player name"
+          placeholder="nickname"
         />
         <input
-          className="input input-bordered input-warning text-center text-info w-full max-w-xs mt-2"
+          className="input input-bordered input-warning text-center text-info w-full max-w-xs mt-4"
           value={input.password || ''}
           type="password"
           name="password"
           onChange={inputHandler}
-          placeholder="Password"
+          placeholder="password"
         />
 
-        <button className="btn btn-primary text-info text-center mt-4" type="submit">
-          Sig in
+        <button className="btn btn-info text-white text-center mt-4" type="submit">
+          sign in
         </button>
-        {error.error}
+        <div className="mt-4 text-red-400">
+          {error.error}
+        </div>
         {/* <div>
           {login ? (
             <div className={styles.noyLogin}>Wrong login or password</div>

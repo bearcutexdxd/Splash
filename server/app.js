@@ -120,6 +120,7 @@ io.on('connection', (socket) => {
           name: socketUser.name,
           userId: socketUser.id,
           room: roomId,
+          skin: socketUser.skin,
         });
       }
     });
@@ -130,7 +131,7 @@ io.on('connection', (socket) => {
 
     socketRooms.push({
 
-      [socketId]: roomId, name: socketUser.name, userId: socketUser.id, room: roomId, playerId: socket.number,
+      [socketId]: roomId, name: socketUser.name, userId: socketUser.id, room: roomId, playerId: socket.number, skin: socketUser.skin,
     });
     socket.join(roomId);
     console.log(socketRooms, '\n ^ users and rooms');
@@ -140,10 +141,10 @@ io.on('connection', (socket) => {
     socket.emit('playerId', socket.number);
 
     // sending lobby users
-    if (globalGameState[roomId].intervalCounter > 1) {
+    if (globalGameState[roomId].intervalCounter >= 1) {
       let roomUsersNicknames = socketRooms.map((el) => {
         if (el.room === roomId) {
-          const userInfo = { nickname: el.name, playerId: el.playerId };
+          const userInfo = { nickname: el.name, playerId: el.playerId, skin: el.skin };
           return userInfo;
         }
       });
@@ -177,7 +178,30 @@ io.on('connection', (socket) => {
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
       const winner = checkWinnerInStarted(roomId, currSocketRooms);
-      if (winner) io.sockets.in(roomId).emit('win', currGameState, winner);
+      if (winner) {
+        if (winner === 1) {
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 2) {
+          currGameState.player1.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 3) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 4) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+        }
+
+        io.sockets.in(roomId).emit('win', currGameState, winner);
+      }
     });
 
     // user leave (navigate)
@@ -189,11 +213,34 @@ io.on('connection', (socket) => {
       // check if 1 user in started games
       const currSocketRooms = socketRooms;
       const winner = checkWinnerInStarted(roomId, currSocketRooms);
-      if (winner) io.sockets.in(roomId).emit('win', currGameState, winner);
+      if (winner) {
+        if (winner === 1) {
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 2) {
+          currGameState.player1.isAlive = false;
+          currGameState.player3.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 3) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player4.isAlive = false;
+        }
+        if (winner === 4) {
+          currGameState.player1.isAlive = false;
+          currGameState.player2.isAlive = false;
+          currGameState.player3.isAlive = false;
+        }
+
+        io.sockets.in(roomId).emit('win', currGameState, winner);
+      }
     });
 
     socket.on('keydown', (key, roomId2, playerId) => {
-      console.log(key);
+      // console.log('playerId', playerId);
       if (currGameState.intervalCounter > 1) {
         currGameState = changeCoordsStart(currGameState);
         currGameState = keydownHandle(key, currGameState, playerId);

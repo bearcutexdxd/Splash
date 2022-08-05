@@ -20,17 +20,18 @@ function SignUp({ setActive }) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log('!!!sig', userSignUp);
     dispatch(signUp(userSignUp, navigate));
     setUserSignUp({});
-    setActive();
+    if (!error.error) {
+      setActive();
+    }
   };
 
   return (
     <div className="main">
       <form onSubmit={submitHandler} className="min-w-300 form flex justify-center items-center flex-col">
         <legend className="text-center mb-4 text-info">
-          User Sign Up
+          sign up
         </legend>
 
         <input
@@ -39,21 +40,22 @@ function SignUp({ setActive }) {
           value={userSignUp.playerName}
           type="text"
           name="playerName"
-          placeholder="Name"
+          placeholder="nickname"
         />
-
         <input
           onChange={changeHandler}
-          className="input input-bordered input-warning w-full max-w-xs text-info text-center mt-2"
+          className="input input-bordered input-warning w-full max-w-xs text-info text-center mt-4"
           value={userSignUp.password}
           type="password"
           name="password"
-          placeholder="Pass"
+          placeholder="password"
         />
-        <button type="submit" className="btn btn-primary text-info text-center mt-4">
-          Sign Up
+        <button type="submit" className="btn btn-info text-white text-center mt-4">
+          sign up
         </button>
-        {error.error}
+        <div className="mt-4 text-red-400">
+          {error.error}
+        </div>
       </form>
     </div>
   );

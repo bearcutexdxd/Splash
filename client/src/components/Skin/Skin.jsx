@@ -8,26 +8,28 @@ function Skin({
 }) {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  // console.log(user);
 
   function SkinIdHandler() {
-    if (user.balanc >= price) {
+    console.log('click done');
+    if (user.balance >= price) {
+      console.log('if done');
       dispatch(postSkinThunk(user, skinId, price));
     }
   }
 
   return (
-    <div className="card m-4 shop">
-      <img src={`${hostFrontSkin()}${img}`} alt="BEST" />
+    <div className="card m-4 shop items-center">
+      <img className="max-h-36" src={`${hostFrontSkin()}${img}`} alt="BEST" />
       <div className="card-body">
-        <h5 className="card-title justify-center text-success">{name}</h5>
-        <p className="text-info text-2xl">Уникальный скин в игре Kitty Splash</p>
-        <h5 className="card-title justify-center text-success">
+        <h5 className="card-title justify-center text-success text-2xl">{name}</h5>
+        <h5 className="card-title justify-center text-warning">
           {price}
-          {' S.coin'}
+          {' kitcoin'}
         </h5>
         <div className="card-actions justify-center">
           <button
-            className="btn btn-primary text-warning"
+            className="btn btn-primary text-white"
             type="button"
             onClick={() => { SkinIdHandler(); }}
           >

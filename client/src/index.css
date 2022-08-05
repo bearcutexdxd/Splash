@@ -2,26 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
 @font-face {
   font-family: "pixel";
   src: url('./assets/fonts/TypoGraphica_demo.otf');
 }
 
-body {
-  font-family: "pixel";
+@font-face {
+  font-family: "undertale";
+  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
 }
 
-/* #about {
+@font-face {
+  font-family: "staypixel";
+  src: url('./assets/fonts/Stay\ Pixel\ DEMO.ttf');
+}
 
-} */
+body {
+  font-family: "Fredoka One";
+}
+
+#about {
+  font-family: 'undertale';
+}
+
+
+#home {
+  font-family: 'staypixel';
+}
+
+.playerInfo {
+  font-family: 'Fredoka One';
+}
+
+.bgCustom {
+  background-color: #f43f5e;
+  font-size: 0.85rem;
+  text-transform: lowercase;
+}
+
+.win {
+  background-color: #17f468;
+  color: white;
+}
+
+.winButton {
+  color: white;
+  background-color: #4a586d;
+  border-radius: 16px;
+  border: none;
+  text-transform: lowercase;
+  font-size: 1rem;
+}
+
+.winButton:hover {
+  background-color: #374151;
+}
 
 /* .navbar {
   
 } */
 
-/* .btn {
-  @apply rounded-full;
-} */
+
+#typewritter {
+  font-family: 'undertale';
+  line-height: 50px;
+
+}
+
+#h3 {
+  font-family: 'staypixel';
+}
+
+#rooms {
+  min-height: 100vh;
+  background: url('./assets/images/jungle.png');
+  background-repeat: no-repeat;
+  background-size: 100% 130%;
+}
 
 .game-canvas {
   align-self: center;
@@ -30,25 +89,32 @@ body {
   background-image: url("./assets/images/gamefieldLarger.png");
 }
 
-.back {
+/* .back {
   min-height: 100vh;
-  background: url('https://kartinkin.net/uploads/posts/2021-07/1625541534_2-kartinkin-com-p-krasivii-fon-terrariya-krasivie-foni-2.jpg') center no-repeat;
-}
+  background: url('https://cdnb.artstation.com/p/assets/images/images/036/502/523/large/carolyn-jong-beach-sketch5.jpg?1617837553') center no-repeat;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-size: 75% 100%;
+} */
 
 .backshop {
   text-align: center;
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./assets/images/picture/simpleguy_pixel_cat_shop_40344d36-2b94-4544-9a63-0ebf23bfbca0.png') center center repeat fixed;
+  background: url('./assets/images/shop.png') center center repeat fixed;
 }
 
 .backmain {
   min-height: 100vh;
-  background: url('./assets/images/mainImage.jpg') center repeat
+  background: url('./assets/images/mainImage.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .backhead {
   min-height: 100vh;
-  background: url('./assets/images/picture/simpleguy_kitty_splash_08c8b024-4a62-4acb-ad3d-a5dcfeeb0e16.png') center repeat
+  background: url('./assets/images/about-bg.gif');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .animation:hover {
@@ -100,6 +166,7 @@ body {
   border-left: 2px solid rebeccapurple;
   height: 100%;
 }
+
 .catScin {
   height: 40vh;
 }

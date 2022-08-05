@@ -1,23 +1,57 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
+import '../../index.css';
 import React, {
-  useRef, useEffect, memo, useState, useLayoutEffect,
+  useRef, useEffect, memo, useState, useLayoutEffect, useMemo,
 } from 'react';
 
 import {
-  Image, Layer, Stage,
+  Image, Layer, Stage, Text,
 } from 'react-konva';
+
+import sf from 'seconds-formater';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNavigate } from 'react-router';
+
 import characterSkin1 from '../../assets/images/skins/pipo-nekonin001.png';
 import characterSkin2 from '../../assets/images/skins/pipo-nekonin002.png';
 import characterSkin3 from '../../assets/images/skins/pipo-nekonin003.png';
 import characterSkin4 from '../../assets/images/skins/pipo-nekonin004.png';
+import characterSkin5 from '../../assets/images/skins/pipo-nekonin005.png';
+import characterSkin6 from '../../assets/images/skins/pipo-nekonin006.png';
+import characterSkin7 from '../../assets/images/skins/pipo-nekonin007.png';
+import characterSkin8 from '../../assets/images/skins/pipo-nekonin008.png';
+import characterSkin9 from '../../assets/images/skins/pipo-nekonin009.png';
+import characterSkin10 from '../../assets/images/skins/pipo-nekonin010.png';
+import characterSkin11 from '../../assets/images/skins/pipo-nekonin011.png';
+import characterSkin12 from '../../assets/images/skins/pipo-nekonin012.png';
+import characterSkin13 from '../../assets/images/skins/pipo-nekonin013.png';
+import characterSkin14 from '../../assets/images/skins/pipo-nekonin014.png';
+import characterSkin15 from '../../assets/images/skins/pipo-nekonin015.png';
+import characterSkin16 from '../../assets/images/skins/pipo-nekonin016.png';
+import characterSkin17 from '../../assets/images/skins/pipo-nekonin017.png';
+import characterSkin18 from '../../assets/images/skins/pipo-nekonin018.png';
+import characterSkin19 from '../../assets/images/skins/pipo-nekonin019.png';
+import characterSkin20 from '../../assets/images/skins/pipo-nekonin020.png';
+import characterSkin21 from '../../assets/images/skins/pipo-nekonin021.png';
+import characterSkin22 from '../../assets/images/skins/pipo-nekonin022.png';
+import characterSkin23 from '../../assets/images/skins/pipo-nekonin023.png';
+import characterSkin24 from '../../assets/images/skins/pipo-nekonin024.png';
+import characterSkin25 from '../../assets/images/skins/pipo-nekonin025.png';
+import characterSkin26 from '../../assets/images/skins/pipo-nekonin026.png';
+import characterSkin27 from '../../assets/images/skins/pipo-nekonin027.png';
+import characterSkin28 from '../../assets/images/skins/pipo-nekonin028.png';
+import characterSkin29 from '../../assets/images/skins/pipo-nekonin029.png';
+import characterSkin30 from '../../assets/images/skins/pipo-nekonin030.png';
+import characterSkin31 from '../../assets/images/skins/pipo-nekonin031.png';
+
 import bomb1 from '../../assets/images/bomb/bomb1.png';
 import bomb2 from '../../assets/images/bomb/bomb2.png';
 import bomb3 from '../../assets/images/bomb/bomb3.png';
-import bomb4 from '../../assets/images/bomb/bomb4.png';
+import bomb4 from '../../assets/images/bomb/bomb4.png'; import closeButton from '../../assets/images/close.png';
 import splashImage from '../../assets/images/splash/splash2.png';
 
 import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
@@ -29,7 +63,12 @@ import bonusImage1 from '../../assets/images/bonuses/bonus3.png';
 import bonusImage2 from '../../assets/images/bonuses/bonus2.png';
 import bonusImage4 from '../../assets/images/bonuses/bonus1.png';
 import bonusImage3 from '../../assets/images/bonuses/bonus4.png';
+
 import { sendStatistics, showStatistic } from '../../utils';
+import FirstPlayerInfo from '../playersInfo/FirstPlayerInfo/FirstPlayerInfo';
+import SecondPlayerInfo from '../playersInfo/SecondPlayerInfo/SecondPlayerInfo';
+import ThirdPlayerInfo from '../playersInfo/ThirdPlayerInfo/ThirdPlayerInfo';
+import FourthPlayerInfo from '../playersInfo/FourthPlayerInfo/FourthPlayerInfo';
 
 function Game({
   socket, listenKey, setListenKey, currRoomId,
@@ -38,6 +77,7 @@ function Game({
   const gameState = useSelector((store) => store.gameState);
 
   const currRoom = useSelector((store) => store.currRoom);
+  const user = useSelector((store) => store.user);
 
   const rooms = useSelector((store) => store.rooms);
   const currentRoom = useSelector((store) => store.currentRoom);
@@ -97,11 +137,53 @@ function Game({
   const gridsize = 32;
   const tileAmount = 13;
 
+  const skins = {
+    '/pipo-nekonin001.png': characterSkin1,
+    'pipo-nekonin001.png': characterSkin1,
+    'pipo-nekonin002.png': characterSkin2,
+    'pipo-nekonin003.png': characterSkin3,
+    'pipo-nekonin004.png': characterSkin4,
+    'pipo-nekonin005.png': characterSkin5,
+    'pipo-nekonin006.png': characterSkin6,
+    'pipo-nekonin007.png': characterSkin7,
+    'pipo-nekonin008.png': characterSkin8,
+    'pipo-nekonin009.png': characterSkin9,
+    'pipo-nekonin010.png': characterSkin10,
+    'pipo-nekonin011.png': characterSkin11,
+    'pipo-nekonin012.png': characterSkin12,
+    'pipo-nekonin013.png': characterSkin13,
+    'pipo-nekonin014.png': characterSkin14,
+    'pipo-nekonin015.png': characterSkin15,
+    'pipo-nekonin016.png': characterSkin16,
+    'pipo-nekonin017.png': characterSkin17,
+    'pipo-nekonin018.png': characterSkin18,
+    'pipo-nekonin019.png': characterSkin19,
+    'pipo-nekonin020.png': characterSkin20,
+    'pipo-nekonin021.png': characterSkin21,
+    'pipo-nekonin022.png': characterSkin22,
+    'pipo-nekonin023.png': characterSkin23,
+    'pipo-nekonin024.png': characterSkin24,
+    'pipo-nekonin025.png': characterSkin25,
+    'pipo-nekonin026.png': characterSkin26,
+    'pipo-nekonin027.png': characterSkin27,
+    'pipo-nekonin028.png': characterSkin28,
+    'pipo-nekonin029.png': characterSkin29,
+    'pipo-nekonin030.png': characterSkin30,
+    'pipo-nekonin031.png': characterSkin31,
+  };
+
+  function exitHandle() {
+    window.location.reload();
+  }
+
+  socket.on('playerId', (playerNum) => {
+    console.log('in socket player id');
+    console.log('playerNum', playerNum);
+    setPlayerId(playerNum);
+  });
+
   useEffect(() => {
-    socket.on('playerId', (playerNum) => {
-      console.log('in socket player id');
-      setPlayerId(playerNum);
-    });
+    dispatch(getCurrRoom());
 
     socket.on('roomUsersNicknames', (roomUsersNicknames) => {
       // console.log(roomUsersNicknames);
@@ -137,29 +219,33 @@ function Game({
     socket.on('gameEnd', (currGameState, alivePlayer) => {
       setWinner(alivePlayer);
       if (alivePlayer === playerId) {
-        console.log('ya tut');
         window.removeEventListener('keydown', onKeyDown);
         window.removeEventListener('keyup', onKeyUp);
         setListenKey(false);
-        console.log('you won! by pure strength');
-        sendStatistics(currGameState, roomNicknames);
+        setScoreWin(true);
+        console.log('you won! everyone is wet');
+        setStats(showStatistic(currGameState, playerId));
+        setShowStats(true);
+        if (roomNicknames) sendStatistics(currGameState, roomNicknames);
       }
     });
 
     socket.on('win', (currGameState, winnerId) => {
       setWinner(winnerId);
       if (winnerId === playerId) {
-        console.log(scoreWin);
         if (scoreWin) {
           window.removeEventListener('keydown', onKeyDown);
           window.removeEventListener('keyup', onKeyUp);
           setListenKey(false);
-          console.log('you won!');
-          // sendStatistics(currGameState, roomNicknames);
+          setScoreWin(true);
+          console.log('you won! evetyone has left the lobby!');
+          setStats(showStatistic(currGameState, playerId));
+          setShowStats(true);
+          if (roomNicknames) sendStatistics(currGameState, roomNicknames);
         }
       }
     });
-  }, [playerId]);
+  }, [playerId, roomNicknames, winner]);
 
   // player lost, show stats from this currGameState
 
@@ -188,8 +274,8 @@ function Game({
 
   // user connected to the same room
 
-  useEffect(() => {
-  }, [playerId, winner]);
+  // useEffect(() => {
+  // }, [playerId, winner]);
 
   // on dismount
   useEffect(() => () => {
@@ -198,9 +284,9 @@ function Game({
     window.location.reload();
   }, []);
 
-  useEffect(() => {
-    dispatch(getCurrRoom());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getCurrRoom());
+  // }, []);
 
   useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
@@ -209,23 +295,43 @@ function Game({
     });
   }, [currRoom]);
 
+  useEffect(() => {
+    if (roomNicknames.length === 2) { // change to 4 for 4 player !!!!!!!!!!!!!!
+      const skin1 = new window.Image();
+      if (skins[roomNicknames[0]?.skin]) {
+        skin1.src = skins[roomNicknames[0]?.skin];
+      } else {
+        skin1.src = skins['/pipo-nekonin001.png'];
+      }
+      setSkin1State(skin1);
+
+      const skin2 = new window.Image();
+      if (skins[roomNicknames[1]?.skin]) {
+        skin2.src = skins[roomNicknames[1]?.skin];
+      } else {
+        skin2.src = skins['/pipo-nekonin001.png'];
+      }
+      setSkin2State(skin2);
+
+      const skin3 = new window.Image();
+      if (skins[roomNicknames[2]?.skin]) {
+        skin3.src = skins[roomNicknames[2]?.skin];
+      } else {
+        skin3.src = skins['/pipo-nekonin001.png'];
+      }
+      setSkin3State(skin3);
+
+      const skin4 = new window.Image();
+      if (skins[roomNicknames[3]?.skin]) {
+        skin4.src = skins[roomNicknames[3]?.skin];
+      } else {
+        skin4.src = skins['/pipo-nekonin001.png'];
+      }
+      setSkin4State(skin4);
+    }
+  }, [roomNicknames]);
+
   useEffect(() => { // loading all images
-    const skin1 = new window.Image();
-    skin1.src = characterSkin1;
-    setSkin1State(skin1);
-
-    const skin2 = new window.Image();
-    skin2.src = characterSkin2;
-    setSkin2State(skin2);
-
-    const skin3 = new window.Image();
-    skin3.src = characterSkin3;
-    setSkin3State(skin3);
-
-    const skin4 = new window.Image();
-    skin4.src = characterSkin4;
-    setSkin4State(skin4);
-
     const bomb1Img = new window.Image();
     bomb1Img.src = bomb1;
     setBomb1State(bomb1Img);
@@ -758,13 +864,23 @@ function Game({
   }, [gameState]);
 
   return (
-    <>
+    <div className="playerInfo">
+      {!showStats && (
+        <button className="btn btn-circle absolute bg-rose-500 border-0 hover:bg-rose-700 top-0 right-0 mr-8 mt-4 z-10" type="button" onClick={exitHandle}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      )}
       {showStats && (
-        <div className="toast">
-          <div className="alert alert-info">
-            <div className="flex justify-center items-center">
-              <label htmlFor="my-modal-4" className="btn modal-button">show stats</label>
-              <span>you won or lost</span>
+        <button className="btn btn-circle absolute bg-rose-500 border-0 hover:bg-rose-700 top-0 right-0 mr-8 mt-4 z-10 animate-bounce" type="button" onClick={exitHandle}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      )}
+      {showStats && (
+        <div className="toast mr-4">
+          <div className={`alert  mb-6 ${!scoreWin ? 'bg-rose-500' : 'win'}`}>
+            <div className="">
+              {!scoreWin ? <span className="text-2xl z-10 w-[100px]">you lost</span> : <span className="text-2xl z-10 w-[100px]">you won</span>}
+              <label htmlFor="my-modal-4" className="btn modal-button border-lg winButton">show stats</label>
             </div>
           </div>
         </div>
@@ -772,228 +888,54 @@ function Game({
       <input type="checkbox" id="my-modal-4" className="modal-toggle" />
       <label htmlFor="my-modal-4" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
-          <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
-          kills :
-          {' '}
-          {stats?.kills}
-          deaths:
-          {' '}
-          {stats?.deaths}
-          time played:
-          {' '}
-          {stats?.timePlayed}
+          <h3 className="text-lg font-bold text-center mb-2 text-[#93d3c8]">
+            Congratulations,
+            {' '}
+            {user.name}
+          </h3>
+          <div className="text-slate-400 mb-4 text-center">You can be proud of yourself, brave Kitty!</div>
+          <div className="flex-row text-center space-y-1 text-slate-400">
+            <div>
+              score:
+              {' '}
+              {stats?.kills}
+            </div>
+            <div>
+              time played:
+              {' '}
+              {sf.convert(Math.floor(stats?.timePlayed / 60)).format('MM:SS')}
+            </div>
+          </div>
         </label>
       </label>
-      <div className="absolute text-white mt-4 ml-4">
-        {currRoom.map((el) => (
-          <div key={el.userId}>{el.name}</div>
-        ))}
+      <div className="absolute mt-5 ml-8">
+        {!listenKey && <button className="btn loading playerInfo bgCustom" type="button">waiting for other players</button>}
       </div>
-      <div className="absolute mt-32 ml-4 ">
-        <div className="mt-8 text-red-200">
-          {currRoom[0] ? currRoom[0].name : null}
-          <div>
-            life:
+      <div className="absolute mt-16 ml-8">
+        {(!gameState.gameTimer) ? (
+          <div className="mt-6 text-white">
+            current room id :
             {' '}
-            {gameState.player1.hp}
+            {currentRoom}
           </div>
-          <div>
-            speed:
+        ) : null}
+        {currRoom[0] && <FirstPlayerInfo currRoom={currRoom[0]} gameState={gameState} />}
+        {currRoom[1] && <SecondPlayerInfo currRoom={currRoom[1]} gameState={gameState} />}
+        {currRoom[2] && <ThirdPlayerInfo currRoom={currRoom[2]} gameState={gameState} />}
+        {currRoom[3] && <FourthPlayerInfo currRoom={currRoom[3]} gameState={gameState} />}
+        {(gameState.gameTimer) ? (
+          <div className="mt-5 text-white">
+            time played:
             {' '}
-            {gameState.player1.bonusesTimer.speed.active ? gameState.player1.bonusesTimer.speed.timer : null}
+            {sf.convert(Math.floor(gameState?.gameTimer / 60)).format('MM:SS')}
           </div>
-          <div>
-            more bombs:
-            {' '}
-            {gameState.player1.bonusesTimer.moreBombs.active ? gameState.player1.bonusesTimer.moreBombs.timer : null}
-          </div>
-          <div>
-            more strength:
-            {' '}
-            {gameState.player1.bonusesTimer.strength.active ? gameState.player1.bonusesTimer.strength.timer : null}
-          </div>
-        </div>
-        <div className="mt-8 text-green-200">
-          {currRoom[1] ? currRoom[1].name : null}
-          <div>
-            life:
-            {' '}
-            {gameState.player2.hp}
-          </div>
-          <div>
-            speed:
-            {' '}
-            {gameState.player2.bonusesTimer.speed.active ? gameState.player2.bonusesTimer.speed.timer : null}
-          </div>
-          <div>
-            more bombs:
-            {' '}
-            {gameState.player2.bonusesTimer.moreBombs.active ? gameState.player2.bonusesTimer.moreBombs.timer : null}
-          </div>
-          <div>
-            more strength:
-            {' '}
-            {gameState.player2.bonusesTimer.strength.active ? gameState.player2.bonusesTimer.strength.timer : null}
-          </div>
-        </div>
-        <div className="mt-8 text-blue-200">
-          {currRoom[2] ? currRoom[2].name : null}
-          <div>
-            life:
-            {' '}
-            {gameState.player3.hp}
-          </div>
-          <div>
-            speed:
-            {' '}
-            {gameState.player3.bonusesTimer.speed.active ? gameState.player3.bonusesTimer.speed.timer : null}
-          </div>
-          <div>
-            more bombs:
-            {' '}
-            {gameState.player3.bonusesTimer.moreBombs.active ? gameState.player3.bonusesTimer.moreBombs.timer : null}
-          </div>
-          <div>
-            more strength:
-            {' '}
-            {gameState.player3.bonusesTimer.strength.active ? gameState.player3.bonusesTimer.strength.timer : null}
-          </div>
-        </div>
-        <div className="mt-8 text-yellow-100">
-          {currRoom[3] ? currRoom[3].name : null}
-          <div>
-            life:
-            {' '}
-            {gameState.player4.hp}
-          </div>
-          <div>
-            speed:
-            {' '}
-            {gameState.player4.bonusesTimer.speed.active ? gameState.player4.bonusesTimer.speed.timer : null}
-          </div>
-          <div>
-            more bombs:
-            {' '}
-            {gameState.player4.bonusesTimer.moreBombs.active ? gameState.player4.bonusesTimer.moreBombs.timer : null}
-          </div>
-          <div>
-            more strength:
-            {' '}
-            {gameState.player4.bonusesTimer.strength.active ? gameState.player4.bonusesTimer.strength.timer : null}
-          </div>
-        </div>
+        ) : null}
       </div>
-
-      <div className="absolute mt-32 right-0 mr-4">
-        <div className="mt-8 text-red-200">
-          player 1:
-          <div>
-            kills:
-            {' '}
-            {gameState.player1.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player1.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player1.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player1.statistics.wins}
-            {' '}
-          </div>
-        </div>
-        <div className="mt-8 text-red-200">
-          player 2:
-          <div>
-            kills:
-            {' '}
-            {gameState.player2.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player2.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player2.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player2.statistics.wins}
-            {' '}
-          </div>
-        </div>
-        <div className="mt-8 text-red-200">
-          player 3:
-          <div>
-            kills:
-            {' '}
-            {gameState.player3.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player3.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player3.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player3.statistics.wins}
-            {' '}
-          </div>
-        </div>
-        <div className="mt-8 text-red-200">
-          player 4:
-          <div>
-            kills:
-            {' '}
-            {gameState.player4.statistics.kills}
-          </div>
-          <div>
-            deaths:
-            {' '}
-            {gameState.player4.statistics.deaths}
-          </div>
-          <div>
-            loses:
-            {' '}
-            {gameState.player4.statistics.loses}
-            {' '}
-          </div>
-          <div>
-            wins:
-            {' '}
-            {gameState.player4.statistics.wins}
-            {' '}
-          </div>
-        </div>
-
-      </div>
-
       <div className="flex justify-center items-center min-h-[100vh] bg-gray-700">
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
           <div className="flex justify-center items-center pt-16">
-
-            <Stage width={gridsize * 23} height={gridsize * 17} className="game-canvas rounded-2xl shadow-lg shadow-teal-200">
+            <Stage width={gridsize * 23} height={gridsize * 17} className="game-canvas rounded-xl border-[5px] border-[#2c3542]">
               <Layer>
                 {splash?.map((el) => el.pos.map((el2) => (
                   <Image
@@ -1105,6 +1047,11 @@ function Game({
                 })}
               </Layer>
               <Layer>
+                {(roomNicknames[0]?.nickname.length <= 3)
+                  ? <Text text={roomNicknames[0]?.nickname} fill="#ff3874" fontSize={10} x={gameState.player1.pos.x + 6} y={gameState.player1.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                  : (roomNicknames[0]?.nickname.length <= 6 && roomNicknames[0]?.nickname.length > 3)
+                    ? <Text text={roomNicknames[0]?.nickname} fill="#ff3874" fontSize={10} x={gameState.player1.pos.x + 4} y={gameState.player1.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                    : <Text text={roomNicknames[0]?.nickname} fill="#ff3874" fontSize={10} x={gameState.player1.pos.x - 4} y={gameState.player1.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />}
                 <Image
                   image={skin1State}
                   x={gameState.player1.pos.x}
@@ -1114,6 +1061,11 @@ function Game({
                   ref={skin1Ref}
                   visible={!!gameState.player1.hp}
                 />
+                {(roomNicknames[1]?.nickname.length <= 3)
+                  ? <Text text={roomNicknames[1]?.nickname} fill="#00aa7f" fontSize={10} x={gameState.player2.pos.x + 6} y={gameState.player2.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                  : (roomNicknames[1]?.nickname.length <= 6 && roomNicknames[1]?.nickname.length > 3)
+                    ? <Text text={roomNicknames[1]?.nickname} fill="#00aa7f" fontSize={10} x={gameState.player2.pos.x + 4} y={gameState.player2.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                    : <Text text={roomNicknames[1]?.nickname} fill="#00aa7f" fontSize={10} x={gameState.player2.pos.x - 4} y={gameState.player2.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />}
                 <Image
                   image={skin2State}
                   x={gameState.player2.pos.x}
@@ -1123,6 +1075,11 @@ function Game({
                   ref={skin2Ref}
                   visible={!!gameState.player2.hp}
                 />
+                {(roomNicknames[2]?.nickname.length <= 3)
+                  ? <Text text={roomNicknames[2]?.nickname} fill="#436fff" fontSize={10} x={gameState.player3.pos.x + 6} y={gameState.player3.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                  : (roomNicknames[2]?.nickname.length <= 6 && roomNicknames[1]?.nickname.length > 3)
+                    ? <Text text={roomNicknames[2]?.nickname} fill="#436fff" fontSize={10} x={gameState.player3.pos.x + 4} y={gameState.player3.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                    : <Text text={roomNicknames[2]?.nickname} fill="#436fff" fontSize={10} x={gameState.player3.pos.x - 4} y={gameState.player3.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />}
                 <Image
                   image={skin3State}
                   x={gameState.player3.pos.x}
@@ -1132,6 +1089,11 @@ function Game({
                   ref={skin3Ref}
                   visible={!!gameState.player3.hp}
                 />
+                {(roomNicknames[3]?.nickname.length <= 3)
+                  ? <Text text={roomNicknames[3]?.nickname} fill="#8419ff" fontSize={10} x={gameState.player4.pos.x + 6} y={gameState.player4.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                  : (roomNicknames[3]?.nickname.length <= 6 && roomNicknames[1]?.nickname.length > 3)
+                    ? <Text text={roomNicknames[3]?.nickname} fill="#8419ff" fontSize={10} x={gameState.player4.pos.x + 4} y={gameState.player4.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />
+                    : <Text text={roomNicknames[3]?.nickname} fill="#8419ff" fontSize={10} x={gameState.player4.pos.x - 4} y={gameState.player4.pos.y - 8} opacity={0.6} fontFamily="Fredoka One" />}
                 <Image
                   image={skin4State}
                   x={gameState.player4.pos.x}
@@ -1195,7 +1157,7 @@ function Game({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
