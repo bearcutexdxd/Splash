@@ -296,7 +296,7 @@ function Game({
   }, [currRoom]);
 
   useEffect(() => {
-    if (roomNicknames.length === 2) { // change to 4 for 4 player !!!!!!!!!!!!!!
+    if (roomNicknames.length === 2) { // change to 4 for 4players !!!!!!!!!!!!!!
       const skin1 = new window.Image();
       skin1.src = skins[roomNicknames[0]?.skin];
       setSkin1State(skin1);
