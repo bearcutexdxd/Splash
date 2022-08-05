@@ -18,7 +18,6 @@ function Rooms({ socket }) {
 
   useEffect(() => {
     if (gameName) {
-      console.log(gameName);
       socket.emit('joinRoom', gameName, user);
       navigate('/game');
     }
@@ -41,7 +40,6 @@ function Rooms({ socket }) {
     dispatch(currentRoomAC(roomId));
   });
 
-  console.log(rooms);
   return (
     <>
       <Navbar />
