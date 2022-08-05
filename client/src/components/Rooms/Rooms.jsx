@@ -42,39 +42,28 @@ function Rooms({ socket }) {
 
   return (
     <>
-      <Navbar />
-      <div className="flex justify-center items-center">
-        <div className="flex items-start mt-20">
-          <button
-            className="animation"
-            type="button"
-            onClick={createGameHandle}
-          >
-            <img src="https://svgsilh.com/svg/2923485-673ab7.svg" width="120px" alt="sory" />
-          </button>
-          <div className="flex flex-col">
-            {Object.keys(rooms).map((room) => (
-              <div key={room} className="">
-                <h2 className="text-2xl mt-12 text-info">
-                  {`Room-number---${room}`}
-                  <br />
-                  {`Playr-in-room------${rooms[room]}`}
-                </h2>
-                <Link to="/game">
-                  <button
-                    className="btn btn-primary mt-4 text-info"
-                    type="button"
-                    onClick={() => joinGameHandle(room)}
-                  >
-                    Join game
-                  </button>
-                </Link>
+      <Navbar colorRoom="#18614b" />
+      <div id="rooms">
+        <div className="absolute top-24 left-1/3 ml-16">
+          <button className="btn bg-[#95cb3f] w-56 btn-lg border-none text-white hover:bg-[#87b738] text-xl" type="button" onClick={createGameHandle}>create lobby</button>
+        </div>
+        <div className="absolute top-24 right-1/3 mr-16">
+          <button className="btn bg-[#95cb3f] w-56 btn-lg border-none text-white hover:bg-[#87b738] text-xl" type="button" onClick={updateGameHandle}>update</button>
+        </div>
+        <div className="flex justify-around flex-wrap pt-36">
+          {Object.keys(rooms).map((room) => (
+            <div key={room} className={`card w-72 shadow-xl ml-4 mr-4 mb-4 bg-primary text-primary-content ${rooms[room] < 4 && 'bg-teal-700'}`}>
+              <div className="card-body">
+                <h2 className="card-title">{room}</h2>
+                <p>{`Players: ${rooms[room]} / 4`}</p>
+                <div className="card-actions justify-end">
+                  <Link to="/game">
+                    <button className="btn btn-warning" type="button" onClick={() => joinGameHandle(room)}>join</button>
+                  </Link>
+                </div>
               </div>
-            ))}
-          </div>
-          <button className="animation" type="button" onClick={updateGameHandle}>
-            <img src="https://svgsilh.com/svg/31199-673ab7.svg" width="80px" alt="sory" />
-          </button>
+            </div>
+          ))}
         </div>
       </div>
     </>

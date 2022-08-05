@@ -6,7 +6,7 @@ import SigIn from '../Forms/SigIn/SigIn';
 import SignUp from '../Forms/SiginUp/SiginUp';
 import Modal from '../Modal/Modal';
 
-export default function Navbar({ color }) {
+export default function Navbar({ color, colorRoom }) {
   const [sigInActive, setSigInActive] = useState(false);
   const [siginUpActive, setSiginUpActive] = useState(false);
   const user = useSelector((store) => store.user);
@@ -19,7 +19,7 @@ export default function Navbar({ color }) {
 
   return (
     <>
-      <div className={`navbar  text-lg ${color ? 'bg-[#113053]' : 'bg-[#714cba]'}`}>
+      <div className={`navbar text-lg ${color ? 'bg-[#113053]' : 'bg-[#714cba]'}`}>
         <div className="flex-1">
           <Link className="text-xl text-white animation" to="/main">{color ? null : 'Kitty Splash'}</Link>
         </div>
