@@ -15,7 +15,7 @@ function Shop() {
       <Navbar />
       <div className="backshop">
         <div className="container mx-auto pt-8 text-white text-6xl">
-          <h3 id="h3">Shop Myagkie Lapki</h3>
+          <h3 id="h3" className="mb-8">Shop Myagkie Lapki</h3>
           <div className="grid grid-cols-6">
             {skins?.map((el) => (
               <Skin key={el.id} skinId={el.id} name={el.name} img={el.img} price={el.price} />

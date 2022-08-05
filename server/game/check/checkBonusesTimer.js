@@ -1,6 +1,6 @@
 function checkBonusesTimer(gameStateArg) {
   const currGameState = gameStateArg;
-  const bonusTimer = 600;
+  const bonusTimer = 1200;
 
   // player 1
 

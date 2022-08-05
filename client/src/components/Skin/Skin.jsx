@@ -19,8 +19,8 @@ function Skin({
   }
 
   return (
-    <div className="card m-4 shop">
-      <img src={`${hostFrontSkin()}${img}`} alt="BEST" />
+    <div className="card m-4 shop items-center">
+      <img className="max-h-36" src={`${hostFrontSkin()}${img}`} alt="BEST" />
       <div className="card-body">
         <h5 className="card-title justify-center text-success text-2xl">{name}</h5>
         <h5 className="card-title justify-center text-warning">

@@ -32,6 +32,14 @@ body {
   font-family: 'staypixel';
 }
 
+.bgstats {
+  background-image: url("./assets/images/bgstats.png");
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-size: 100% 120%;
+  background-position: 100% 80%;
+}
+
 .playerInfo {
   font-family: 'Fredoka One';
 }
@@ -144,9 +152,9 @@ body {
   min-width: 200px;
 }
 
-.skinImg {
+/* .skinImg {
   width: 80px;
-}
+} */
 
 .area {
   width: 100vw;
@@ -163,7 +171,7 @@ body {
 .div2 {
   display: flex;
   width: 100%;
-  border-left: 2px solid rebeccapurple;
+  /* border-left: 2px solid rebeccapurple; */
   height: 100%;
 }
 
