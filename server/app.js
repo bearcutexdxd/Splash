@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 
     if (globalGameState[roomId]) {
       globalGameState[roomId].intervalCounter += 1;
-      if (globalGameState[roomId].intervalCounter > 2) { // change for 4 players
+      if (globalGameState[roomId].intervalCounter > 4) { // change for 4players
         socket.emit('gameInProgress');
       }
     }
@@ -141,7 +141,7 @@ io.on('connection', (socket) => {
     socket.emit('playerId', socket.number);
 
     // sending lobby users
-    if (globalGameState[roomId].intervalCounter >= 1) {
+    if (globalGameState[roomId].intervalCounter >= 3) { // 4players
       let roomUsersNicknames = socketRooms.map((el) => {
         if (el.room === roomId) {
           const userInfo = { nickname: el.name, playerId: el.playerId, skin: el.skin };
@@ -154,7 +154,7 @@ io.on('connection', (socket) => {
       console.log(roomUsersNicknames, '\n users nicmaknames!!!!!!!!!!!!!! \n');
     }
 
-    if (socketsNumber === 1) { // starting game, (players number === 4) intervalCounter
+    if (socketsNumber === 3) { // starting game, (4players) intervalCounter
       io.sockets.in(roomId).emit('startGame', roomId);
     }
 
@@ -241,7 +241,7 @@ io.on('connection', (socket) => {
 
     socket.on('keydown', (key, roomId2, playerId) => {
       // console.log('playerId', playerId);
-      if (currGameState.intervalCounter > 1) {
+      if (currGameState.intervalCounter > 3) { // 4players
         currGameState = changeCoordsStart(currGameState);
         currGameState = keydownHandle(key, currGameState, playerId);
         currGameState = changeCoordsFinish(currGameState);
@@ -249,7 +249,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keyup', (key, roomId2, playerId) => {
-      if (currGameState.intervalCounter > 1) {
+      if (currGameState.intervalCounter > 3) { // 4players
         currGameState = changeCoordsStart(currGameState);
         currGameState = keyupHandle(key, currGameState, playerId);
         currGameState = changeCoordsFinish(currGameState);
@@ -262,7 +262,7 @@ io.on('connection', (socket) => {
 
     let interval;
 
-    if (globalGameState[roomId]?.intervalCounter === 1) {
+    if (globalGameState[roomId]?.intervalCounter === 3) { // 4players
       // if (socketsNumber === 1) {
       //   gameStarted = true;
       // }
@@ -293,7 +293,7 @@ io.on('connection', (socket) => {
         }
 
         // stopGame on leave check
-        if (checkStopGameOnLeave(roomId, socketRooms, currGameState)) { // change inside for 4 players!
+        if (checkStopGameOnLeave(roomId, socketRooms, currGameState)) { // change inside for 4players!
           clearInterval(interval);
         }
 
