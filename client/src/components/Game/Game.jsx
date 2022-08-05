@@ -9,6 +9,9 @@ import React, {
 import {
   Image, Layer, Stage, Text,
 } from 'react-konva';
+
+import sf from 'seconds-formater';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNavigate } from 'react-router';
@@ -136,36 +139,37 @@ function Game({
 
   const skins = {
     '/pipo-nekonin001.png': characterSkin1,
-    '/pipo-nekonin002.png': characterSkin2,
-    '/pipo-nekonin003.png': characterSkin3,
-    '/pipo-nekonin004.png': characterSkin4,
-    '/pipo-nekonin005.png': characterSkin5,
-    '/pipo-nekonin006.png': characterSkin6,
-    '/pipo-nekonin007.png': characterSkin7,
-    '/pipo-nekonin008.png': characterSkin8,
-    '/pipo-nekonin009.png': characterSkin9,
-    '/pipo-nekonin010.png': characterSkin10,
-    '/pipo-nekonin011.png': characterSkin11,
-    '/pipo-nekonin012.png': characterSkin12,
-    '/pipo-nekonin013.png': characterSkin13,
-    '/pipo-nekonin014.png': characterSkin14,
-    '/pipo-nekonin015.png': characterSkin15,
-    '/pipo-nekonin016.png': characterSkin16,
-    '/pipo-nekonin017.png': characterSkin17,
-    '/pipo-nekonin018.png': characterSkin18,
-    '/pipo-nekonin019.png': characterSkin19,
-    '/pipo-nekonin020.png': characterSkin20,
-    '/pipo-nekonin021.png': characterSkin21,
-    '/pipo-nekonin022.png': characterSkin22,
-    '/pipo-nekonin023.png': characterSkin23,
-    '/pipo-nekonin024.png': characterSkin24,
-    '/pipo-nekonin025.png': characterSkin25,
-    '/pipo-nekonin026.png': characterSkin26,
-    '/pipo-nekonin027.png': characterSkin27,
-    '/pipo-nekonin028.png': characterSkin28,
-    '/pipo-nekonin029.png': characterSkin29,
-    '/pipo-nekonin030.png': characterSkin30,
-    '/pipo-nekonin031.png': characterSkin31,
+    'pipo-nekonin001.png': characterSkin1,
+    'pipo-nekonin002.png': characterSkin2,
+    'pipo-nekonin003.png': characterSkin3,
+    'pipo-nekonin004.png': characterSkin4,
+    'pipo-nekonin005.png': characterSkin5,
+    'pipo-nekonin006.png': characterSkin6,
+    'pipo-nekonin007.png': characterSkin7,
+    'pipo-nekonin008.png': characterSkin8,
+    'pipo-nekonin009.png': characterSkin9,
+    'pipo-nekonin010.png': characterSkin10,
+    'pipo-nekonin011.png': characterSkin11,
+    'pipo-nekonin012.png': characterSkin12,
+    'pipo-nekonin013.png': characterSkin13,
+    'pipo-nekonin014.png': characterSkin14,
+    'pipo-nekonin015.png': characterSkin15,
+    'pipo-nekonin016.png': characterSkin16,
+    'pipo-nekonin017.png': characterSkin17,
+    'pipo-nekonin018.png': characterSkin18,
+    'pipo-nekonin019.png': characterSkin19,
+    'pipo-nekonin020.png': characterSkin20,
+    'pipo-nekonin021.png': characterSkin21,
+    'pipo-nekonin022.png': characterSkin22,
+    'pipo-nekonin023.png': characterSkin23,
+    'pipo-nekonin024.png': characterSkin24,
+    'pipo-nekonin025.png': characterSkin25,
+    'pipo-nekonin026.png': characterSkin26,
+    'pipo-nekonin027.png': characterSkin27,
+    'pipo-nekonin028.png': characterSkin28,
+    'pipo-nekonin029.png': characterSkin29,
+    'pipo-nekonin030.png': characterSkin30,
+    'pipo-nekonin031.png': characterSkin31,
   };
 
   function exitHandle() {
@@ -291,15 +295,19 @@ function Game({
     });
   }, [currRoom]);
 
+  useEffect(() => {
+    if (roomNicknames.length === 2) { // change to 4 for 4 player !!!!!!!!!!!!!!
+      const skin1 = new window.Image();
+      skin1.src = skins[roomNicknames[0]?.skin];
+      setSkin1State(skin1);
+
+      const skin2 = new window.Image();
+      skin2.src = skins[roomNicknames[1]?.skin];
+      setSkin2State(skin2);
+    }
+  }, [roomNicknames]);
+
   useEffect(() => { // loading all images
-    const skin1 = new window.Image();
-    skin1.src = skins[user.skin]; // skins['/pipo-nekonin001.png']
-    setSkin1State(skin1);
-
-    const skin2 = new window.Image();
-    skin2.src = characterSkin2;
-    setSkin2State(skin2);
-
     const skin3 = new window.Image();
     skin3.src = characterSkin3;
     setSkin3State(skin3);
@@ -879,7 +887,7 @@ function Game({
             <div>
               time played:
               {' '}
-              {stats?.timePlayed}
+              {sf.convert(Math.floor(stats?.timePlayed / 60)).format('MM:SS')}
             </div>
           </div>
         </label>
@@ -888,10 +896,24 @@ function Game({
         {!listenKey && <button className="btn loading playerInfo bgCustom" type="button">waiting for other players</button>}
       </div>
       <div className="absolute mt-16 ml-8">
+        {(!gameState.gameTimer) ? (
+          <div className="mt-6 text-white">
+            current room id :
+            {' '}
+            {currentRoom}
+          </div>
+        ) : null}
         {currRoom[0] && <FirstPlayerInfo currRoom={currRoom[0]} gameState={gameState} />}
         {currRoom[1] && <SecondPlayerInfo currRoom={currRoom[1]} gameState={gameState} />}
         {currRoom[2] && <ThirdPlayerInfo currRoom={currRoom[2]} gameState={gameState} />}
         {currRoom[3] && <FourthPlayerInfo currRoom={currRoom[3]} gameState={gameState} />}
+        {(gameState.gameTimer) ? (
+          <div className="mt-5 text-white">
+            time played:
+            {' '}
+            {sf.convert(Math.floor(gameState?.gameTimer / 60)).format('MM:SS')}
+          </div>
+        ) : null}
       </div>
       <div className="flex justify-center items-center min-h-[100vh] bg-gray-700">
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}

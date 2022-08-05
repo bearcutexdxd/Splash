@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import sf from 'seconds-formater';
 import { hostFrontSkin } from '../../config/endPoints';
 import { getUserSkinsThunk, putSkinUserThunk } from '../../redux/actions/skinsAction';
 import { getStats } from '../../redux/actions/statisticsAction';
@@ -22,11 +23,12 @@ function PersonalArea() {
     setActive(false);
   }
   const user = useSelector((store) => store.user);
-  console.log('user', user);
+  // console.log('user', user);
   const userSkins = useSelector((store) => store.stats);
   const stats = useSelector((store) => store.stats);
   const { Skins: skins } = useSelector((store) => store.userSkins);
-  console.log(skins);
+  console.log('skins', skins);
+  // console.log(stats);
   return (
     <>
       <Navbar />
@@ -39,13 +41,14 @@ function PersonalArea() {
         </div>
         <div className="div2">
           <div className="m-auto">
-            <h2 className="text-6xl ">Statistics</h2>
+            <h2 className="text-5xl text-center mb-8">Statistics</h2>
             {stats?.map((el) => (
-              <ul className="flex flex-col items-center text-3xl" key={el.id}>
-                <li>{`Kills--${el.kills}`}</li>
-                <li>{`Deaths--${el.deaths}`}</li>
-                <li>{`loses--${el.loses}`}</li>
-                <li>{`Wins--${el.wins}`}</li>
+              <ul className="flex flex-col items-center text-xl space-y-4" key={el.id}>
+                <li className="text-green-400">{`kills: ${el.kills}`}</li>
+                <li className="text-green-400">{`wins: ${el.wins}`}</li>
+                <li className="text-red-500">{`deaths: ${el.deaths}`}</li>
+                <li className="text-red-500">{`loses: ${el.loses}`}</li>
+                <li className="text-purple-400">{`time played: ${sf.convert(Math.floor((el.timePlayed) / 60)).format('D days HH hours M min S s')}`}</li>
               </ul>
             ))}
           </div>
