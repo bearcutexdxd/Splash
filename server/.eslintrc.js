@@ -11,5 +11,8 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
+    'no-unused-vars': 0,
+    'max-len': 0,
+    'no-param-reassign': 0,
   },
 };

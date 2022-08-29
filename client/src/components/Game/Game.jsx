@@ -1,6 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
 import '../../index.css';
 import React, {
   useRef, useEffect, memo, useState, useLayoutEffect, useMemo,
@@ -51,7 +48,7 @@ import characterSkin31 from '../../assets/images/skins/pipo-nekonin031.png';
 import bomb1 from '../../assets/images/bomb/bomb1.png';
 import bomb2 from '../../assets/images/bomb/bomb2.png';
 import bomb3 from '../../assets/images/bomb/bomb3.png';
-import bomb4 from '../../assets/images/bomb/bomb4.png'; import closeButton from '../../assets/images/close.png';
+import bomb4 from '../../assets/images/bomb/bomb4.png';
 import splashImage from '../../assets/images/splash/splash2.png';
 
 import { getCurrRoomAC, getCurrRoom, getRoomsAC } from '../../redux/actions/roomsAction';
@@ -125,8 +122,6 @@ function Game({
   const [bonus3State, setBonus3State] = useState(new window.Image());
   const [bonus4State, setBonus4State] = useState(new window.Image());
 
-  const [textState, setTextState] = useState({ isDragging: false, x: 0, y: 0 });
-
   // images refs
   const skin1Ref = useRef();
   const skin2Ref = useRef();
@@ -135,7 +130,8 @@ function Game({
 
   // const values
   const gridsize = 32;
-  const tileAmount = 13;
+  const tileWidth = 23;
+  const tileHeight = 17;
 
   const skins = {
     '/pipo-nekonin001.png': characterSkin1,
@@ -247,46 +243,12 @@ function Game({
     });
   }, [playerId, roomNicknames, winner]);
 
-  // player lost, show stats from this currGameState
-
-  // useEffect(() => {
-  //   console.log('pobeditel');
-  //   if (scoreWin) {
-  //     socket.on('win', (currGameState, winnerId) => {
-  //       setWinner(winnerId);
-  //       if (winnerId === playerId) {
-  //         console.log(scoreWin);
-  //         window.removeEventListener('keydown', onKeyDown);
-  //         window.removeEventListener('keyup', onKeyUp);
-  //         setListenKey(false);
-  //         console.log('you won!');
-  //       }
-  //     });
-  //   }
-  // }, [scoreWin]);
-
-  // player won, show stats from this currGameState
-
-  // game in progress handler
-
-  // gameEnd without AFK
-  // sendStatistics(currGameState, roomNicknames);
-
-  // user connected to the same room
-
-  // useEffect(() => {
-  // }, [playerId, winner]);
-
   // on dismount
   useEffect(() => () => {
     socket.emit('disconnectNavigate', currentRoom);
     setScoreWin(true);
     window.location.reload();
   }, []);
-
-  // useEffect(() => {
-  //   dispatch(getCurrRoom());
-  // }, []);
 
   useEffect(() => {
     socket.on('socketRooms', (playrRoom) => {
@@ -296,7 +258,7 @@ function Game({
   }, [currRoom]);
 
   useEffect(() => {
-    if (roomNicknames.length === 2) { // change to 4 for 4 player !!!!!!!!!!!!!!
+    if (roomNicknames.length === 4) { // change to 4 for 4 player !!!!!!!!!!!!!!
       const skin1 = new window.Image();
       if (skins[roomNicknames[0]?.skin]) {
         skin1.src = skins[roomNicknames[0]?.skin];
@@ -935,7 +897,7 @@ function Game({
         {gameEnd ? <h1 className="text-black">you lost :D</h1> : null}
         <div className="min-h-[100vh] bg-gray-700">
           <div className="flex justify-center items-center pt-16">
-            <Stage width={gridsize * 23} height={gridsize * 17} className="game-canvas rounded-xl border-[5px] border-[#2c3542]">
+            <Stage width={gridsize * tileWidth} height={gridsize * tileHeight} className="game-canvas rounded-xl border-[5px] border-[#2c3542]">
               <Layer>
                 {splash?.map((el) => el.pos.map((el2) => (
                   <Image

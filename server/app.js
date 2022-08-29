@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-return-assign */
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 const express = require('express');
@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 
     if (globalGameState[roomId]) {
       globalGameState[roomId].intervalCounter += 1;
-      if (globalGameState[roomId].intervalCounter > 2) { // change for 4 players
+      if (globalGameState[roomId].intervalCounter > 4) { // change for 4 players
         socket.emit('gameInProgress');
       }
     }
@@ -154,7 +154,7 @@ io.on('connection', (socket) => {
       console.log(roomUsersNicknames, '\n users nicmaknames!!!!!!!!!!!!!! \n');
     }
 
-    if (socketsNumber === 1) { // starting game, (players number === 4) intervalCounter
+    if (socketsNumber === 3) { // starting game, (players number === 4) intervalCounter
       io.sockets.in(roomId).emit('startGame', roomId);
     }
 
@@ -241,7 +241,7 @@ io.on('connection', (socket) => {
 
     socket.on('keydown', (key, roomId2, playerId) => {
       // console.log('playerId', playerId);
-      if (currGameState.intervalCounter > 1) {
+      if (currGameState.intervalCounter > 3) {
         currGameState = changeCoordsStart(currGameState);
         currGameState = keydownHandle(key, currGameState, playerId);
         currGameState = changeCoordsFinish(currGameState);
@@ -249,7 +249,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keyup', (key, roomId2, playerId) => {
-      if (currGameState.intervalCounter > 1) {
+      if (currGameState.intervalCounter > 3) {
         currGameState = changeCoordsStart(currGameState);
         currGameState = keyupHandle(key, currGameState, playerId);
         currGameState = changeCoordsFinish(currGameState);

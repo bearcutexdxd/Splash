@@ -33,5 +33,8 @@ module.exports = {
     'max-len': 0,
     'no-unsafe-optional-chaining': 0,
     'no-use-before-define': 0,
+    'no-nested-ternary': 0,
+    'consistent-return': 0,
+    'array-callback-return': 0,
   },
 };

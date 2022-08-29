@@ -94,7 +94,7 @@ body {
   align-self: center;
   image-rendering: pixelated;
   transform: scale(1.6) translateY(14%);
-  background-image: url("./assets/images/gamefieldLarger.png");
+  background-image: url("./assets/images/gamefieldboundaries2.png");
 }
 
 /* .back {
