@@ -2,13 +2,179 @@
 @tailwind components;
 @tailwind utilities;
 
-.game-container {
-  display: flex;
-  justify-content: center;
-  height: 100vh;
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+@font-face {
+  font-family: "pixel";
+  src: url('./assets/fonts/TypoGraphica_demo.otf');
+}
+
+@font-face {
+  font-family: "undertale";
+  src: url('./assets/fonts/Undertale-Battle-Font.ttf');
+}
+
+@font-face {
+  font-family: "staypixel";
+  src: url('./assets/fonts/Stay\ Pixel\ DEMO.ttf');
+}
+
+body {
+  font-family: "Fredoka One";
+}
+
+#about {
+  font-family: 'undertale';
+}
+
+
+#home {
+  font-family: 'staypixel';
+}
+
+.bgstats {
+  background-image: url("./assets/images/bgstats.png");
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-size: 100% 120%;
+  background-position: 100% 80%;
+}
+
+.playerInfo {
+  font-family: 'Fredoka One';
+}
+
+.bgCustom {
+  background-color: #f43f5e;
+  font-size: 0.85rem;
+  text-transform: lowercase;
+}
+
+.win {
+  background-color: #17f468;
+  color: white;
+}
+
+.winButton {
+  color: white;
+  background-color: #4a586d;
+  border-radius: 16px;
+  border: none;
+  text-transform: lowercase;
+  font-size: 1rem;
+}
+
+.winButton:hover {
+  background-color: #374151;
+}
+
+/* .navbar {
+  
+} */
+
+
+#typewritter {
+  font-family: 'undertale';
+  line-height: 50px;
+
+}
+
+#h3 {
+  font-family: 'staypixel';
+}
+
+#rooms {
+  min-height: 100vh;
+  background: url('./assets/images/jungle.png');
+  background-repeat: no-repeat;
+  background-size: 100% 130%;
 }
 
 .game-canvas {
-  border: 5px solid #fa8072;
   align-self: center;
+  image-rendering: pixelated;
+  transform: scale(1.6) translateY(14%);
+  background-image: url("./assets/images/gamefieldboundaries2.png");
+}
+
+/* .back {
+  min-height: 100vh;
+  background: url('https://cdnb.artstation.com/p/assets/images/images/036/502/523/large/carolyn-jong-beach-sketch5.jpg?1617837553') center no-repeat;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-size: 75% 100%;
+} */
+
+.backshop {
+  text-align: center;
+  min-height: 100vh;
+  background: url('./assets/images/shop.png') center center repeat fixed;
+}
+
+.backmain {
+  min-height: 100vh;
+  background: url('./assets/images/mainImage.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.backhead {
+  min-height: 100vh;
+  background: url('./assets/images/about-bg.gif');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.animation:hover {
+  transform-origin: center;
+  transform: translateY(-10px);
+  transition: 0.7s;
+
+}
+
+.animation::before {
+  content: '';
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  width: 0%;
+  height: 4px;
+  background-color: rgb(252, 230, 139);
+  transition: 0.2s;
+}
+
+.animation:hover:before {
+  width: 100%;
+  left: 0;
+}
+
+.shop {
+  min-width: 200px;
+}
+
+/* .skinImg {
+  width: 80px;
+} */
+
+.area {
+  width: 100vw;
+  height: 100vh;
+
+}
+
+.div {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.div2 {
+  display: flex;
+  width: 100%;
+  /* border-left: 2px solid rebeccapurple; */
+  height: 100%;
+}
+
+.catScin {
+  height: 40vh;
 }
